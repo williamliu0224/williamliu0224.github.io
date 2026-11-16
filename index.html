@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>賞巴掌</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="stage" data-tier="0">
+    <!-- 鏡頭畫面（CSS 鏡像） -->
+    <video id="video" autoplay playsinline muted></video>
+
+    <!-- 連擊高時的外框光暈 -->
+    <div id="glow"></div>
+
+    <!-- 主角：由 game.js 依狀態換圖 -->
+    <div id="hero">
+      <div id="heroShadow"></div>
+      <div id="heroInner">
+        <img id="heroImg" alt="" hidden>
+        <canvas id="superCanvas" hidden></canvas>
+        <div id="heroEmoji">🐸</div>
+      </div>
+    </div>
+
+    <!-- 偵測到的手與揮動殘影 -->
+    <canvas id="overlay"></canvas>
+
+    <!-- 特效層：粒子、跳字、閃光、橫幅 -->
+    <div id="fx"></div>
+    <canvas id="coins"></canvas>
+    <div id="flash"></div>
+    <div id="banner"></div>
+    <div id="countdown" data-mode="start"></div>
+
+    <!-- 分數與時間 -->
+    <div id="hud">
+      <div class="hud-item"><span class="hud-label">分數</span><span id="score">0</span></div>
+      <div class="hud-item"><span class="hud-label">時間</span><span id="time">60</span></div>
+    </div>
+
+    <!-- 連擊 -->
+    <div id="comboBox" class="hidden">
+      <div id="comboLabel">連擊</div>
+      <div id="comboNum">0</div>
+      <div id="comboMult">x1</div>
+      <div id="comboBar"><span></span></div>
+    </div>
+
+    <p id="hint">用手橫著揮過去，賞青蛙一巴掌</p>
+
+    <!-- 開始 / 結束畫面 -->
+    <div id="message">
+      <h1>賞巴掌</h1>
+      <p id="messageText">
+        對著鏡頭，把手橫著揮過主角。<br>
+        連續打中會累積連擊，揮空就會歸零。
+      </p>
+      <button id="startBtn">開始遊戲</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
