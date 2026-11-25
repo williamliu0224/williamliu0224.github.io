@@ -1,0 +1,942 @@
+/* ===== 商店頁專用樣式（共用變數與導覽列在 style.css） ===== */
+
+/* 商店頁額外的設計變數（取自 Figma） */
+:root {
+  --shop-pink: #fb6291; /* 商店頁主粉紅（與 style.css 的 --pink-500 不同） */
+  --shop-pink-title: #ff3573; /* 區塊標題粉紅 */
+  --shop-line: #d9d7d5; /* 分隔線 */
+  --shop-ink-800: #1f1f1f; /* 深色文字 */
+  --shop-ink-400: #9a9895; /* 淺灰文字 */
+}
+
+/* 商店頁背景為純白，覆蓋首頁的淡綠漸層 */
+body.shop-page {
+  background: var(--white);
+}
+
+/* 導覽列：目前所在頁面 */
+.menu a[aria-current="page"] {
+  color: var(--ink-900);
+}
+
+/* ===== 各 frame 共用設定 ===== */
+.shop-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ----- 以下為各 frame 的佔位高度與背景，之後逐一製作 ----- */
+
+/* ===== 00 商店首頁 ===== */
+/* 設計稿 1728 × 1117，高度隨寬度等比例（1117 / 1728 ≈ 64.64vw） */
+.shop-welcome {
+  height: clamp(560px, 64.64vw, 1117px);
+  background: var(--white);
+}
+
+/* 眼睛特寫照片鋪滿 */
+.welcome-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* 粉紅漸層＋模糊：設計稿漸層總長 2105px，只露出上半段，所以底部不會完全透明 */
+.welcome-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--shop-pink) 0,
+    rgba(251, 98, 145, 0) 188.45%
+  );
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+
+/* welcome 字樣：水平置中，中心點比畫框中心略低 24px（582.5 / 1117 ≈ 52.15%） */
+.welcome-title {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(var(--fs-40), 4.63vw, var(--fs-64));
+  font-weight: 500;
+  line-height: var(--lh-tight);
+  color: var(--white);
+  -webkit-text-stroke: 1px var(--ink-line); /* 1px 文字邊框 */
+  text-align: center;
+  white-space: nowrap;
+  letter-spacing: var(--ls-heading);
+}
+
+/* ===== 01 貼布飛入 ===== */
+/* 區塊高度＝捲動距離：多出來的 250vh 用來播放動畫，內層用 sticky 固定在畫面上 */
+.shop-section.shop-flyin {
+  height: 100vh; /* 自動播放，不需要額外捲動距離 */
+  height: 100svh;
+  overflow: visible; /* sticky 需要父層不裁切 */
+}
+
+.flyin-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: linear-gradient(to bottom, var(--white), var(--lime-500));
+}
+
+/* 3D 畫布容器：鋪滿固定的畫面 */
+.flyin-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+/* 減少動態：不需要捲動距離，直接顯示最後畫面 */
+@media (prefers-reduced-motion: reduce) {
+  .shop-section.shop-flyin {
+    height: auto;
+  }
+  .flyin-sticky {
+    position: relative;
+  }
+}
+
+/* ===== 共用元件：徽章、膠囊按鈕 ===== */
+.shop-badge {
+  display: inline-block;
+  padding: 10px 16px;
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius-pill);
+  background: var(--gray-100);
+  font-size: var(--fs-14);
+  letter-spacing: var(--ls-ui);
+  line-height: var(--lh-tight);
+  color: var(--ink-900);
+  white-space: nowrap;
+}
+
+/* 膠囊按鈕：Primary 萊姆綠、Secondary 白底、Dark 深色 */
+.pill-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 64px;
+  padding: 0 24px;
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-16);
+  font-weight: 500;
+  letter-spacing: var(--ls-ui);
+  white-space: nowrap;
+  color: var(--ink-900);
+  font-family: inherit; /* 用在 <button> 時沿用網站字型 */
+  cursor: pointer;
+  transition: background-color 0.2s;
+  line-height: var(--lh-tight);
+}
+
+.pill-primary {
+  background: var(--lime-500);
+}
+
+.pill-primary:hover {
+  background: var(--lime-300);
+}
+
+.pill-secondary {
+  background: var(--white);
+}
+
+.pill-secondary:hover {
+  background: var(--gray-100);
+}
+
+.pill-dark {
+  background: var(--ink-line);
+  color: var(--white);
+}
+
+.pill-dark:hover {
+  background: var(--ink-900);
+}
+
+/* 頁內連結平滑捲動（減少動態時不套用） */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ===== 02 開場 ===== */
+/* 區塊約一個畫面高，內容垂直置中，讓 3D 袋子停在畫面正中央 */
+.shop-intro {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  background: var(--shop-pink);
+}
+
+/* 依設計稿比例排版（1728 寬：左留 290、右留 220、圖 511、間距 187、文字 520） */
+.intro-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1728px;
+  margin: 0 auto;
+  padding: 80px 12.73% 80px 16.78%;
+  display: flex;
+  align-items: center;
+  gap: 15.35%;
+}
+
+.intro-visual {
+  flex: 0 0 41.95%;
+}
+
+.intro-img {
+  width: 100%;
+  aspect-ratio: 511 / 781;
+  object-fit: cover;
+  box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.25);
+}
+
+.intro-text {
+  flex: 0 0 42.69%;
+  min-width: 0;
+}
+
+.intro-title {
+  margin-top: 28px;
+  font-size: var(--fs-64);
+  font-weight: 500;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-heading);
+  color: var(--lime-500);
+  white-space: nowrap;
+}
+
+.intro-sub {
+  font-size: var(--fs-40);
+  letter-spacing: var(--ls-heading);
+  line-height: var(--lh-tight);
+  color: var(--lime-500);
+}
+
+/* 說明文字：跟不累不累丸頁同一組數值（19px、行高 1.55、段距 14px、最寬 620px；手機 0.8 倍） */
+.intro-desc {
+  margin-top: 28px;
+  max-width: 620px;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--white);
+  letter-spacing: 0;
+}
+.intro-desc p + p {
+  margin-top: 14px;
+}
+@media (max-width: 640px) {
+  .intro-desc {
+    font-size: calc(19px * 0.8);
+  }
+}
+
+/* 3D 畫布：鋪滿區塊、不擋點擊，對齊商品圖之前先隱藏 */
+.intro-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.shop-intro.is-ready .intro-canvas {
+  visibility: visible;
+}
+
+/* 02 袋子可拖曳旋轉：商品圖範圍顯示抓取游標；觸控時左右滑給 js 轉袋子，上下滑照常捲頁 */
+.intro-visual.is-spinnable {
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.intro-visual.is-spinning {
+  cursor: grabbing;
+}
+
+/* 3D 模式：不顯示平面商品圖（只保留位置給 3D 袋子對齊） */
+.shop-intro.is-3d .intro-img {
+  visibility: hidden;
+}
+
+/* 右欄文字進場（跟不累不累丸頁同一套）：NEW 標籤從小轉著彈開，標題／副標／說明由下往上浮起、從模糊變清楚
+   依序間隔 0.12 秒（延遲由 JS 設定） */
+.intro-reveal {
+  transition:
+    opacity 0.7s ease-out,
+    transform 0.9s cubic-bezier(0.2, 1.3, 0.4, 1),
+    filter 0.7s ease-out;
+}
+
+.shop-intro.is-3d .intro-reveal:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(48px);
+  filter: blur(8px);
+}
+
+.shop-intro.is-3d .shop-badge.intro-reveal:not(.is-revealed) {
+  transform: scale(0.4) rotate(-8deg);
+  filter: none;
+}
+
+/* ===== 區塊大標題（03、04、05 共用：40px Medium、字距 0.8px） ===== */
+.shop-heading {
+  font-size: clamp(var(--fs-28), 2.31vw, var(--fs-40));
+  font-weight: 500;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-heading);
+}
+
+/* ===== 03 運作原理 ===== */
+/* 設計稿：上留 140、標題、標題與展示框間距 56、展示框 600 高、下留 197，總高 1117 */
+.shop-how {
+  background: linear-gradient(to bottom, var(--shop-pink), var(--gray-100));
+}
+
+/* 左右各留 176（1728 寬的 10.19%） */
+.how-inner {
+  max-width: 1728px;
+  margin: 0 auto;
+  padding: 140px 10.19% 197px;
+}
+
+.how-title {
+  color: var(--lime-500);
+}
+
+/* 展示框：1376 × 600，維持比例縮放 */
+.how-stage {
+  margin-top: 56px; /* 標題與下方內容固定 56px */
+  width: 100%;
+  aspect-ratio: 1376 / 600;
+  min-height: 320px;
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius-lg);
+  background: var(--white);
+}
+
+/* ===== 04 規格數字 ===== */
+/* 設計稿：上留 130、標題、標題與卡片間距 56、卡片 400 高、下留 200，總高 860 */
+.shop-specs {
+  background: var(--gray-100);
+}
+
+.specs-inner {
+  max-width: 1728px;
+  margin: 0 auto;
+  padding: 130px 10.19% 200px;
+}
+
+.specs-title {
+  color: var(--shop-pink-title);
+}
+
+/* 四張卡：每張 326 寬、間距 24 */
+.spec-row {
+  margin-top: 56px; /* 標題與下方內容固定 56px */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.spec-card {
+  min-height: 400px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius-lg);
+  background: var(--white);
+}
+
+/* 大數字＋單位，底線對齊 */
+.spec-number-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px; /* 設計稿的 8px 間隔 */
+  white-space: nowrap;
+}
+
+.spec-number {
+  /* 字級與不累不累丸頁「產品說明」統一：大螢幕 65、往下等比例縮（平板以下固定 52） */
+  font-size: clamp(38px, 5.6vw, 65px);
+  font-weight: 500;
+  line-height: var(--lh-tight);
+  color: var(--lime-500);
+  -webkit-text-stroke: 1px var(--ink-line); /* 1px 文字邊框 */
+}
+
+.spec-unit {
+  font-size: clamp(var(--fs-20), 1.9vw, var(--fs-28)); /* 與不累不累丸頁統一：20～28 */
+  color: var(--ink-600);
+  line-height: var(--lh-tight);
+}
+
+.spec-title {
+  font-size: clamp(var(--fs-20), 1.7vw, var(--fs-28)); /* 與不累不累丸頁統一：20～28 */
+  font-weight: 500;
+  line-height: var(--lh-snug);
+  color: var(--ink-900);
+  letter-spacing: var(--ls-title);
+}
+
+.spec-body {
+  font-size: clamp(var(--fs-14), 1.05vw, var(--fs-16)); /* 與不累不累丸頁統一：14～16 */
+  line-height: var(--lh-body);
+  color: var(--ink-600);
+  letter-spacing: var(--ls-body);
+}
+
+/* 進場前：卡片在畫面右側外面（由 JS 加上 is-anim 才生效，沒有 JS 時直接顯示） */
+.shop-specs.is-anim .spec-card {
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.shop-specs.is-anim:not(.is-in) .spec-card {
+  transform: translateX(100vw);
+}
+
+/* ===== 資訊框滑鼠移入：跳一下（與首頁身體部位卡片相同，card-bounce 定義在 style.css） ===== */
+/* 04 規格卡：滑入完成（is-settled）或沒有滑入動畫時才啟用，避免和滑入的 transform 衝突 */
+.shop-specs .spec-card.is-settled,
+.shop-specs:not(.is-anim) .spec-card {
+  transition: transform 0.3s ease-out; /* 移開時平順降回 */
+}
+
+.shop-specs .spec-card.is-settled:hover,
+.shop-specs:not(.is-anim) .spec-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  animation: card-bounce 0.6s ease-out;
+}
+
+/* 05 說明卡：自動播放時，輪到的卡片淡入的同時跳一下（落回原位，不停在浮起狀態）
+   另取名稱 layer-pop，避免與下方 hover 的 card-bounce 同名而無法重播 */
+@keyframes layer-pop {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  28% {
+    transform: translateY(-14px) scale(1.02);
+  }
+  48% {
+    transform: translateY(0) scale(1.015, 0.985); /* 落地壓扁 */
+  }
+  66% {
+    transform: translateY(-5px) scale(1.01);
+  }
+  84% {
+    transform: translateY(0) scale(1.01, 0.995);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.layer-label.is-current .layer-box {
+  animation: layer-pop 0.6s ease-out;
+}
+
+/* 05 說明卡：動畫播完、可以懸停時才會觸發（卡片本體跳，引導線不動） */
+.layer-box {
+  transition: transform 0.3s ease-out;
+}
+
+.layer-box:hover {
+  transform: translateY(-4px) scale(1.01);
+  animation: card-bounce 0.6s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spec-card:hover,
+  .layer-box:hover,
+  .layer-label.is-current .layer-box {
+    transform: none !important;
+    animation: none !important;
+  }
+}
+
+/* ===== 05 貼布構造 ===== */
+/* 區塊高度＝捲動距離：多出來的 100vh（一個畫面）讓畫面固定一段，期間捲一下就自動播完動畫 */
+.shop-section.shop-layers {
+  height: 100vh; /* 自動播放＋鎖捲動，不需要額外捲動距離 */
+  height: 100svh;
+  overflow: visible; /* sticky 需要父層不裁切 */
+}
+
+.layers-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: linear-gradient(to bottom, var(--gray-100), var(--shop-pink));
+}
+
+/* 3D 畫布鋪滿固定畫面，貼布在正中央 */
+.layers-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+/* 標題與說明卡疊在 3D 上方，不擋滑鼠（讓貼布可以跟著滑鼠傾斜） */
+.layers-inner {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  max-width: 1728px;
+  margin: 0 auto;
+  padding: 8vh 10.19% 5vh;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+}
+
+.layers-title {
+  color: var(--shop-pink-title);
+}
+
+/* 說明區：從標題下方 56px 開始放第一張卡
+   之後每張卡比上一張往下錯開「半張卡高＋18px」（由 JS 設定 margin-top），左右交錯、同側卡片間距 36px */
+.layer-labels {
+  position: relative;
+  flex: 1;
+  margin-top: 56px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 單張說明：左側卡靠左、右側卡靠右（左右交錯） */
+.layer-label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+}
+
+.layer-label.is-left {
+  align-self: flex-start;
+}
+
+.layer-label.is-right {
+  align-self: flex-end;
+}
+
+/* 目前程序：完全顯示；已播過：半透明；還沒到：隱藏 */
+.layer-label.is-current {
+  opacity: 1;
+}
+
+.layer-label.is-past {
+  opacity: 0.5;
+}
+
+/* 動畫播完（is-finale）或減少動態（show-all）：五張全部 50%，可以懸停／點擊 */
+.shop-layers.is-finale .layer-label,
+.shop-layers.show-all .layer-label {
+  opacity: 0.5;
+}
+
+.shop-layers.is-finale .layer-box,
+.shop-layers.show-all .layer-box {
+  pointer-events: auto; /* 外層 .layers-inner 不擋滑鼠，卡片本身要能點 */
+  cursor: pointer;
+}
+
+/* 懸停或點擊選中的卡片：100% 顯示（鏡頭同時推近對應區域） */
+.shop-layers .layer-label.is-focus {
+  opacity: 1;
+}
+
+.layer-box {
+  width: 320px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius-md);
+  background: var(--white);
+}
+
+.layer-name {
+  font-size: var(--fs-16);
+  font-weight: 500;
+  line-height: var(--lh-snug);
+  color: var(--ink-900);
+  letter-spacing: var(--ls-title);
+}
+
+.layer-body {
+  font-size: var(--fs-14);
+  line-height: var(--lh-body);
+  color: var(--ink-600);
+  letter-spacing: var(--ls-body);
+}
+
+/* 引導線：88 × 1 虛線 */
+.layer-leader {
+  flex-shrink: 0;
+  width: 88px;
+  height: 1px;
+}
+
+/* 減少動態：不需要捲動距離 */
+@media (prefers-reduced-motion: reduce) {
+  .shop-section.shop-layers {
+    height: auto;
+  }
+  .layers-sticky {
+    position: relative;
+  }
+}
+
+/* ===== 06 購買 ===== */
+/* 設計稿：上留 120、左商品框 660 × 720、間距 80、右欄 636 寬、下留 140，總高 980 */
+.shop-buy {
+  background: var(--white);
+}
+
+.buy-inner {
+  max-width: 1728px;
+  margin: 0 auto;
+  padding: 120px 10.19% 140px;
+  display: grid;
+  grid-template-columns: 660fr 636fr;
+  gap: 80px;
+  align-items: start;
+}
+
+/* 左：商品框，3D 袋子放在裡面 */
+.buy-visual {
+  position: relative;
+  aspect-ratio: 660 / 720;
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius-lg);
+  background: var(--gray-100);
+  overflow: hidden;
+}
+
+.buy-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+/* 右：商品資訊（標題比商品框頂端低 50px） */
+.buy-info {
+  padding-top: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+.buy-title {
+  font-size: clamp(var(--fs-28), 2.31vw, var(--fs-40));
+  font-weight: 500;
+  line-height: var(--lh-tight);
+  color: var(--shop-ink-800);
+  letter-spacing: var(--ls-heading);
+}
+
+.buy-price {
+  margin-top: 56px; /* 標題與下方內容固定 56px */
+  font-size: var(--fs-28);
+  line-height: var(--lh-tight);
+  color: var(--ink-600);
+}
+
+.buy-desc {
+  margin-top: 24px;
+  max-width: 600px;
+  font-size: var(--fs-14);
+  line-height: var(--lh-body);
+  color: var(--ink-600);
+  letter-spacing: var(--ls-body);
+}
+
+.buy-label {
+  margin-top: 63px; /* 原本分隔線上下的間距（32＋1＋30），位置維持不變 */
+  font-size: var(--fs-16);
+  color: var(--ink-600);
+  letter-spacing: var(--ls-ui);
+}
+
+/* 數量加減：180 × 52 膠囊 */
+.qty-stepper {
+  margin-top: 8px;
+  width: 180px;
+  height: 52px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius-pill);
+  background: var(--white);
+  font-size: var(--fs-16);
+  color: var(--ink-900);
+}
+
+.qty-btn {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: var(--radius-circle);
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.qty-btn:hover:not(:disabled) {
+  background: var(--gray-100);
+}
+
+.qty-btn:disabled {
+  color: var(--shop-ink-400);
+  cursor: default;
+}
+
+.qty-value {
+  font-weight: 500;
+  min-width: 2ch;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 加入購物車／願望清單：寬度填滿右欄（636） */
+.buy-button {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.buy-button.pill-dark {
+  margin-top: 36px;
+}
+
+/* ===== 頁尾 ===== */
+.site-footer {
+  height: 220px;
+  padding: 72px 176px 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  background: var(--white);
+}
+
+.site-footer-title {
+  font-size: var(--fs-20);
+  letter-spacing: var(--ls-title);
+  color: var(--shop-ink-800);
+}
+
+.site-footer-sub {
+  margin-top: 16px;
+  font-size: var(--fs-14);
+  letter-spacing: var(--ls-ui);
+  color: var(--shop-ink-400);
+}
+
+/* 回首頁按鈕：預設／滑過切換圖片 */
+.site-footer-home {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+}
+
+.site-footer-home img {
+  width: 56px;
+  height: 56px;
+}
+
+.site-footer-home .icon-hover {
+  display: none;
+}
+
+.site-footer-home:hover .icon-default {
+  display: none;
+}
+
+.site-footer-home:hover .icon-hover {
+  display: block;
+}
+
+/* ===== 小螢幕調整 ===== */
+/* 04 規格數字：平板以下大數字固定 52（與不累不累丸頁統一） */
+@media (max-width: 1100px) {
+  .spec-number {
+    font-size: 52px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .site-footer {
+    padding: 72px 40px 0;
+  }
+  /* 05 貼布構造：卡片變窄、引導線變短，讓出中間的貼布 */
+  .layers-inner {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+  .layer-box {
+    width: 260px;
+  }
+  .layer-leader {
+    width: 40px;
+  }
+}
+
+/* 05 貼布構造：手機版——貼布在上，下方一次只顯示目前那一張卡 */
+@media (max-width: 767px) {
+  .layers-canvas {
+    bottom: 38%;
+  }
+  .layers-inner {
+    padding: 64px 16px 24px;
+  }
+  /* 五張卡疊在說明區底部同一個位置，一次只顯示一張 */
+  .layer-label,
+  .layer-label.is-left,
+  .layer-label.is-right {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .layer-leader {
+    display: none;
+  }
+  .layer-box {
+    width: 100%;
+  }
+  /* 播過的卡片不顯示，只留目前那一張 */
+  .layer-label.is-past,
+  .shop-layers.is-finale:not(.show-all) .layer-label.is-past {
+    opacity: 0; /* 卡片疊在同一位置，播完也只顯示最後一張 */
+  }
+  /* 減少動態：卡片改成直向排列在貼布下方 */
+  .shop-layers.show-all .layers-sticky {
+    height: auto;
+  }
+  .shop-layers.show-all .layers-canvas {
+    bottom: auto;
+    height: 60vh;
+  }
+  .shop-layers.show-all .layer-labels {
+    margin-top: 50vh;
+    gap: 12px;
+  }
+  .shop-layers.show-all .layer-label {
+    position: static;
+  }
+}
+
+/* 02 開場、06 購買：平板以下改成上下排列 */
+@media (max-width: 900px) {
+  /* 06 購買：商品框在上、資訊在下 */
+  .buy-inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 80px 24px 120px;
+  }
+  .buy-visual {
+    width: min(100%, 480px);
+    justify-self: center;
+  }
+  .buy-info {
+    padding-top: 0;
+  }
+  .intro-inner {
+    flex-direction: column;
+    padding: 80px 24px;
+    gap: 48px;
+  }
+  .intro-visual {
+    flex: none;
+    width: min(70%, 400px);
+  }
+  .intro-text {
+    flex: none;
+    width: 100%;
+  }
+  /* 04 規格數字：兩欄 */
+  .specs-inner {
+    padding: 80px 24px 120px;
+  }
+  .spec-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .spec-card {
+    min-height: 320px;
+  }
+  /* 03 運作原理 */
+  .how-inner {
+    padding: 80px 24px 120px;
+  }
+}
+
+@media (max-width: 640px) {
+  /* 04 規格數字：一欄 */
+  .spec-row {
+    grid-template-columns: 1fr;
+  }
+  .spec-card {
+    min-height: auto;
+  }
+  .site-footer {
+    height: auto;
+    padding: 48px 16px;
+    gap: 24px;
+  }
+  .site-footer-sub {
+    font-size: var(--fs-12);
+  }
+}
+
+/* ===== 貼布盒下方的剩餘片數膠囊（js/screenPatch.js 產生）===== */
+/* 與導覽列購物車膠囊同一組樣式：白底、細黑框、12px、UI 字距；寬度隨文字，左右 padding 12px，靠右對齊（js 設定位置） */
+.patch-tray-badge {
+  padding: 7px 12px;
+  text-align: center;
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius-pill);
+  background: var(--white);
+  color: var(--ink-900);
+  font-family: var(--font-tc);
+  font-size: var(--fs-12);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-ui);
+  white-space: nowrap;
+}
+
+/* ===== 滑到底：回商店／看另一個商品 ===== */
+.back-band{padding:64px 10.19%;display:flex;align-items:center;justify-content:space-between;gap:24px 40px;flex-wrap:wrap;background:var(--gray-100,#edebeb);border-top:1px solid var(--ink-line,#2b2b2b)}
+.back-band-kicker{font-size:var(--fs-12,12px);letter-spacing:var(--ls-label,.2em);color:var(--ink-600,#5f5f5f)}
+.back-band-title{margin-top:8px;text-wrap:balance;font-size:clamp(var(--fs-20,20px),1.7vw,var(--fs-28,28px));font-weight:500;letter-spacing:var(--ls-title,.04em)}
+.back-band-actions{display:flex;gap:16px;flex-wrap:wrap}
+.back-band .pill-button{width:auto;min-width:200px;gap:10px;text-decoration:none}
+.back-band .pill-button .arr{display:inline-block;transition:transform .25s}
+.back-band .to-store:hover .arr{transform:translateX(-4px)}
+.back-band .to-other:hover .arr{transform:translateX(4px)}
+@media (max-width:640px){.back-band{padding:48px 16px}.back-band-actions,.back-band .pill-button{width:100%}}

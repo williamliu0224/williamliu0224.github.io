@@ -1,0 +1,680 @@
+/* ===== 設計變數（取自 Figma） ===== */
+:root {
+  --lime-50: #e7ffc4;
+  --lime-100: #ecffca;
+  --lime-300: #bafc52;
+  --lime-500: #c8fa6e;
+  --pink-200: #ffbdd1;
+  --pink-tag: #ffbad1;
+  --pink-500: #ff5391;
+  --ink-900: #000000;
+  --ink-600: #5f5f5f;
+  --ink-line: #2b2b2b;
+  --gray-100: #edebeb;
+  --white: #ffffff;
+  --font-tc: "Noto Sans TC", sans-serif;
+  --font-logo: "Post No Bills Colombo", var(--font-tc);
+
+  /* ----- 字級系統（8 級，全站只用這些）----- */
+  --fs-12: 12px; /* 小標籤、編號 */
+  --fs-14: 14px; /* 小內文、清單 */
+  --fs-16: 16px; /* 內文、選單、按鈕、標籤 */
+  --fs-20: 20px; /* 導言、小標題 */
+  --fs-28: 28px; /* 中標題 */
+  --fs-40: 40px; /* 區塊標題、頁面主標 */
+  --fs-64: 64px; /* 大字 */
+  --fs-128: 128px; /* 超大主視覺字 */
+
+  /* ----- 行高 ----- */
+  --lh-tight: 1.2; /* 大字、區塊標題、單行 UI */
+  --lh-snug: 1.6; /* 小標題（20–28） */
+  --lh-body: 1.7; /* 內文段落 */
+
+  /* ----- 字距（用 em，字級改變時自動等比例）----- */
+  --ls-heading: 0.02em; /* 40 以上的標題 */
+  --ls-title: 0.04em; /* 20–28 的小標題 */
+  --ls-body: 0.04em; /* 內文 */
+  --ls-ui: 0.1em; /* 按鈕、選單、標籤 */
+  --ls-label: 0.2em; /* 小標籤（品牌寬字距） */
+
+  /* ----- 圓角（R1：3 級）----- */
+  --radius-lg: 32px; /* 大框：卡片、展示框、面板、輸入框 */
+  --radius-md: 20px; /* 小卡 */
+  --radius-pill: 999px; /* 膠囊：按鈕、標籤、徽章 */
+  --radius-circle: 50%; /* 正圓按鈕 */
+}
+
+/* 手機版大框圓角縮小 */
+@media (max-width: 640px) {
+  :root {
+    --radius-lg: 24px;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* 停用觸控板左右滑動換頁（上一頁／下一頁）的手勢，避免誤觸 */
+html,
+body {
+  overscroll-behavior-x: none;
+}
+
+body {
+  font-family: var(--font-tc);
+  font-weight: 400;
+  color: var(--ink-900);
+  /* 頁首淡綠漸層，高度 498px */
+  background:
+    linear-gradient(to bottom, var(--lime-50) 0, var(--white) 498px) no-repeat,
+    var(--white);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+img {
+  display: block;
+}
+
+.container {
+  width: 100%;
+  max-width: 1728px;
+  margin: 0 auto;
+}
+
+/* ===== 導覽列 ===== */
+/* 導覽列高度 60（原 120 的一半），logo 等比縮一半 */
+.nav {
+  height: 60px;
+  padding: 0 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--white);
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  letter-spacing: 3.2px;
+  line-height: normal;
+}
+
+/* logo 是品牌圖形，不套字級系統；整體縮為原本一半 */
+.logo-name {
+  font-family: var(--font-logo);
+  font-size: 24px;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.menu a {
+  font-size: var(--fs-14);
+  letter-spacing: var(--ls-ui);
+  color: var(--ink-600);
+  transition: color 0.2s;
+}
+
+.menu a:hover {
+  color: var(--ink-900);
+}
+
+.menu .cart-button {
+  padding: 7px 20px; /* 原 14px 40px 的一半 */
+  font-size: var(--fs-12);
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius-pill);
+  background: var(--white);
+  color: var(--ink-900);
+}
+
+.menu .cart-button:hover {
+  background: var(--lime-50);
+}
+
+/* ===== 主標區 ===== */
+.hero {
+  padding: 222px 146px 0;
+}
+
+.hero-title {
+  font-size: var(--fs-40);
+  font-weight: 500;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-heading);
+}
+
+.hero-intro {
+  width: 430px;
+  margin-top: 68px;
+  font-size: var(--fs-20);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+}
+
+.tag-row {
+  display: flex;
+  gap: 24px;
+  padding: 20px 0;
+}
+
+.tag {
+  height: 40px;
+  padding: 6px 16px;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--ink-900);
+  border-radius: var(--radius-pill);
+  background: var(--lime-50);
+  font-size: var(--fs-16);
+  letter-spacing: var(--ls-ui);
+  transition: background-color 0.2s;
+}
+
+.tag:hover {
+  background: var(--lime-300);
+}
+
+.tag-warning {
+  background: var(--pink-tag);
+}
+
+.tag-warning:hover {
+  background: var(--pink-500);
+}
+
+/* 首頁五個膠囊：滑鼠移入時跳一下
+   跳起（往上 10px、放大）→ 落地壓扁 → 小跳（往上 4px）→ 落地 → 停在略微浮起 */
+@keyframes tag-bounce {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  28% {
+    transform: translateY(-10px) scale(1.1);
+  }
+  48% {
+    transform: translateY(0) scale(1.08, 0.92); /* 落地時橫向撐開、縱向壓扁 */
+  }
+  66% {
+    transform: translateY(-4px) scale(1.04);
+  }
+  84% {
+    transform: translateY(0) scale(1.04, 0.98);
+  }
+  100% {
+    transform: translateY(-2px) scale(1.03); /* 停在略微浮起放大，表示目前懸停中 */
+  }
+}
+
+.tag-row .tag {
+  transition:
+    background-color 0.2s,
+    transform 0.3s ease-out; /* 移開時平順縮回 */
+}
+
+.tag-row .tag:hover {
+  transform: translateY(-2px) scale(1.03);
+  animation: tag-bounce 0.6s ease-out;
+}
+
+/* 首頁三張身體部位卡片：同樣跳一下，但卡片較大，放大與壓扁幅度縮小 */
+@keyframes card-bounce {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  28% {
+    transform: translateY(-14px) scale(1.02);
+  }
+  48% {
+    transform: translateY(0) scale(1.015, 0.985); /* 落地壓扁 */
+  }
+  66% {
+    transform: translateY(-5px) scale(1.01);
+  }
+  84% {
+    transform: translateY(0) scale(1.01, 0.995);
+  }
+  100% {
+    transform: translateY(-4px) scale(1.01); /* 停在略微浮起 */
+  }
+}
+
+.body-card {
+  transition: transform 0.3s ease-out; /* 移開時平順降回 */
+}
+
+.body-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  animation: card-bounce 0.6s ease-out;
+}
+
+/* 減少動態：只換顏色與圖示，不彈跳 */
+@media (prefers-reduced-motion: reduce) {
+  .tag-row .tag:hover,
+  .body-card:hover {
+    transform: none;
+    animation: none;
+  }
+}
+
+.hero-desc {
+  width: 417px;
+  font-size: var(--fs-20);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+}
+
+/* ===== 青蛙主視覺 ===== */
+/* 舞台依設計稿 1728×1117 等比例縮放，內部座標皆為設計稿像素 */
+.frog-stage {
+  position: relative;
+  width: 100%;
+  max-width: 1728px;
+  margin: 128px auto 0;
+  aspect-ratio: 1728 / 1117;
+  overflow: visible;
+}
+
+.frog-stage-inner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1728px;
+  height: 1117px;
+  transform-origin: 0 0;
+  transform: scale(var(--stage-scale, 1));
+}
+
+.frog-img {
+  width: 1728px;
+  height: 1117px;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.hint-text {
+  position: absolute;
+  width: 104px;
+  transform: translate(-50%, -50%);
+  font-size: var(--fs-20);
+  line-height: var(--lh-tight);
+  text-align: center;
+  pointer-events: none;
+}
+
+.hint-arrow {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.hint-arrow img {
+  flex: none;
+  height: 7.364px;
+}
+
+.body-button {
+  position: absolute;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: transform 0.3s ease-out; /* 移開時平順降回 */
+}
+
+.body-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* 青蛙身上的三個部位按鈕：滑鼠移入時原地彈一下（不往上跳，只有放大與壓扁回彈） */
+@keyframes part-bounce {
+  0% {
+    transform: scale(1);
+  }
+  28% {
+    transform: scale(1.12);
+  }
+  48% {
+    transform: scale(1.1, 0.92); /* 壓扁 */
+  }
+  66% {
+    transform: scale(1.07);
+  }
+  84% {
+    transform: scale(1.07, 1.03);
+  }
+  100% {
+    transform: scale(1.06); /* 停在略微放大 */
+  }
+}
+
+.body-button:hover {
+  transform: scale(1.06);
+  animation: part-bounce 0.6s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .body-button:hover {
+    transform: scale(1.06);
+    animation: none;
+  }
+}
+
+/* 症狀對話框 */
+.popout {
+  position: absolute;
+  z-index: 2;
+  width: 308px;
+  height: 200px;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.85);
+  transition:
+    opacity 0.2s,
+    transform 0.2s,
+    visibility 0.2s;
+}
+
+.popout[data-popout="eye"],
+.popout[data-popout="arm"] {
+  transform-origin: 0 25%;
+}
+
+.popout[data-popout="organ"] {
+  transform-origin: 100% 25%;
+}
+
+.popout.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+.popout-bubble {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 308px;
+  height: 200px;
+  /* Figma 的背景模糊 2px，依泡泡形狀裁切 */
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  clip-path: path(
+    "M44 0H292C302.667 0 308 5.33333 308 16V184C308 194.667 302.667 200 292 200H44C33.3333 200 28 194.667 28 184V62L0 44L28 26V16C28 5.33333 33.3333 0 44 0Z"
+  );
+}
+
+/* 內臟對話框的泡泡左右翻轉，尾巴朝右 */
+.popout-bubble-flip {
+  transform: scaleX(-1);
+}
+
+.chip-title {
+  position: absolute;
+  width: 96px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius-pill);
+  background: var(--pink-200);
+  font-size: var(--fs-14);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-ui);
+}
+
+.chip {
+  position: absolute;
+  padding: 4px 12px;
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius-pill);
+  background: var(--white);
+  font-size: var(--fs-12);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-ui);
+  white-space: nowrap;
+  /* 以中心點定位並旋轉 */
+  transform: translate(-50%, -50%) rotate(var(--r, 0deg));
+}
+
+/* ===== 身體部位卡片 ===== */
+.cards-section {
+  margin-top: 213px;
+  padding: 0 146px;
+}
+
+.cards-heading {
+  font-size: var(--fs-28);
+  font-weight: 500;
+  line-height: var(--lh-snug);
+  letter-spacing: var(--ls-title);
+}
+
+.cards-heading span {
+  display: block;
+  font-size: var(--fs-20);
+  font-weight: 400;
+  line-height: var(--lh-snug);
+  letter-spacing: var(--ls-title);
+}
+
+.card-row {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 90px;
+}
+
+.body-card {
+  width: 414px;
+  height: 667px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  cursor: pointer;
+}
+
+.card-illustration {
+  position: relative;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--ink-line);
+  background: var(--lime-100);
+  transition: background-color 0.2s;
+}
+
+.card-illustration img {
+  width: 251px;
+  height: 201px;
+  object-fit: contain;
+}
+
+.card-body {
+  padding: 20px 24px 0;
+}
+
+.card-title {
+  font-size: var(--fs-40);
+  font-weight: 500;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-heading);
+}
+
+.card-label {
+  margin-top: 32px; /* 與上方卡片大標題的間距 */
+  font-size: var(--fs-16);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-label);
+}
+
+.symptoms {
+  margin-top: 8px;
+}
+
+.symptoms li {
+  padding: 10px 0;
+  border-top: 1px solid var(--gray-100);
+  font-size: var(--fs-14);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-body);
+}
+
+.card-footer {
+  padding: 16px 24px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* 只剩右側箭頭按鈕 */
+  font-size: var(--fs-14);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-body);
+  color: var(--ink-600);
+}
+
+.go-button img {
+  width: 40px;
+  height: 40px;
+}
+
+/* 預設與 hover 圖示切換 */
+.body-card .icon-hover {
+  display: none;
+}
+
+.body-card:hover .icon-default {
+  display: none;
+}
+
+.body-card:hover .icon-hover {
+  display: block;
+}
+
+.body-card:hover .card-illustration {
+  background: var(--lime-500);
+}
+
+/* ===== 免責聲明 ===== */
+.disclaimer {
+  width: 854px;
+  max-width: calc(100% - 32px);
+  margin: 189px auto 0;
+  font-size: var(--fs-16);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+}
+
+.disclaimer p + p {
+  margin-top: 24px;
+}
+
+/* ===== 關於我們 ===== */
+.about {
+  max-width: 1728px;
+  margin: 0 auto;
+  padding: 174px 219px 139px 218px;
+  display: flex;
+  gap: 187px;
+}
+
+.about-title {
+  flex: none;
+  width: 303px;
+  font-size: var(--fs-40);
+  font-weight: 500;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-heading);
+}
+
+.about-text {
+  max-width: 801px;
+  font-size: var(--fs-16);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+}
+
+/* ===== 小螢幕調整 ===== */
+@media (max-width: 1200px) {
+  .nav {
+    padding: 0 24px;
+  }
+  .menu {
+    gap: 16px;
+  }
+  .hero {
+    padding: 120px 40px 0;
+  }
+  .cards-section {
+    padding: 0 40px;
+  }
+  .card-row {
+    flex-wrap: wrap;
+  }
+  .about {
+    flex-direction: column;
+    gap: 32px;
+    padding: 120px 40px;
+  }
+}
+
+@media (max-width: 640px) {
+  .nav {
+    height: auto;
+    padding: 16px;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .menu {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+  .hero {
+    padding: 60px 16px 0;
+  }
+  .hero-title {
+    font-size: var(--fs-28);
+  }
+  .hero-intro,
+  .hero-desc {
+    width: auto;
+    font-size: var(--fs-16);
+  }
+  .tag-row {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .cards-section {
+    padding: 0 16px;
+  }
+  .body-card {
+    width: 100%;
+  }
+  .about {
+    padding: 80px 16px;
+  }
+}

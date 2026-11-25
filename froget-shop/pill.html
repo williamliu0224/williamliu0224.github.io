@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>不累不累丸</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500&family=Post+No+Bills+Colombo&display=swap" rel="stylesheet">
+<style>
+/* 依 FROGet 網站設計系統（tsann0918.github.io 的 style.css / shop.css）重建，讓兩個商品頁放在一起一致 */
+:root{
+  --lime-50:#e7ffc4; --lime-100:#ecffca; --lime-300:#bafc52; --lime-500:#c8fa6e;
+  --pink-200:#ffbdd1; --pink:#fb6291; --pink-title:#ff3573;
+  --ink-900:#000; --ink-800:#1f1f1f; --ink-600:#5f5f5f; --ink-400:#9a9895; --ink-line:#2b2b2b;
+  --gray-100:#edebeb; --line:#d9d7d5; --white:#fff; --cyan:#00dcff;
+  --font-tc:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --font-logo:"Post No Bills Colombo",var(--font-tc);
+  --fs-12:12px; --fs-14:14px; --fs-16:16px; --fs-20:20px; --fs-28:28px; --fs-40:40px; --fs-64:64px; --fs-128:128px;
+  --lh-tight:1.2; --lh-snug:1.6; --lh-body:1.7;
+  --ls-heading:.02em; --ls-title:.04em; --ls-body:.04em; --ls-ui:.1em; --ls-label:.2em;
+  --radius-lg:32px; --radius-md:20px; --radius-pill:999px;
+  --nav-h:60px; --vh:calc(100svh - var(--nav-h));
+  /* 舊名稱沿用（3D 與部分元件引用） */
+  --ink:var(--ink-line); --lime:var(--lime-500); --lime-pale:var(--lime-100); --pink-soft:var(--pink-200); --muted:var(--ink-600); --blue:#2f7cf4;
+  color-scheme:light;
+}
+@media (max-width:640px){ :root{ --radius-lg:24px; --nav-h:92px; } }
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{overscroll-behavior-x:none}
+body{font-family:var(--font-tc);font-weight:400;color:var(--ink-900);background:var(--white);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+ul,ol{list-style:none}
+img{display:block}
+:focus-visible{outline:2px solid var(--pink);outline-offset:3px}
+@media (prefers-reduced-motion:no-preference){ html{scroll-behavior:smooth} }
+
+/* 細黑外框字（描在字外緣，避免筆畫交疊處出線） */
+.outline-1{text-shadow:1px 0 0 var(--ink-line),-1px 0 0 var(--ink-line),0 1px 0 var(--ink-line),0 -1px 0 var(--ink-line),.7px .7px 0 var(--ink-line),-.7px .7px 0 var(--ink-line),.7px -.7px 0 var(--ink-line),-.7px -.7px 0 var(--ink-line)}
+
+/* ===== 導覽列（與 FROGet 網站相同） ===== */
+.nav{position:sticky;top:0;z-index:30;height:60px;padding:0 64px;display:flex;align-items:center;justify-content:space-between;background:var(--white)}
+.logo{display:flex;flex-direction:column;letter-spacing:3.2px;line-height:normal}
+.logo-name{font-family:var(--font-logo);font-size:24px}
+.menu{display:flex;align-items:center;gap:24px}
+.menu a{font-size:var(--fs-14);letter-spacing:var(--ls-ui);color:var(--ink-600);transition:color .2s}
+.menu a:hover,.menu a[aria-current="page"]{color:var(--ink-900)}
+.menu .cart-button{padding:7px 20px;font-size:var(--fs-12);border:1px solid var(--ink-line);border-radius:var(--radius-pill);background:var(--white);color:var(--ink-900);transition:background .2s}
+.menu .cart-button:hover{background:var(--lime-50)}
+.menu .cart-button.bump{animation:bump .45s}
+@keyframes bump{40%{transform:scale(1.12)}}
+
+/* ===== 共用元件 ===== */
+.shop-badge{display:inline-block;padding:10px 16px;border:1px solid var(--ink-line);border-radius:var(--radius-pill);background:var(--gray-100);font-size:var(--fs-14);letter-spacing:var(--ls-ui);line-height:var(--lh-tight);white-space:nowrap}
+.pill-button{display:inline-flex;align-items:center;justify-content:center;width:200px;height:64px;padding:0 24px;border:1px solid var(--ink-line);border-radius:var(--radius-pill);font:inherit;font-size:var(--fs-16);font-weight:500;letter-spacing:var(--ls-ui);line-height:var(--lh-tight);white-space:nowrap;color:var(--ink-900);cursor:pointer;transition:background-color .2s}
+.pill-primary{background:var(--lime-500)} .pill-primary:hover{background:var(--lime-300)}
+.pill-secondary{background:var(--white)} .pill-secondary:hover{background:var(--gray-100)}
+.pill-dark{background:var(--ink-line);color:var(--white)} .pill-dark:hover{background:var(--ink-900)}
+.tag{height:40px;padding:6px 16px;display:inline-flex;align-items:center;border:1px solid var(--ink-900);border-radius:var(--radius-pill);background:var(--lime-50);font-size:var(--fs-16);letter-spacing:var(--ls-ui);transition:background-color .2s,transform .3s ease-out}
+.tag:hover{background:var(--lime-300);transform:translateY(-2px) scale(1.03)}
+.shop-heading{font-size:clamp(var(--fs-28),2.31vw,var(--fs-40));font-weight:500;line-height:var(--lh-tight);letter-spacing:var(--ls-heading)}
+
+/* ===== 00 開場：跑馬燈 ===== */
+.hero{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:clamp(12px,2vh,24px);padding:clamp(48px,8vh,88px) 0 clamp(40px,7vh,72px);
+  background:linear-gradient(to bottom,var(--pink) 0,rgba(251,98,145,.55) 70%,rgba(251,98,145,.25) 100%),var(--white)}
+.marquee{overflow:hidden;white-space:nowrap;user-select:none}
+.track{display:inline-flex;will-change:transform;animation:slide 26s linear infinite}
+.track > span{display:inline-flex;align-items:center;flex:none;font-weight:500;letter-spacing:var(--ls-heading);line-height:var(--lh-tight)}
+.row-a .track > span{font-size:clamp(64px,9.2vw,var(--fs-128));color:var(--lime-500);padding-right:.3em}
+.row-b .track{animation-direction:reverse;animation-duration:32s}
+.row-b .track > span{font-size:clamp(40px,4.63vw,var(--fs-64));color:var(--white);padding-right:.8em}
+.row-b .track > span.lime{color:var(--lime-500)}
+.cap{display:block;flex:none;height:.8em;width:auto;margin-left:.25em;filter:drop-shadow(0 6px 10px rgba(0,0,0,.15))}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.hero-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;padding:0 64px;margin-top:clamp(12px,3vh,32px)}
+.hero-sub{font-size:var(--fs-28);font-weight:500;letter-spacing:var(--ls-title);color:var(--white)}
+.hero-sub u{display:inline-block;width:3em;border-bottom:2px solid var(--white);text-decoration:none;transform:translateY(-.2em)}
+.hero-tags{display:flex;flex-wrap:wrap;gap:12px}
+
+/* ===== 01 包裝（對應網站的 02 開場：粉紅底、左商品右文字） ===== */
+.promo{position:relative;display:flex;align-items:center;min-height:var(--vh);background:var(--pink)}   /* 撐滿一整個畫面：停在這裡時看不到下一段 */
+/* 依網站開場比例：左留 16.78%、右留 12.73%、圖 41.95%、間距 15.35%、文字 42.69%（相對內寬） */
+.promo-in{width:100%;max-width:1728px;margin:0 auto;padding:56px 12.73% 56px 16.78%;display:flex;align-items:center;gap:9.3%}
+.promo-shot{flex:0 0 48%}   /* 藥瓶放大一點（原本 41.95%） */
+.promo-text{flex:0 0 42.69%;min-width:0}
+.promo-shot{position:relative;margin:0;transform-origin:50% 80%;will-change:transform}
+.promo-stage{position:relative;width:100%;aspect-ratio:511/781;max-height:calc(var(--vh) - 112px);cursor:grab;touch-action:pan-y;user-select:none}
+.promo-stage:active{cursor:grabbing}
+#promo-gl{position:absolute;inset:0;width:100%;height:100%;display:block}
+.promo-title{margin-top:28px;font-size:var(--fs-64);font-weight:500;line-height:var(--lh-tight);letter-spacing:var(--ls-heading);color:var(--lime-500);white-space:nowrap}
+.promo-sub{font-size:var(--fs-40);line-height:var(--lh-tight);letter-spacing:var(--ls-heading);color:var(--lime-500)}
+.promo-desc{--pd-size:19px;--pd-first:1;--pd-weight:400;--pd-lh:1.55;--pd-ls:0em;--pd-gap:14px;--pd-max:620px;   /* 說明文字：數值集中在這裡，網址加 #tune 可以用面板拉 */
+  margin-top:28px;max-width:var(--pd-max);font-size:var(--pd-size);font-weight:var(--pd-weight);line-height:var(--pd-lh);letter-spacing:var(--pd-ls);color:var(--white)}
+.promo-desc p:first-child{font-size:calc(1em * var(--pd-first))}
+.promo-desc p + p{margin-top:var(--pd-gap)}
+/* 右欄文字進場（跟青蛙貼布頁同一套）：NEW 標籤彈開，標題／副標／說明由下往上浮起、從模糊變清楚，依序間隔 0.12 秒；JS 加上 is-anim 才生效 */
+.promo-reveal{transition:opacity .7s ease-out,transform .9s cubic-bezier(.2,1.3,.4,1),filter .7s ease-out}
+.promo.is-anim .promo-reveal:not(.is-revealed){opacity:0;transform:translateY(48px);filter:blur(8px)}
+.promo.is-anim .shop-badge.promo-reveal:not(.is-revealed){transform:scale(.4) rotate(-8deg);filter:none}   /* NEW 標籤從小轉著彈開 */
+@media (max-width:640px){ .promo-desc{font-size:calc(var(--pd-size) * .8)} }
+.cm{display:inline-block;margin:0 -.24em}
+
+/* ===== 02 產品說明（對應網站的 04 規格：淺灰底、粉紅標題、白卡細框） ===== */
+.sheet-wrap{background:var(--gray-100);padding:112px 10.19% 120px}   /* 上下多留一點白 */
+.sheet-title{color:var(--pink-title)}
+.sheet-lead{margin-top:14px;font-size:var(--fs-20);font-weight:500;letter-spacing:var(--ls-title);color:var(--ink-800)}
+.num-cards{margin-top:clamp(32px,4vw,56px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(16px,1.8vw,28px)}
+.num-card{background:var(--white);border:1px solid var(--ink-line);border-radius:var(--radius-lg);padding:clamp(28px,2.4vw,40px) clamp(22px,1.9vw,32px);min-height:clamp(300px,28vw,420px)}
+.num-card .num{display:flex;align-items:baseline;gap:10px;white-space:nowrap}
+.num-card .num b{font-size:clamp(38px,5.6vw,65px);   /* 與青蛙貼布頁統一：大螢幕 65、平板以下 52 */ font-weight:400;line-height:1;color:var(--lime-500);letter-spacing:0}
+.num-card .num span{font-size:clamp(var(--fs-20),1.9vw,var(--fs-28));color:var(--ink-600);letter-spacing:var(--ls-title)}
+.num-card h3{margin-top:clamp(22px,2.2vw,36px);font-size:clamp(var(--fs-20),1.7vw,var(--fs-28));font-weight:500;line-height:var(--lh-snug);letter-spacing:var(--ls-title);color:var(--ink-900,#1b1c1e)}
+.num-card p{margin-top:clamp(16px,1.8vw,26px);font-size:clamp(var(--fs-14),1.05vw,var(--fs-16));line-height:1.9;letter-spacing:var(--ls-body);color:var(--ink-600)}
+.num-card .lines span{display:block}
+/* 滑鼠經過：卡片抖一抖（數字也跟著跳一下）；觸控裝置與「減少動態」不播 */
+@keyframes card-wiggle{0%{transform:rotate(0)}15%{transform:rotate(-2.2deg) translateY(-4px)}30%{transform:rotate(1.8deg) translateY(-4px)}45%{transform:rotate(-1.3deg) translateY(-2px)}60%{transform:rotate(.8deg)}75%{transform:rotate(-.4deg)}100%{transform:rotate(0)}}
+@keyframes num-hop{0%,100%{transform:translateY(0)}35%{transform:translateY(-8px) scale(1.06)}65%{transform:translateY(1px) scale(.98)}}
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+  .num-card{transform-origin:50% 90%}
+  .sheet-wrap:not(.is-anim) .num-card:hover,.num-card.is-settled:hover{animation:card-wiggle .6s ease-in-out}
+  .num-card .num b{display:inline-block}
+  .sheet-wrap:not(.is-anim) .num-card:hover .num b,.num-card.is-settled:hover .num b{animation:num-hop .6s ease-in-out}
+}
+/* 產品說明進場（跟青蛙貼布頁「數字會說話」一樣）：四張卡依序從畫面右側滑入；JS 加上 is-anim 才生效 */
+.sheet-wrap{overflow-x:clip}
+.sheet-wrap.is-anim .num-card{transition:transform .9s cubic-bezier(.22,1,.36,1)}
+.sheet-wrap.is-anim:not(.is-in) .num-card{transform:translateX(100vw)}
+.sheet-note{margin-top:24px;font-size:var(--fs-12);color:var(--ink-600);letter-spacing:var(--ls-body)}
+@media (max-width:1100px){ .num-cards{grid-template-columns:repeat(2,minmax(0,1fr))} .num-card{min-height:0;padding:24px 28px} .num-card .num b{font-size:56px} .num-card h3{margin-top:16px} .num-card p{margin-top:12px;line-height:1.75} .sheet-wrap{padding-top:72px;padding-bottom:72px} .num-card .num b{font-size:52px} .num-card h3 br{display:none} }
+@media (max-width:640px){ .num-cards{grid-template-columns:1fr} }
+@media (max-width:760px){ .cols{grid-template-columns:1fr} }
+
+/* ===== 03 3D 拆解（對應網站的 05 構造：灰→粉漸層、白色說明卡） ===== */
+.explode{position:relative;height:520vh}
+.stage{position:sticky;top:var(--nav-h);height:var(--vh);overflow:hidden;background:linear-gradient(to bottom,var(--gray-100),var(--pink))}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1}
+.frogs{position:absolute;inset:0;z-index:0;pointer-events:none}
+.frogs img{position:absolute;left:0;right:0;top:50%;margin:auto;height:64vh;width:auto;max-width:none;opacity:0;transform:translateY(-50%) scale(.94);transition:opacity .5s ease,transform .6s cubic-bezier(.3,1.5,.5,1)}
+.frogs img.on{opacity:.28;transform:translateY(-50%)}
+.frogs img.tired{height:min(64vh,73vw)}
+.frogs img.hype.on{animation:hop 1.2s ease-in-out infinite}
+@keyframes hop{0%,100%{transform:translateY(-50%) rotate(-2deg)}50%{transform:translateY(calc(-50% - 14px)) rotate(2deg)}}
+.stage-head{position:absolute;z-index:2;top:5vh;left:10.19%;right:10.19%;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;pointer-events:none}
+.stage-title{color:var(--pink-title)}
+.frog-cap{display:inline-block;margin-top:16px;padding:4px 12px;border:1px solid var(--ink-line);border-radius:var(--radius-pill);background:var(--white);font-size:var(--fs-12);letter-spacing:var(--ls-ui);white-space:nowrap}
+.frog-cap b{font-weight:500;color:var(--pink);margin-right:6px}
+.hint{padding:7px 16px;border:1px solid var(--ink-line);border-radius:var(--radius-pill);background:var(--white);font-size:var(--fs-12);letter-spacing:var(--ls-ui);white-space:nowrap;transition:opacity .3s,transform .3s}
+.tag3d{position:absolute;z-index:2;left:0;top:0;pointer-events:none;display:flex;align-items:center;opacity:0;will-change:transform,opacity}
+.tag3d::before{content:"";width:40px;height:1px;background:repeating-linear-gradient(90deg,var(--ink-line) 0 6px,transparent 6px 12px)}
+.tag3d span{background:var(--white);font-size:var(--fs-12);letter-spacing:var(--ls-ui);white-space:nowrap;border:1px solid var(--ink-line);border-radius:var(--radius-pill);padding:4px 12px}
+.tag3d span b{font-weight:500;color:var(--pink);margin-right:4px}
+.tag3d.flip{flex-direction:row-reverse}
+.card{position:absolute;z-index:2;left:10.19%;bottom:6vh;width:min(320px,calc(100% - 32px));padding:20px 24px;display:flex;flex-direction:column;gap:6px;border:1px solid var(--ink-line);border-radius:var(--radius-md);background:var(--white)}
+.card-top{display:flex;justify-content:space-between;font-size:var(--fs-12);letter-spacing:var(--ls-label);color:var(--ink-600)}
+.card h3{font-size:var(--fs-20);font-weight:500;line-height:var(--lh-snug);letter-spacing:var(--ls-title)}
+.card p{font-size:var(--fs-14);line-height:var(--lh-body);letter-spacing:var(--ls-body);color:var(--ink-600)}
+.card .dose{margin-top:6px;padding-top:8px;border-top:1px solid var(--gray-100);font-size:var(--fs-14);display:flex;justify-content:space-between;letter-spacing:var(--ls-body)}
+.card .dose b{font-weight:500}
+.progress{position:absolute;z-index:2;right:10.19%;bottom:6vh;display:flex;flex-direction:column;gap:8px}
+.progress i{display:block;width:8px;height:8px;border-radius:50%;background:var(--white);border:1px solid var(--ink-line);transition:background .3s}
+.progress i.on{background:var(--ink-line)}
+/* 3D 拆解：滑進來時，標題、標籤、說明卡、進度點依序淡入往上（簡單一致的一種動態） */
+.stage .stage-title,.stage .frog-cap,.stage .hint,.stage .card,.stage .progress{transition:opacity .5s ease,transform .5s ease}
+.stage:not(.revealed) .stage-title,.stage:not(.revealed) .frog-cap,.stage:not(.revealed) .hint,.stage:not(.revealed) .card,.stage:not(.revealed) .progress{opacity:0;transform:translateY(16px)}
+.stage.revealed .frog-cap{transition-delay:.1s}.stage.revealed .card{transition-delay:.2s}.stage.revealed .progress{transition-delay:.3s}
+.stage #tags,.stage .frogs{transition:opacity .5s ease}
+.stage:not(.revealed) #tags,.stage:not(.revealed) .frogs{opacity:0}
+/* 每換一層：說明卡內容淡入 */
+.card.swap h3,.card.swap p,.card.swap .dose{animation:swapIn .35s ease both}
+@keyframes swapIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* 開場動畫：一整個畫面，跟 3D 拆解同一種灰→粉漸層 */
+.opening{position:relative;height:var(--vh);overflow:hidden;background:linear-gradient(to bottom,var(--gray-100),var(--pink))}
+.opening-stage{position:absolute;inset:0}
+@media (prefers-reduced-motion:reduce){.card.swap *{animation:none!important}.stage .stage-title,.stage .card,.stage .frog-cap,.stage .progress{transform:none!important}}
+.fallback{position:absolute;inset:0;display:none;place-items:center;font-size:var(--fs-14);padding:24px;text-align:center}
+@media (max-width:767px){
+  .stage-head{left:16px;right:16px;top:64px}
+  .hint{display:none}
+  .card{left:16px;bottom:24px}
+  .progress{right:16px;bottom:24px}
+  .frogs img{height:46vh;top:44%}
+  .frogs img.tired{height:min(46vh,73vw)}
+}
+
+/* ===== 04 購買（與網站的 06 購買相同結構） ===== */
+.shop-buy{background:var(--white);min-height:var(--vh);display:flex;align-items:center}
+.buy-inner{width:100%;max-width:1728px;margin:0 auto;padding:40px 8% 48px;display:grid;grid-template-columns:1.2fr 1fr;gap:72px;align-items:stretch}
+.buy-visual{position:relative;min-height:min(calc(var(--vh) - 88px),760px);border:1px solid var(--ink-line);border-radius:var(--radius-lg);background:var(--gray-100);overflow:hidden}
+.buy-stage{position:absolute;inset:0}
+#buy-gl{position:absolute;inset:0;width:100%;height:100%;display:block}
+.buy-info{display:flex;flex-direction:column;padding-top:0}
+.buy-title{font-size:clamp(var(--fs-28),2.31vw,var(--fs-40));font-weight:500;line-height:var(--lh-tight);letter-spacing:var(--ls-heading);color:var(--ink-800)}
+.buy-price{margin-top:28px;font-size:var(--fs-28);line-height:var(--lh-tight);color:var(--ink-600);font-variant-numeric:tabular-nums}
+.buy-desc{margin-top:24px;max-width:600px;font-size:var(--fs-14);line-height:var(--lh-body);letter-spacing:var(--ls-body);color:var(--ink-600)}
+.buy-label{display:block;margin-top:36px;font-size:var(--fs-16);letter-spacing:var(--ls-ui);color:var(--ink-600)}
+.buy-opts{display:grid;gap:10px;margin-top:10px}
+.opt{font:inherit;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;text-align:left;padding:16px 24px;border-radius:var(--radius-md);background:var(--white);border:1px solid var(--ink-line);color:var(--ink-900);transition:background-color .2s}
+.opt:hover{background:var(--lime-50)}
+.opt.on{background:var(--lime-500)}
+.opt-l{display:grid;gap:2px}
+.opt-l b{font-size:var(--fs-16);font-weight:500;letter-spacing:var(--ls-title)}
+.opt-l small{font-size:var(--fs-12);letter-spacing:var(--ls-body);color:var(--ink-600)}
+.opt-p{font-size:var(--fs-14);letter-spacing:var(--ls-body);white-space:nowrap}
+.qty-stepper{margin-top:8px;width:180px;height:52px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--ink-line);border-radius:var(--radius-pill);background:var(--white);font-size:var(--fs-16)}
+.qty-btn{width:36px;height:36px;border:0;border-radius:50%;background:transparent;font:inherit;color:inherit;cursor:pointer;transition:background-color .2s}
+.qty-btn:hover:not(:disabled){background:var(--gray-100)}
+.qty-btn:disabled{color:var(--ink-400);cursor:default}
+.qty-value{font-weight:500;min-width:2ch;text-align:center;font-variant-numeric:tabular-nums}
+.buy-actions{margin-top:auto;padding-top:40px;display:grid;gap:16px}
+.buy-button{width:100%}
+.select-wrap{position:relative;margin-top:8px}
+.select-wrap::after{content:"";position:absolute;right:24px;top:50%;width:9px;height:9px;border-right:1.5px solid var(--ink-900);border-bottom:1.5px solid var(--ink-900);transform:translateY(-70%) rotate(45deg);pointer-events:none}
+.buy-select{appearance:none;-webkit-appearance:none;width:100%;height:56px;padding:0 56px 0 24px;border:1px solid var(--ink-line);border-radius:var(--radius-pill);background:var(--white);font:inherit;font-size:var(--fs-16);letter-spacing:var(--ls-body);color:var(--ink-900);cursor:pointer;transition:background-color .2s}
+.buy-select:hover{background:var(--lime-50)}
+.pill-secondary[aria-pressed="true"]{background:var(--pink-200)}
+.toast{position:fixed;left:50%;bottom:28px;z-index:40;transform:translate(-50%,calc(100% + 48px));opacity:0;background:var(--white);border:1px solid var(--ink-line);border-radius:var(--radius-pill);padding:10px 20px;font-size:var(--fs-14);letter-spacing:var(--ls-body);transition:transform .35s cubic-bezier(.3,1.3,.5,1),opacity .25s;white-space:nowrap;pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1;pointer-events:auto}   /* 出現時可以點「看購物車」 */
+.toast b{font-weight:500}
+@media (max-width:900px){
+  .buy-inner{grid-template-columns:1fr;gap:40px;padding:80px 24px 120px}
+  .buy-visual{width:100%;min-height:auto;aspect-ratio:1/1}
+  .buy-actions{margin-top:0}
+  .buy-select{font-size:var(--fs-14);padding:0 48px 0 20px}
+  .buy-info{padding-top:0}
+  .promo-in{flex-direction:column;padding:32px 24px 48px;gap:24px}
+  .promo-shot{flex:none;width:min(72%,360px);margin:0 auto}
+  .promo-text{flex:none;width:100%}
+  .promo-stage{max-height:52svh}
+  .promo-title{white-space:normal}
+}
+
+/* ===== 頁尾（與 FROGet 網站相同） ===== */
+.site-footer{padding:72px 176px 64px;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;background:var(--white)}
+.site-footer-title{font-size:var(--fs-20);letter-spacing:var(--ls-title);color:var(--ink-800)}
+.site-footer-sub{margin-top:16px;font-size:var(--fs-14);letter-spacing:var(--ls-ui);color:var(--ink-400)}
+.site-footer-home{width:56px;height:56px;flex-shrink:0}
+.site-footer-home svg{display:block}
+.site-footer-home .bg{fill:var(--white);transition:fill .2s}
+.site-footer-home:hover .bg{fill:var(--lime-500)}
+
+/* 內文統一 */
+.nw{white-space:nowrap}
+@media (max-width:1200px){
+  .nav{padding:0 24px} .menu{gap:16px}
+  .site-footer{padding:72px 40px 56px}
+  .hero-foot{padding:0 40px}
+}
+@media (max-width:640px){
+  .nav{height:auto;padding:12px 16px;flex-direction:column;gap:8px}
+  .menu{flex-wrap:wrap;justify-content:center;gap:14px}
+  .hero-foot{padding:0 16px}
+  .hero-sub{font-size:var(--fs-20)}
+  .sheet-wrap{padding:96px 16px 136px}
+  .site-footer{padding:48px 16px}
+  .site-footer-sub{font-size:var(--fs-12)}
+}
+/* 矮螢幕：收緊購買區間距，讓整區一次放得下 */
+@media (max-height:800px) and (min-width:901px){
+  .buy-price{margin-top:16px;font-size:var(--fs-20)}
+  .buy-desc{margin-top:10px}
+  .buy-label{margin-top:20px}
+  .buy-actions{padding-top:20px;gap:10px}
+  .buy-actions .pill-button{height:52px}
+}
+@media (max-width:900px){ .promo-stage{max-height:44svh} .hero{padding:24px 0} }
+@media (prefers-reduced-motion:reduce){ .track{animation:none} .frogs img.hype.on{animation:none} .tag:hover{transform:none} }
+/* ===== 滑到底：回商店／看另一個商品 ===== */
+.back-band{padding:64px 10.19%;display:flex;align-items:center;justify-content:space-between;gap:24px 40px;flex-wrap:wrap;background:var(--gray-100,#edebeb);border-top:1px solid var(--ink-line,#2b2b2b)}
+.back-band-kicker{font-size:var(--fs-12,12px);letter-spacing:var(--ls-label,.2em);color:var(--ink-600,#5f5f5f)}
+.back-band-title{margin-top:8px;text-wrap:balance;font-size:clamp(var(--fs-20,20px),1.7vw,var(--fs-28,28px));font-weight:500;letter-spacing:var(--ls-title,.04em)}
+.back-band-actions{display:flex;gap:16px;flex-wrap:wrap}
+.back-band .pill-button{width:auto;min-width:200px;gap:10px;text-decoration:none}
+.back-band .pill-button .arr{display:inline-block;transition:transform .25s}
+.back-band .to-store:hover .arr{transform:translateX(-4px)}
+.back-band .to-other:hover .arr{transform:translateX(4px)}
+@media (max-width:640px){.back-band{padding:48px 16px}.back-band-actions,.back-band .pill-button{width:100%}}
+</style>
+<script>
+  /* 每次進到這頁都從最上面開始，第一頁的動畫才會自己從頭跑。
+     瀏覽器（或嵌入的預覽視窗）會在載入後、甚至過好幾秒才把頁面捲回上次的位置（例如上一頁的最下面）；
+     在你自己動手捲動、或開場動畫播完自動往下捲之前，任何不是你捲的捲動都會被拉回最上面。 */
+  (function () {
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    var top = function () { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); };   // instant：頁面有平滑捲動，要直接跳回去
+    top();
+    var holding = true;
+    function release() { holding = false; window.removeEventListener('scroll', hold); }
+    window.__releaseTopHold = release;   // 開場動畫要自動往下捲時呼叫
+    ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (t) {
+      window.addEventListener(t, release, { passive: true, capture: true, once: true });
+    });
+    function hold() { if (holding && window.scrollY > 0) top(); }
+    window.addEventListener('scroll', hold, { passive: true });
+    window.addEventListener('load', hold);
+    window.addEventListener('pageshow', function (e) { if (e.persisted) { holding = true; window.addEventListener('scroll', hold, { passive: true }); top(); } });
+    setTimeout(release, 20000);   // 保險：20 秒後一定放開
+  })();
+</script>
+<script>
+  /* 離開這頁時馬上釋放所有 3D 畫面（WebGL）。瀏覽器同時能開的 3D 畫面有上限，
+     舊頁面的還沒釋放、新頁面又開了好幾個，最先開的那個（開場動畫）就會被瀏覽器關掉，變成一片空白。 */
+  window.addEventListener('pagehide', function () {
+    document.querySelectorAll('canvas').forEach(function (c) {
+      try {
+        var gl = c.__gl || null;
+        if (!gl) return;
+        var ext = gl.getExtension('WEBGL_lose_context'); if (ext) ext.loseContext();
+      } catch (e) {}
+    });
+  });
+  // 按「上一頁」回到這頁時（瀏覽器直接拿快取的舊畫面），3D 已經釋放了，重新載入一次
+  window.addEventListener('pageshow', function (e) { if (e.persisted) location.reload(); });
+  // 記下每個畫布的 3D 內容，離開時才找得到（不改變任何畫面行為）
+  (function () {
+    var orig = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (type) {
+      var ctx = orig.apply(this, arguments);
+      if (ctx && /webgl/.test(type)) this.__gl = ctx;
+      return ctx;
+    };
+  })();
+</script>
+</head>
+<body>
+
+<header class="nav">
+  <a class="logo" href="index.html"><span class="logo-name">FROGet</span></a>
+  <nav class="menu" aria-label="主選單">
+    <a href="ask.html">問答</a>
+    <a href="store.html" aria-current="page">商店</a>
+    <a href="game.html">解壓遊戲</a>
+    <a href="index.html#about">關於我們</a>
+    <a class="cart-button" id="cart-button" href="cart.html">購物車 (<span id="cart-count">0</span>)</a>
+  </nav>
+</header>
+
+
+
+<!-- 開場：只有膠囊動畫（自動播放）：打開 → 四層一層一層拆開 → 中間的青蛙跳出來放大到整個畫面 → 自動往下捲到下一段 -->
+<section class="opening" id="opening" aria-label="不累不累丸 開場動畫">
+  <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">不累不累丸，永不喊累</h1>
+  <div class="opening-stage" id="opening-stage">
+    <canvas id="gl" aria-hidden="true"></canvas>
+  </div>
+</section>
+
+<section class="promo" id="promo" aria-label="不累不累丸 產品包裝">
+  <div class="promo-in">
+    <figure class="promo-shot" id="promo-shot">
+      <div class="promo-stage" id="promo-stage">
+        <canvas id="promo-gl" role="img" aria-label="不累不累丸 3D 藥瓶，可以拖曳旋轉看背面"></canvas>
+      </div>
+    </figure>
+    <div class="promo-text">
+      <span class="shop-badge promo-reveal">NEW｜新品上市</span>
+      <h2 class="promo-title promo-reveal">不累不累丸</h2>
+      <p class="promo-sub promo-reveal">累<span class="cm">，</span>到此為止</p>
+      <div class="promo-desc promo-reveal">
+        <p>四層配方，為人而生。設計師他呱的也是人。</p>
+        <p>設計師記得所有快捷鍵，卻常常忘了自己。FROGet 把「忘了照顧自己」這件事，做成一顆膠囊。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="explode" id="explode" aria-label="膠囊成分 3D 拆解">
+  <div class="stage" id="stage">
+    <div class="frogs" aria-hidden="true">
+      <img class="tired on" src="frogs/tired.png" alt="">
+      <img class="worm" src="frogs/worm.png" alt="">
+      <img class="hype" src="frogs/hype.png" alt="">
+    </div>
+    <div class="fallback" id="fallback">你的瀏覽器無法顯示 3D 畫面。</div>
+    <div class="stage-head">
+      <div>
+        <h2 class="shop-heading stage-title">四層構造，由外往內把累趕走</h2>
+        <div class="frog-cap" id="frog-cap" aria-live="polite"><b>服用前</b>趴在桌上，只剩一口氣</div>
+      </div>
+      <div class="hint" id="hint">往下滑 ↓ 拆開再組合</div>
+    </div>
+    <div id="tags"></div>
+    <div class="card" aria-live="polite">
+      <div class="card-top"><span id="c-k">00 / 04</span><span id="c-part">外觀</span></div>
+      <h3 id="c-n">完整膠囊</h3>
+      <p id="c-d">綠藍雙色硬膠囊，長 21.7 mm。往下滑，把它一層一層拆開。</p>
+      <div class="dose"><span>含量</span><b id="c-m">1 粒</b></div>
+    </div>
+    <div class="progress" id="progress" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+</section>
+
+<section class="sheet-wrap" id="sheet" aria-label="產品說明">
+  <h2 class="shop-heading sheet-title">產品說明</h2>
+  <p class="sheet-lead">你忘了照顧自己，這顆幫你記得。</p>
+  <div class="num-cards">
+    <article class="num-card">
+      <div class="num"><b class="outline-1">4</b><span>層配方</span></div>
+      <h3>由外而內，<br>把累趕走</h3>
+      <p class="lines"><span>心態防護衣</span><span>快捷鍵記憶膠</span><span>雙色漩渦微粒</span><span>靈感濃縮核</span></p>
+    </article>
+    <article class="num-card">
+      <div class="num"><b class="outline-1">30</b><span>粒入</span></div>
+      <h3>一天一粒，<br>撐滿一個月</h3>
+      <p class="lines"><span>綠藍雙色硬膠囊</span><span>每粒 21.7 mm</span><span>能量來源：</span><span>台藝龍鳳視傳研究室</span></p>
+    </article>
+    <article class="num-card">
+      <div class="num"><b class="outline-1">0</b><span>秒等待</span></div>
+      <h3>打開軟體，<br>立即生效</h3>
+      <p class="lines"><span>心態崩潰前，溫水吞服一粒</span><span>F 粒子搜集疲勞訊號</span><span>把壞情緒全部集結、</span><span>爆破、消滅。</span></p>
+    </article>
+    <article class="num-card">
+      <div class="num"><b class="outline-1">1</b><span>個好覺</span></div>
+      <h3>最後，<br>記得去睡覺</h3>
+      <p class="lines"><span>如症狀持續超過</span><span>一個專案週期，</span><span>請先去睡覺。</span><span>FROGet 會等你。</span></p>
+    </article>
+  </div>
+</section>
+
+
+<section class="shop-buy" id="buy" aria-label="購買不累不累丸">
+  <div class="buy-inner">
+    <div class="buy-visual">
+      <div class="buy-stage" id="buy-stage"><canvas id="buy-gl" role="img" aria-label="不累不累丸藥瓶，旁邊堆著一些膠囊"></canvas></div>
+    </div>
+    <div class="buy-info">
+      <h2 class="buy-title">不累不累丸｜<span id="buy-name">一瓶 30 粒</span></h2>
+      <p class="buy-price">NT$ <span id="buy-price">399</span></p>
+      <p class="buy-desc">你負責設計，它負責記得照顧你。每天一粒，四層緩釋，陪你撐過每一次壞情緒來臨時。</p>
+
+      <label class="buy-label" for="opt-select">規格</label>
+      <div class="select-wrap">
+        <select id="opt-select" class="buy-select">
+          <option value="399" data-name="一瓶 30 粒" selected>30 粒入・一個月份　NT$ 399</option>
+          <option value="699" data-name="一瓶 60 粒">60 粒入・兩個月份　NT$ 699</option>
+          <option value="899" data-name="期末救命組 90 粒">期末救命組 90 粒　NT$ 899</option>
+        </select>
+      </div>
+
+      <p class="buy-label" id="qty-label">數量</p>
+      <div class="qty-stepper" role="group" aria-labelledby="qty-label">
+        <button class="qty-btn" type="button" id="qty-minus" aria-label="減少數量" disabled>－</button>
+        <output class="qty-value" id="qty" aria-live="polite">1</output>
+        <button class="qty-btn" type="button" id="qty-plus" aria-label="增加數量">＋</button>
+      </div>
+      <div class="buy-actions">
+        <button class="pill-button pill-dark buy-button" type="button" id="add-cart">加入購物車</button>
+        <button class="pill-button pill-secondary buy-button" type="button" id="add-wish" aria-pressed="false">加入願望清單</button>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</section>
+
+<!-- 滑到底：回商店／看另一個商品 -->
+<nav class="back-band" aria-label="繼續逛逛">
+  <div>
+    <p class="back-band-kicker">KEEP BROWSING</p>
+    <p class="back-band-title">逛完了？回商店看看其他照顧自己的方法</p>
+  </div>
+  <div class="back-band-actions">
+    <a class="pill-button pill-primary to-store" href="store.html"><span class="arr">←</span>回商店</a>
+    <a class="pill-button pill-secondary to-other" href="patch.html">看青蛙貼布<span class="arr">→</span></a>
+  </div>
+</nav>
+
+<footer class="site-footer">
+  <div class="site-footer-text">
+    <p class="site-footer-title">FROGet to self-care</p>
+    <p class="site-footer-sub">designer survival guide ｜ 永不喊累</p>
+  </div>
+  <a class="site-footer-home" href="index.html" aria-label="回首頁">
+    <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true"><rect class="bg" x=".5" y=".5" width="55" height="55" rx="27.5"/><rect x=".5" y=".5" width="55" height="55" rx="27.5" stroke="#2B2B2B"/><path d="M19 27.5L28 19.5L37 27.5M22 25.5V36.5H34V25.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke="#000"/></svg>
+  </a>
+</footer>
+
+<script src="frogs/label.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+function startPage(){ (function(){
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = id => document.getElementById(id);
+
+  /* ---------- 內文排版：中英數之間一個半形空格，段尾不留單字 ---------- */
+  const CJK = '\u3400-\u9fff\uf900-\ufaff';
+  const reA = new RegExp('([' + CJK + '])([A-Za-z0-9⌘])', 'g');
+  const reB = new RegExp('([A-Za-z0-9%+])([' + CJK + '])', 'g');
+  function tidy(el){
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(n => { n.nodeValue = n.nodeValue.replace(reA, '$1 $2').replace(reB, '$1 $2').replace(/[ \u00a0]{2,}/g, ' ')
+      .replace(/F[ \u00a0]粒子/g, 'F\u00a0粒子').replace(/F-RECHARGE/g, 'F-\u2060RECHARGE'); });   // 「F 粒子」「F-RECHARGE」不拆開
+    // 中文斷詞：同一個詞的字黏在一起（例如「疲勞」「回收」不會被拆成兩行），只在詞與詞之間換行
+    if (window.Intl && Intl.Segmenter){
+      const seg = new Intl.Segmenter('zh-Hant', {granularity:'word'});
+      nodes.forEach(n => {
+        let out = '';
+        for (const p of seg.segment(n.nodeValue)){ const w = p.segment; out += (p.isWordLike && /[\u3400-\u9fff]/.test(w) && w.length > 1) ? [...w].join('\u2060') : w; }
+        // 標點不放在行首：黏在前一個字後面
+        n.nodeValue = out.replace(/([^\s])([，、；：。！？」』）])/g, '$1\u2060$2').replace(/([「『（])([^\s])/g, '$1\u2060$2');
+      });
+    }
+    // 產品專有名詞整組不拆
+    const KEEP = ['四層緩釋', '緩釋', '心態防護衣', '快捷鍵記憶膠', '雙色漩渦微粒', '靈感濃縮核', '由外而內', '產品設定', '精神續航', '再改一版', '壞情緒', '來臨時', '四層式', '疲勞訊號', '溫水吞服', '空白畫布', '專案週期', '提神飲品', '短暫清醒', '可再設計', '好眠', '好覺'];
+    nodes.forEach(n => { let v = n.nodeValue;
+      KEEP.forEach(k => { const re = new RegExp([...k].join('\u2060?'), 'g'); v = v.replace(re, [...k].join('\u2060')); });
+      n.nodeValue = v; _orig.set(n, v); });
+  }
+  const _orig = new WeakMap();
+
+  /* ---------- 斷行整理：不讓最後一行只剩一兩個字，優先在逗號後換行 ---------- */
+  const WRAP_SEL = '.promo-desc p, .sheet p, .sheet-lead, .sheet-note, .steps li, .spec dd, .caution li, .buy-desc, .hero-sub, .stage-title, .frog-cap, #c-d, .shop-heading, .promo-sub, .foot-row span';
+  const PUNCT = /[，、；：。！？]/;
+  function measureLines(el){
+    const lines = [], w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); let n;
+    while ((n = w.nextNode())){
+      const pe = n.parentElement; if (pe !== el && getComputedStyle(pe).display !== 'inline') continue;   // 略過編號等方塊
+      const t = n.nodeValue;
+      for (let i = 0; i < t.length; i++){
+        if (/[\s\u2060]/.test(t[i])) continue;
+        const rg = document.createRange(); rg.setStart(n, i); rg.setEnd(n, i + 1);
+        const rc = rg.getClientRects()[0]; if (!rc) continue;
+        const y = Math.round(rc.top); let L = lines.find(l => Math.abs(l.y - y) < 4);
+        if (!L){ L = {y, s:''}; lines.push(L); } L.s += t[i];
+      }
+    }
+    return lines.sort((a, b) => a.y - b.y).map(l => l.s);
+  }
+  function lastTextNode(el){
+    const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); let n, last = null;
+    while ((n = w.nextNode())){ const pe = n.parentElement; if ((pe === el || getComputedStyle(pe).display === 'inline') && n.nodeValue.trim()) last = n; }
+    return last;
+  }
+  function wrapFix(el){
+    el.querySelectorAll('*').length; // keep structure
+    const tn = lastTextNode(el); if (!tn) return;
+    if (_orig.has(tn)) tn.nodeValue = _orig.get(tn);
+    const lines = measureLines(el); if (lines.length < 2) return;
+    const last = lines[lines.length - 1].length, prev = lines[lines.length - 2].length;
+    const want = Math.max(5, Math.ceil(prev * 0.4));
+    if (last >= want) return;
+    const arr = [...tn.nodeValue.replace(/\s+$/, '')], vis = [];
+    arr.forEach((c, i) => { if (c !== '\u2060') vis.push(i); });
+    // 找最後一個逗號後面那一句（不含句尾標點），整句一起換到下一行；太長就只帶 want 個字
+    let k = want;
+    for (let j = vis.length - 2; j > 0; j--){ if (PUNCT.test(arr[vis[j]])){ const clause = vis.length - 1 - j; if (clause >= want && clause <= prev * 0.92) k = clause; break; } }
+    k = Math.min(k, vis.length - 1); if (k < 2) return;
+    const cut = vis[vis.length - k];
+    const tail = arr.slice(cut).join('').replace(/\u2060/g, '');   // 尾巴整段黏住
+    tn.nodeValue = arr.slice(0, cut).join('') + [...tail].join('\u2060');
+  }
+  // 複製文字時去掉看不見的「不換行符號」，貼到別處才乾淨
+  document.addEventListener('copy', e => { const t = String(getSelection()); if (!/\u2060/.test(t) || !e.clipboardData) return; e.clipboardData.setData('text/plain', t.replace(/\u2060/g, '')); e.preventDefault(); });
+  function fixAllWraps(){ document.querySelectorAll(WRAP_SEL).forEach(el => { if (el.offsetWidth) wrapFix(el); }); }
+  document.querySelectorAll('.sheet p, .steps li, .spec dd, .caution li, .trow .fx, .hero-tags span, .foot-row span, ' + WRAP_SEL).forEach(tidy);
+  let wrapT; window.addEventListener('resize', () => { clearTimeout(wrapT); wrapT = setTimeout(fixAllWraps, 150); });
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(fixAllWraps);
+
+  /* ---------- Barcode ---------- */
+  (function(){
+    const svg = $('bars'); if (!svg) return; let x = 2, s = 11, html = '';
+    while (x < 118){ s = (s * 9301 + 49297) % 233280; const w = 1 + (s % 3); html += `<rect x="${x}" y="0" width="${w}" height="44" fill="#1B1C1E"/>`; x += w + 1 + ((s >> 3) % 2); }
+    svg.innerHTML = html;
+  })();
+
+  /* ---------- Marquee speeds up with scroll ---------- */
+  const anims = [...document.querySelectorAll('.track')].map(t => t.getAnimations ? t.getAnimations()[0] : null).filter(Boolean);
+  let lastY = window.scrollY, rate = 1;
+  function marqueeTick(){
+    const y = window.scrollY, v = Math.abs(y - lastY); lastY = y;
+    const target = 1 + Math.min(v * 0.25, 7);
+    rate += (target - rate) * 0.08;
+    anims.forEach(a => { a.playbackRate = rate; });
+    requestAnimationFrame(marqueeTick);
+  }
+  if (!reduce && anims.length) requestAnimationFrame(marqueeTick);
+
+
+
+  /* ---------- 連結平滑往下捲 ---------- */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', ev => {
+      const el = document.querySelector(a.getAttribute('href')); if (!el) return;
+      ev.preventDefault();
+      const navH = (document.querySelector('.nav') || {offsetHeight:0}).offsetHeight;
+      const startY = window.scrollY, endY = el.getBoundingClientRect().top + startY - (el.id === 'explode' ? 0 : navH);
+      if (reduce) { window.scrollTo(0, endY); return; }
+      const dist = endY - startY, dur = Math.min(1800, Math.max(1000, Math.abs(dist) * 0.7));
+      const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+      let t0 = null;
+      function step(now){
+        if (t0 === null) t0 = now;
+        const t = Math.min(1, (now - t0) / dur);
+        window.scrollTo(0, startY + dist * ease(t));
+        if (t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  });
+
+  /* ---------- 藥瓶介紹：右欄文字依序出場（區塊露出 60% 才開始、間隔 0.12 秒、只播一次） ----------
+     開場動畫播完（或你自己動手捲）之前不播，避免載入時頁面被捲回上次位置，字在你看不到的時候就先播完了 */
+  window.__promoGate = false;
+  (function(){
+    const sec = $('promo'); if (!sec || reduce) { window.__openPromoGate = () => {}; return; }
+    const els = [...sec.querySelectorAll('.promo-reveal')];
+    const PROMO_IN = { stagger: 0.12, triggerRatio: 0.6 };
+    let done = false;
+    sec.classList.add('is-anim');
+    function tryReveal(){
+      if (done || !window.__promoGate) return;
+      const r = sec.getBoundingClientRect();
+      const seen = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0);
+      if (seen < Math.min(r.height, window.innerHeight) * PROMO_IN.triggerRatio) return;
+      done = true;
+      window.removeEventListener('scroll', tryReveal);
+      els.forEach((el, i) => { el.style.transitionDelay = (i * PROMO_IN.stagger) + 's'; el.classList.add('is-revealed'); });
+    }
+    window.__openPromoGate = () => { window.__promoGate = true; setTimeout(tryReveal, 120); };   // 等自動下捲快到定位再判斷
+    window.addEventListener('scroll', tryReveal, {passive:true});
+    // 你自己捲動、或開場沒辦法播（例如 3D 載入失敗）時，也開放
+    ['wheel', 'touchstart', 'keydown'].forEach(t => window.addEventListener(t, () => { window.__promoGate = true; }, {passive:true, once:true}));
+    setTimeout(() => { if (!window.__promoGate) window.__openPromoGate(); }, 9000);
+  })();
+
+  /* ---------- 產品說明：四張卡依序從右側滑入（跟青蛙貼布頁一樣：間隔 120ms、區塊露出 80% 才開始、只播一次） ---------- */
+  (function(){
+    const sec = $('sheet'); if (!sec || reduce) return;
+    const cards = [...sec.querySelectorAll('.num-card')];
+    const SHEET_IN = { stagger: 120, triggerRatio: 0.8 };
+    sec.classList.add('is-anim');
+    cards.forEach((c, i) => { c.style.transitionDelay = (i * SHEET_IN.stagger) + 'ms'; });
+    const io = new IntersectionObserver(es => {
+      const en = es[0];
+      if (en.intersectionRect.height < Math.min(en.boundingClientRect.height, window.innerHeight) * SHEET_IN.triggerRatio) return;
+      io.disconnect();
+      // 滑到定位後才開放滑鼠移入的抖動，避免跟滑入動作打架
+      cards.forEach(c => c.addEventListener('transitionend', ev => {
+        if (ev.propertyName !== 'transform') return;
+        c.style.transitionDelay = ''; c.classList.add('is-settled');
+      }, {once:true}));
+      sec.classList.add('is-in');
+    }, {threshold: Array.from({length:21}, (_, i) => i / 20)});
+    io.observe(sec);
+  })();
+
+  /* ---------- Promo 圖：捲動時微微放大 ---------- */
+  (function(){
+    const shot = $('promo-shot'); if (!shot || reduce) return;
+    function upd(){
+      const r = shot.getBoundingClientRect(), vh = window.innerHeight;
+      const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height * 0.4)));
+      shot.style.transform = 'scale(' + (0.9 + 0.1 * p).toFixed(4) + ')';
+    }
+    window.addEventListener('scroll', upd, {passive:true}); window.addEventListener('resize', upd); upd();
+  })();
+
+
+  /* ---------- 加入購物車 ---------- */
+  (function(){
+    const select = $('opt-select'), priceEl = $('buy-price'), qtyEl = $('qty'), nameEl = $('buy-name');
+    const btn = $('add-cart'), wish = $('add-wish'), toast = $('toast'), cartBtn = $('cart-button'), countEl = $('cart-count');
+    const minus = $('qty-minus'), plus = $('qty-plus');
+    if (!btn) return;
+    let qty = 1, tTimer, bTimer;
+    // 購物車：存在瀏覽器裡，和青蛙貼布頁、購物車頁（cart.html）共用同一份
+    const CART_KEY = 'froget-cart';
+    const readCart = () => { try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch(e){ return []; } };
+    const writeCart = c => { try { localStorage.setItem(CART_KEY, JSON.stringify(c)); } catch(e){} };
+    const cartQty = () => readCart().reduce((a, it) => a + it.qty, 0);
+    const syncCount = () => { countEl.textContent = cartQty(); };
+    syncCount();
+    window.addEventListener('pageshow', syncCount);                                   // 從購物車頁按上一頁回來時更新
+    window.addEventListener('storage', e => { if (e.key === CART_KEY) syncCount(); });
+    const sel = { get dataset(){ const o = select.options[select.selectedIndex]; return {name:o.dataset.name, price:o.value}; } };
+    function showToast(html){ toast.innerHTML = html; toast.classList.add('show'); clearTimeout(tTimer); tTimer = setTimeout(() => toast.classList.remove('show'), 2200); }
+    function render(){
+      priceEl.textContent = (Number(sel.dataset.price) * qty).toLocaleString();
+      qtyEl.textContent = qty; nameEl.textContent = sel.dataset.name;
+      minus.disabled = qty <= 1; plus.disabled = qty >= 99;
+    }
+    select.addEventListener('change', render);
+    minus.addEventListener('click', () => { qty = Math.max(1, qty - 1); render(); });
+    plus.addEventListener('click', () => { qty = Math.min(99, qty + 1); render(); });
+    btn.addEventListener('click', () => {
+      const c = readCart(), spec = sel.dataset.name, id = 'pill|' + spec;
+      const hit = c.find(it => it.id === id);
+      if (hit) hit.qty = Math.min(99, hit.qty + qty);
+      else c.push({ id, product:'pill', name:'不累不累丸', spec, price:Number(sel.dataset.price), qty });
+      writeCart(c); syncCount();
+      cartBtn.classList.remove('bump'); void cartBtn.offsetWidth; cartBtn.classList.add('bump');
+      showToast('已加入購物車：<b>' + sel.dataset.name + ' × ' + qty + '</b>　<a href="cart.html" style="text-decoration:underline;text-underline-offset:3px">看購物車 →</a>');
+      btn.textContent = '已加入 ✓';
+      clearTimeout(bTimer); bTimer = setTimeout(() => { btn.textContent = '加入購物車'; }, 1600);
+    });
+    wish.addEventListener('click', () => {
+      const on = wish.getAttribute('aria-pressed') !== 'true';
+      wish.setAttribute('aria-pressed', on);
+      wish.textContent = on ? '已加入願望清單' : '加入願望清單';
+      showToast(on ? '已加入願望清單' : '已從願望清單移除');
+    });
+    render();
+  })();
+
+  /* ---------- Card content ---------- */
+  const steps = [
+    {k:'00 / 04', part:'外觀', n:'完整膠囊', d:'綠藍雙色硬膠囊，長 21.7 mm。往下滑，把它一層一層拆開。', m:'1 粒'},
+    {k:'01 / 04', part:'上半殼', n:'心態防護衣', d:'老師說「感覺不太對」時，降低心跳上升的幅度。', m:'綠殼'},
+    {k:'02 / 04', part:'下半殼', n:'快捷鍵記憶膠', d:'可以記得所有快捷鍵。', m:'透明漸層殼'},
+    {k:'03 / 04', part:'微粒', n:'雙色漩渦微粒', d:'粉底：心累修復酶。白底：濃縮咖啡因。沉在膠囊底部，越轉越有精神。', m:'各 60 mg'},
+    {k:'04 / 04', part:'核心', n:'靈感濃縮核', d:'藏在膠囊正中央的一張青蛙臉。對著空白畫布發呆超過 15 分鐘時，會跳出來對你「喵」一聲。', m:'120 mg'},
+    {k:'完成', part:'組合完成', n:'重新組合', d:'四層各司其職，合起來就是你明天的精神。', m:'每日 1 粒'}
+  ];
+  const bars = [...document.querySelectorAll('#progress i')];
+  let curStep = -1, curStepSwapped = false;
+  function setStep(i){
+    if (i === curStep) return; curStep = i;
+    const s = steps[i];
+    $('c-k').textContent = s.k; $('c-part').textContent = s.part; $('c-n').textContent = s.n;
+    $('c-d').textContent = s.d; $('c-m').textContent = s.m;
+    tidy($('c-d')); if ($('c-d').offsetWidth) wrapFix($('c-d'));
+    bars.forEach((b, j) => b.classList.toggle('on', j <= i));
+    const cardEl = document.querySelector('.stage .card');   // 換層時卡片彈一下、內容換進來
+    if (cardEl && i > 0 || (cardEl && curStepSwapped)){ cardEl.classList.remove('swap'); void cardEl.offsetWidth; cardEl.classList.add('swap'); }
+    curStepSwapped = true;
+  }
+  setStep(0);
+
+  /* ---------- Three.js scene ---------- */
+  if (typeof THREE === 'undefined') { $('fallback').textContent = '3D 套件載入失敗：請確認有連上網路，並用 Chrome／Safari 直接開啟這個檔案（VS Code 內建預覽可能會擋外部程式）。'; $('fallback').style.display = 'grid'; return; }
+  const canvas = $('gl');
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true}); }
+  catch(e){ $('fallback').textContent = '瀏覽器沒有開啟 WebGL（3D 繪圖）：請把瀏覽器完全關掉再開，或到 Chrome 設定開啟「使用圖形加速」。'; $('fallback').style.display = 'grid'; return; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.toneMapping = THREE.NoToneMapping;
+
+  /* ========== 共用：所有 3D 模型的描邊、材質、陰影都從這裡來，確保一致 ========== */
+  // 光線：全站同一個方向
+  const LIT_GLSL = `
+    vec3 litColor(vec3 base, vec3 n, vec3 v, float spec, float shin){
+      vec3 L = normalize(vec3(-0.45, 0.6, 0.7));
+      float wrap = clamp((dot(n, L) + 0.35) / 1.35, 0.0, 1.0);
+      vec3 c = base * mix(0.76, 1.0, wrap);                         // 暗部統一壓到 76%
+      vec3 h = normalize(L + v);
+      c += vec3(spec) * pow(max(dot(n, h), 0.0), shin);            // 依材質的光澤
+      c += vec3(0.05) * pow(1.0 - max(dot(n, v), 0.0), 3.0);       // 一點邊緣光
+      return c;
+    }`;
+  const LIT_VS = `varying vec3 vN; varying vec3 vV; varying vec2 vUv;
+    void main(){ vUv = uv; vec4 p = vec4(position, 1.0); vec3 nn = normal;
+      #ifdef USE_INSTANCING
+        p = instanceMatrix * p; nn = mat3(instanceMatrix) * nn;
+      #endif
+      vN = normalize(normalMatrix * nn); vec4 mv = modelViewMatrix * p; vV = -mv.xyz; gl_Position = projectionMatrix * mv; }`;
+  // 材質：膠囊明膠亮面、塑膠半亮、紙標籤霧面、糖果略亮、青蛙皮膚霧面
+  const MAT = { gelatin:{spec:0.32, shin:70}, plastic:{spec:0.16, shin:36}, paper:{spec:0.03, shin:14}, sugar:{spec:0.12, shin:28}, matte:{spec:0.05, shin:18} };
+  function litMat(hex, o){
+    o = o || {}; const c = new THREE.Color(hex);
+    return new THREE.ShaderMaterial({
+      uniforms:{ col:{value:new THREE.Vector3(c.r, c.g, c.b)}, map:{value:o.map || null}, spec:{value:o.spec}, shin:{value:o.shin} },
+      defines: o.map ? {USE_MAP:''} : {},
+      side: o.side || THREE.FrontSide,
+      vertexShader: LIT_VS,
+      fragmentShader: `uniform vec3 col; uniform float spec; uniform float shin; uniform sampler2D map;
+        varying vec3 vN; varying vec3 vV; varying vec2 vUv; ${LIT_GLSL}
+        void main(){ vec3 n = normalize(vN); if (!gl_FrontFacing) n = -n; vec3 base = col;
+          #ifdef USE_MAP
+            base *= texture2D(map, vUv).rgb;
+          #endif
+          gl_FragColor = vec4(litColor(base, n, normalize(vV), spec, shin), 1.0); }`
+    });
+  }
+  // 描邊：在螢幕上固定像素寬（不管物件多大、離鏡頭多遠，線都一樣粗）
+  const OUTLINE_PX = 1, INK = 0x1b1c1e;
+  function makeOutlineMat(noBias){
+    return new THREE.ShaderMaterial({
+      uniforms:{ res:{value:new THREE.Vector2(800, 600)}, px:{value:OUTLINE_PX}, ink:{value:new THREE.Color(INK)} },
+      side: THREE.BackSide,
+      vertexShader:`attribute vec3 sNormal; uniform vec2 res; uniform float px;
+        void main(){
+          vec4 p = vec4(position, 1.0); vec3 sn = sNormal;
+          #ifdef USE_INSTANCING
+            p = instanceMatrix * p; sn = mat3(instanceMatrix) * sn;
+          #endif
+          vec4 c = projectionMatrix * modelViewMatrix * p;
+          vec3 nv = normalize(normalMatrix * sn);
+          vec2 d = (projectionMatrix * vec4(nv, 0.0)).xy;
+          float l = length(d); d = l > 1e-5 ? d / l : vec2(0.0);
+          c.xy += d * px * 2.0 / res * c.w;
+          ${noBias ? '' : 'c.z += 0.0008 * c.w;'}
+          gl_Position = c; }`,
+      fragmentShader:`uniform vec3 ink; void main(){ gl_FragColor = vec4(ink, 1.0); }`
+    });
+  }
+  function syncOutline(mat, rend){
+    const pr = rend.getPixelRatio(), sz = rend.getSize(new THREE.Vector2());
+    mat.uniforms.res.value.set(sz.x * pr, sz.y * pr); mat.uniforms.px.value = OUTLINE_PX * pr * (mat.userData.k || 1);
+    const rm = mat.userData.rim; if (rm && rm !== mat){ const pr2 = rend.getPixelRatio(); rm.uniforms.res.value.copy(mat.uniforms.res.value); rm.uniforms.px.value = OUTLINE_PX * pr2 * 0.55; /* 細圓環兩側都會描，各半寬 → 看起來跟外框一樣粗 */ }
+  }
+  // 開口邊線：極細的隱形圓環＋同一種螢幕固定寬描邊（跟外框同一個粗細）
+  const _hidden = new THREE.MeshBasicMaterial({colorWrite:false, depthWrite:false});
+  function rimMatFor(ol){ if (!ol.userData.rim){ const m = makeOutlineMat(true); m.side = THREE.DoubleSide; /* 雙面：細圓環前後都描，才會是一條實線而不是兩條細線 */ ol.userData.rim = m; } return ol.userData.rim; }
+  function rimLine(parent, R, y, ol){
+    const t = new THREE.Mesh(new THREE.TorusGeometry(R + 0.002, 0.0006, 6, 160), _hidden);
+    t.rotation.x = Math.PI / 2; t.position.y = y;
+    t.add(new THREE.Mesh(smoothGeo(t.geometry), rimMatFor(ol))); parent.add(t); return t;
+  }
+  // 平滑法線（同一位置的點共用法線），描邊在稜角處才不會裂開
+  const _smooth = new WeakMap();
+  function smoothGeo(geo){
+    if (_smooth.has(geo)) return _smooth.get(geo);
+    const g2 = geo.clone(); if (!g2.attributes.normal) g2.computeVertexNormals();
+    const pos = g2.attributes.position, nor = g2.attributes.normal, n = pos.count, idx = new Map(), acc = [], ids = new Array(n);
+    for (let i = 0; i < n; i++){
+      const k = Math.round(pos.getX(i) * 1e4) + '_' + Math.round(pos.getY(i) * 1e4) + '_' + Math.round(pos.getZ(i) * 1e4);
+      let id = idx.get(k); if (id === undefined){ id = acc.length; idx.set(k, id); acc.push(new THREE.Vector3()); }
+      ids[i] = id; acc[id].x += nor.getX(i); acc[id].y += nor.getY(i); acc[id].z += nor.getZ(i);
+    }
+    acc.forEach(v => v.normalize());
+    const sn = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++){ const v = acc[ids[i]]; sn[i*3] = v.x; sn[i*3+1] = v.y; sn[i*3+2] = v.z; }
+    g2.setAttribute('sNormal', new THREE.BufferAttribute(sn, 3)); _smooth.set(geo, g2); return g2;
+  }
+  // 陰影：全站同一種柔和接觸陰影
+  const shadowTex = (() => {
+    const c = document.createElement('canvas'); c.width = c.height = 128;
+    const g = c.getContext('2d'), grd = g.createRadialGradient(64, 64, 2, 64, 64, 62);
+    grd.addColorStop(0, 'rgba(27,28,30,0.30)'); grd.addColorStop(0.55, 'rgba(27,28,30,0.12)'); grd.addColorStop(1, 'rgba(27,28,30,0)');
+    g.fillStyle = grd; g.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c);
+  })();
+  function contactShadow(){ return new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({map:shadowTex, transparent:true, depthWrite:false})); }
+  const olMain = makeOutlineMat(); rimMatFor(olMain);
+  // 膠囊上下殼專用描邊（萊姆綠，調校台定的顏色）；糖果、青蛙、瓶子維持黑線
+  const SHELL_INK = 0xc8fa64;
+  const olShell = makeOutlineMat(); olShell.uniforms.ink.value.set(SHELL_INK);
+  rimMatFor(olShell).uniforms.ink.value.set(SHELL_INK);
+  // 玻璃下殼用：只畫輪廓附近的描邊，透明殼後面那一大片背面不畫（糖果飛到殼後面也不會被擋掉）
+  const olGlass = makeOutlineMat(); olGlass.uniforms.ink.value.set(SHELL_INK);
+  olGlass.vertexShader = olGlass.vertexShader.replace('void main(){', 'varying float vFace;\n        void main(){').replace('gl_Position = c;', 'gl_Position = c; vFace = dot(nv, normalize(-(modelViewMatrix * p).xyz));');
+  olGlass.fragmentShader = 'uniform vec3 ink; varying float vFace; void main(){ if (vFace < -0.3) discard; gl_FragColor = vec4(ink, 1.0); }';
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+  camera.position.set(0, 0, 10);
+
+
+  const root = new THREE.Group(); scene.add(root);
+  const pillShadow = contactShadow(); pillShadow.position.set(0, -2.55, -1); scene.add(pillShadow);
+  const pill = new THREE.Group(); root.add(pill);
+  pill.rotation.z = 0.18;
+
+  function capGeo(R, yStart, yCyl){
+    const pts = [new THREE.Vector2(R, yStart), new THREE.Vector2(R, yCyl)];
+    for (let i = 1; i <= 24; i++){ const a = (i/24) * Math.PI/2; pts.push(new THREE.Vector2(Math.max(R*Math.cos(a), 0.0001), yCyl + R*Math.sin(a))); }
+    return new THREE.LatheGeometry(pts, 72);
+  }
+  // 描邊：所有模型共用同一種（螢幕固定寬度）
+  function outline(mesh, s, mat){ const o = new THREE.Mesh(smoothGeo(mesh.geometry), mat || olMain); mesh.add(o); return o; }
+  function pillGeo(r, len){ // 小膠囊形（高光條用）
+    const pts = [];
+    for (let i = 0; i <= 10; i++){ const a = -Math.PI/2 + (i/10) * Math.PI/2; pts.push(new THREE.Vector2(Math.max(r*Math.cos(a),0.0001), -len/2 + r*Math.sin(a))); }
+    for (let i = 0; i <= 10; i++){ const a = (i/10) * Math.PI/2; pts.push(new THREE.Vector2(Math.max(r*Math.cos(a),0.0001), len/2 + r*Math.sin(a))); }
+    return new THREE.LatheGeometry(pts, 24);
+  }
+  // 均勻厚度的描邊：用「半徑加厚、半球圓心不變」的同形狀做背面黑殼，側邊和圓頭的線一樣粗
+  function shellOutline(mesh){ return outline(mesh); }
+  // 平貼的高光貼紙：白色圓角形＋外圈細黑邊（比立體小球乾淨，不會破圖）
+  const inkFlat = new THREE.MeshBasicMaterial({color:INK}), whiteFlat = new THREE.MeshBasicMaterial({color:0xffffff});
+  function stadium(w, h){
+    const r = Math.min(w, h) / 2, sh = new THREE.Shape(), hw = w / 2 - r, hh = h / 2 - r;
+    sh.absarc(hw, hh, r, 0, Math.PI / 2, false); sh.absarc(-hw, hh, r, Math.PI / 2, Math.PI, false);
+    sh.absarc(-hw, -hh, r, Math.PI, Math.PI * 1.5, false); sh.absarc(hw, -hh, r, Math.PI * 1.5, Math.PI * 2, false);
+    return sh;
+  }
+  function sticker(w, h, line){
+    const g = new THREE.Group();
+    const o = new THREE.Mesh(new THREE.ShapeGeometry(stadium(w + line * 2, h + line * 2), 20), inkFlat);
+    const f = new THREE.Mesh(new THREE.ShapeGeometry(stadium(w, h), 20), whiteFlat);
+    f.position.z = 0.0015; g.add(o, f); return g;
+  }
+  const Z_AXIS = new THREE.Vector3(0, 0, 1);
+  function placeOnSurface(obj, nx, nz, R, y){
+    const n = new THREE.Vector3(nx, 0, nz).normalize();
+    obj.position.set(n.x * R, y, n.z * R);
+    obj.quaternion.setFromUnitVectors(Z_AXIS, n);
+  }
+
+  // 01 上殼：乳白半透光明膠殼，有真實厚度（參數來自上殼調校台）
+  const CAPTOP = {"thick":0.042,"lipRound":1,"base":"#c8fa6e","milk":0.12,"opacity":0.88,"sss":0.55,"sssColor":"#efffbf","sssSpread":0.5,"wrap":0.5,"shadow":0.72,"spec":0.5,"gloss":70,"env":0.22,"rim":0.35,"innerDark":0.72,"innerAO":0.55,"innerGlow":0.6,"lipBright":0.4,"rimLines":true,"lightAz":-33,"lightEl":36};
+  const R_TOP = 0.628, R_TOP_IN = R_TOP - CAPTOP.thick, R_BOT = R_TOP_IN - 0.003, OL = 0.016;
+  const CAPBOT = {"thick":0.019,"lipRound":1,"blue":"#00dcff","gradStart":0,"gradEnd":0.62,"blueAlpha":0.49,"clearAlpha":0.33,"tint":0,"diffuse":0.04,"env":0.55,"streak":1.5,"fresPow":3.5,"fresAlpha":0.55,"edgeTint":0.51,"spec":1.05,"gloss":216,"innerAlpha":0.8,"lipBright":0.6,"lipAlpha":0.85,"rimLines":true};   // 下殼半徑跟著上殼內徑走，才套得進去
+  const TOP_Y0 = -0.15, TOP_YC = 0.72;
+  const capTop = new THREE.Group();
+  {
+    const C = CAPTOP, az = C.lightAz * Math.PI / 180, el = C.lightEl * Math.PI / 180;
+    const U = {
+      uBase:{value:new THREE.Color(C.base)}, uSSSCol:{value:new THREE.Color(C.sssColor)},
+      uMilk:{value:C.milk}, uOpacity:{value:C.opacity}, uSSS:{value:C.sss}, uSpread:{value:C.sssSpread},
+      uWrap:{value:C.wrap}, uShadow:{value:C.shadow}, uSpec:{value:C.spec}, uGloss:{value:C.gloss}, uEnv:{value:C.env}, uRim:{value:C.rim},
+      uInnerDark:{value:C.innerDark}, uInnerAO:{value:C.innerAO}, uInnerGlow:{value:C.innerGlow}, uLip:{value:C.lipBright},
+      uThick:{value:C.thick}, uL:{value:new THREE.Vector3(Math.cos(el) * Math.sin(az), Math.sin(el), Math.cos(el) * Math.cos(az))},
+      uY0:{value:TOP_Y0}, uYTop:{value:TOP_YC + R_TOP_IN}
+    };
+    const VS = `varying vec3 vN; varying vec3 vV; varying float vY;
+      void main(){ vY = position.y; vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        vN = normalize(normalMatrix * normal); vV = -mv.xyz; gl_Position = projectionMatrix * mv; }`;
+    const FS = `uniform vec3 uBase; uniform vec3 uSSSCol; uniform vec3 uL;
+      uniform float uMilk, uOpacity, uSSS, uSpread, uWrap, uShadow, uSpec, uGloss, uEnv, uRim;
+      uniform float uInnerDark, uInnerAO, uInnerGlow, uLip, uThick, uY0, uYTop;
+      varying vec3 vN; varying vec3 vV; varying float vY;
+      vec3 envCol(vec3 r){
+        vec3 e = mix(vec3(0.80, 0.82, 0.84), vec3(1.0), smoothstep(-0.25, 0.6, r.y));
+        e += vec3(0.9) * smoothstep(0.86, 0.96, dot(r, normalize(vec3(-0.5, 0.55, 0.65))));
+        e += vec3(0.35) * smoothstep(0.9, 0.98, dot(r, normalize(vec3(0.75, 0.2, 0.6))));
+        return e;
+      }
+      void main(){
+        vec3 n = normalize(vN); if (!gl_FrontFacing) n = -n;
+        vec3 v = normalize(vV); vec3 L = normalize(uL);
+        vec3 alb = mix(uBase, vec3(1.0), uMilk * 0.45);
+        float ndl = dot(n, L);
+        float wd = clamp((ndl + uWrap) / (1.0 + uWrap), 0.0, 1.0);
+        float thin = 1.0 - smoothstep(0.004, 0.08, uThick);
+      #if defined(OUTER)
+        vec3 col = alb * mix(uShadow, 1.0, wd);
+        vec3 H = normalize(L + n * uSpread);
+        float back = pow(clamp(dot(v, -H), 0.0, 1.0), 3.0);
+        float term = pow(1.0 - abs(ndl), 3.0);
+        col += uSSSCol * uSSS * (0.6 * back + 0.35 * term) * mix(0.55, 1.0, thin);
+        col = mix(col, uSSSCol, clamp(uSSS * 0.14 * (1.0 - wd), 0.0, 1.0));
+        vec3 h = normalize(L + v);
+        float sp = pow(max(dot(n, h), 0.0), uGloss) * uSpec * (uGloss + 8.0) / 25.13 * 0.35;
+        float F = pow(1.0 - max(dot(n, v), 0.0), 4.0);
+        col = mix(col, envCol(reflect(-v, n)), clamp(uEnv * (0.12 + 0.88 * F), 0.0, 1.0));
+        col += vec3(sp);
+        col += vec3(1.0) * F * uRim * (0.3 + 0.7 * uMilk);
+        gl_FragColor = vec4(col, mix(uOpacity, 1.0, F * 0.7));
+      #elif defined(INNER)
+        vec3 col = alb * uInnerDark * mix(uShadow, 1.0, wd);
+        float depth = smoothstep(uY0, uYTop, vY);
+        col *= mix(1.0, 1.0 - uInnerAO * 0.45, depth);
+        col += uSSSCol * uSSS * 0.22 * mix(1.0, 0.6, depth);
+        float through = max(dot(-n, L), 0.0);
+        col += uSSSCol * uSSS * uInnerGlow * through * 0.5 * mix(0.6, 1.0, thin);
+        vec3 h = normalize(L + v);
+        col += vec3(pow(max(dot(n, h), 0.0), max(uGloss * 0.5, 4.0)) * uSpec * 0.12);
+        gl_FragColor = vec4(col, 1.0);
+      #else
+        vec3 col = mix(alb, vec3(1.0), uLip * 0.6) * mix(uShadow, 1.0, wd) + uSSSCol * uSSS * 0.18;
+        gl_FragColor = vec4(col, 1.0);
+      #endif
+      }`;
+    const mk = (kind, side) => new THREE.ShaderMaterial({ uniforms:U, vertexShader:VS, fragmentShader:FS, defines:{[kind]:''}, side });
+    const outerM = mk('OUTER', THREE.FrontSide); outerM.transparent = true; outerM.depthWrite = false;
+    const innerM = mk('INNER', THREE.BackSide), lipM = mk('LIP', THREE.DoubleSide);
+    // 剖面輪廓：外殼、內壁、開口圓唇
+    const t = C.thick, Ri = R_TOP_IN, rl = C.lipRound * t * 0.5, N = 32, V2 = THREE.Vector2;
+    const dome = (r, arr) => { for (let i = 1; i <= N; i++){ const a = (i / N) * Math.PI / 2; arr.push(new V2(Math.max(r * Math.cos(a), 0.0001), TOP_YC + r * Math.sin(a))); } return arr; };
+    const outerP = dome(R_TOP, [new V2(R_TOP, TOP_Y0 + rl), new V2(R_TOP, TOP_YC)]);
+    const innerP = dome(Ri, [new V2(Ri, TOP_Y0 + rl), new V2(Ri, TOP_YC)]);
+    let lipP;
+    if (rl < 1e-5) lipP = [new V2(Ri, TOP_Y0), new V2(R_TOP, TOP_Y0)];
+    else {
+      lipP = [];
+      for (let k = 0; k <= 8; k++){ const a = Math.PI + (k / 8) * Math.PI / 2; lipP.push(new V2(Ri + rl + rl * Math.cos(a), TOP_Y0 + rl + rl * Math.sin(a))); }
+      for (let k = 0; k <= 8; k++){ const a = 1.5 * Math.PI + (k / 8) * Math.PI / 2; lipP.push(new V2(R_TOP - rl + rl * Math.cos(a), TOP_Y0 + rl + rl * Math.sin(a))); }
+    }
+    const SEG = 128;
+    const inner = new THREE.Mesh(new THREE.LatheGeometry(innerP, SEG), innerM); inner.renderOrder = 1;
+    const lip = new THREE.Mesh(new THREE.LatheGeometry(lipP, SEG), lipM); lip.renderOrder = 1;
+    const outer = new THREE.Mesh(new THREE.LatheGeometry(outerP, SEG), outerM); outer.renderOrder = 10;   // 最後畫，才透得到裡面的下殼
+    // 外框：唇邊＋外殼合成一個輪廓來描，接縫處線不會變粗
+    const hull = new THREE.Mesh(smoothGeo(new THREE.LatheGeometry(lipP.concat(outerP.slice(1)), SEG)), olShell);
+    capTop.add(inner, lip, outer, hull);
+    if (C.rimLines){ rimLine(capTop, R_TOP, TOP_Y0 + rl, olShell); rimLine(capTop, Ri - 0.004, TOP_Y0 + rl, olShell); }   // 開口內外兩圈邊線（合起來時外圈就是接縫線）
+  }
+
+  // 02 下殼：清透玻璃，藍色從接縫淡出成透明（參數來自調校台）
+  const capBot = new THREE.Group();
+  capBot.rotation.x = Math.PI;
+  let botRim;
+  {
+    const C = CAPBOT, TOP_L = capTop.children[0].material.uniforms.uL;   // 跟上殼同一個光源方向
+    const B_Y0 = -0.35, B_YC = 0.72;
+    const UB = {
+      uBlue:{value:new THREE.Color(C.blue)}, uGS:{value:C.gradStart}, uGE:{value:C.gradEnd}, uBA:{value:C.blueAlpha}, uCA:{value:C.clearAlpha}, uTint:{value:C.tint},
+      uDiff:{value:C.diffuse}, uEnv:{value:C.env}, uStreak:{value:C.streak}, uFP:{value:C.fresPow}, uFA:{value:C.fresAlpha}, uEdge:{value:C.edgeTint},
+      uSpec:{value:C.spec}, uGloss:{value:C.gloss}, uInA:{value:C.innerAlpha}, uLip:{value:C.lipBright}, uLipA:{value:C.lipAlpha},
+      uY0:{value:B_Y0}, uYT:{value:B_YC + R_BOT}, uL:TOP_L
+    };
+    const VS = `varying vec3 vN; varying vec3 vV; varying float vY;
+      void main(){ vY = position.y; vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        vN = normalize(normalMatrix * normal); vV = -mv.xyz; gl_Position = projectionMatrix * mv; }`;
+    const FS = `uniform vec3 uBlue; uniform vec3 uL;
+      uniform float uGS, uGE, uBA, uCA, uTint, uDiff, uEnv, uStreak, uFP, uFA, uEdge, uSpec, uGloss, uInA, uLip, uLipA, uY0, uYT;
+      varying vec3 vN; varying vec3 vV; varying float vY;
+      vec3 envCol(vec3 r){
+        vec3 e = mix(vec3(0.80, 0.82, 0.84), vec3(1.0), smoothstep(-0.25, 0.6, r.y));
+        e += vec3(0.9) * smoothstep(0.86, 0.96, dot(r, normalize(vec3(-0.5, 0.55, 0.65))));
+        e += vec3(0.35) * smoothstep(0.9, 0.98, dot(r, normalize(vec3(0.75, 0.2, 0.6))));
+        return e;
+      }
+      void main(){
+        vec3 n = normalize(vN); if (!gl_FrontFacing) n = -n;
+        vec3 v = normalize(vV); vec3 L = normalize(uL);
+        float t = clamp((vY - uY0) / (uYT - uY0), 0.0, 1.0);
+        float g = smoothstep(uGS, max(uGE, uGS + 0.001), t);
+        vec3 clearCol = mix(vec3(1.0), uBlue, uTint);
+        vec3 base = mix(uBlue, clearCol, g);
+        float wd = clamp((dot(n, L) + 0.5) / 1.5, 0.0, 1.0);
+      #if defined(LIP)
+        gl_FragColor = vec4(mix(base, vec3(1.0), uLip * 0.7) * mix(0.82, 1.0, wd), max(uLipA, mix(uBA, uCA, g)));
+      #else
+        vec3 col = base * mix(1.0, mix(0.72, 1.0, wd), uDiff * (1.0 - 0.7 * g));
+        float F = pow(1.0 - max(dot(n, v), 0.0), uFP);
+        vec3 edgeCol = mix(uBlue * 0.55, clearCol * 0.9, g * 0.8);
+        col = mix(col, edgeCol, clamp(F * uEdge, 0.0, 1.0));
+        vec3 r = reflect(-v, n);
+        vec3 env = mix(envCol(r), vec3(0.97, 0.99, 1.0), 0.6);
+        float streak = smoothstep(0.1, 0.0, abs(r.x + 0.42)) * smoothstep(-0.7, 0.1, r.y) * uStreak;
+        float er = clamp(uEnv * (0.06 + 0.94 * F), 0.0, 1.0);
+        col = mix(col, env, er) + vec3(streak);
+        float sp = pow(max(dot(n, normalize(L + v)), 0.0), uGloss) * uSpec;
+        col += vec3(sp);
+        float a = max(max(mix(uBA, uCA, g), F * uFA), er * 0.4);
+        a = clamp(a + sp + streak * 0.8, 0.0, 1.0);
+        #if defined(INNER)
+          a *= uInA;
+        #endif
+        gl_FragColor = vec4(col, a);
+      #endif
+      }`;
+    const mk = (kind, side) => { const m = new THREE.ShaderMaterial({ uniforms:UB, vertexShader:VS, fragmentShader:FS, defines:{[kind]:''}, side, transparent:true }); m.depthWrite = false; return m; };
+    const t = C.thick, Ri = R_BOT - t, rl = C.lipRound * t * 0.5, N = 32, V2 = THREE.Vector2;
+    const dome = (r, arr) => { for (let i = 1; i <= N; i++){ const a = (i / N) * Math.PI / 2; arr.push(new V2(Math.max(r * Math.cos(a), 0.0001), B_YC + r * Math.sin(a))); } return arr; };
+    const outerP = dome(R_BOT, [new V2(R_BOT, B_Y0 + rl), new V2(R_BOT, B_YC)]);
+    const innerP = dome(Ri, [new V2(Ri, B_Y0 + rl), new V2(Ri, B_YC)]);
+    let lipP;
+    if (rl < 1e-5) lipP = [new V2(Ri, B_Y0), new V2(R_BOT, B_Y0)];
+    else {
+      lipP = [];
+      for (let k = 0; k <= 8; k++){ const a = Math.PI + (k / 8) * Math.PI / 2; lipP.push(new V2(Ri + rl + rl * Math.cos(a), B_Y0 + rl + rl * Math.sin(a))); }
+      for (let k = 0; k <= 8; k++){ const a = 1.5 * Math.PI + (k / 8) * Math.PI / 2; lipP.push(new V2(R_BOT - rl + rl * Math.cos(a), B_Y0 + rl + rl * Math.sin(a))); }
+    }
+    const SEG = 128;
+    const innerGeo = new THREE.LatheGeometry(innerP, SEG);
+    const inner = new THREE.Mesh(innerGeo, mk('INNER', THREE.BackSide)); inner.renderOrder = 3;
+    const lip = new THREE.Mesh(new THREE.LatheGeometry(lipP, SEG), mk('LIP', THREE.DoubleSide)); lip.renderOrder = 4;
+    const outer = new THREE.Mesh(new THREE.LatheGeometry(outerP, SEG), mk('OUTER', THREE.FrontSide)); outer.renderOrder = 5;
+    const hull = new THREE.Mesh(smoothGeo(new THREE.LatheGeometry(lipP.concat(outerP.slice(1)), SEG)), olGlass);
+    capBot.add(inner, lip, outer, hull);
+    // 開口內外兩圈邊線：只在拆開、開口露出來時才顯示（合起來時藏在上殼裡）
+    botRim = new THREE.Group(); capBot.add(botRim);
+    if (C.rimLines){ rimLine(botRim, R_BOT, B_Y0 + rl, olShell); rimLine(botRim, Ri - 0.004, B_Y0 + rl, olShell); }
+    botRim.visible = false;
+  }
+  pill.add(capTop, capBot);
+  // 下殼的插畫風長條高光已拿掉，改用玻璃直條反光
+
+  // 04 漩渦糖：粉底白漩渦／白底粉漩渦
+  // 舊的平面漩渦貼圖已不用：糖果改成液態玻璃球、青蛙換成新頭型
+  // 03 漩渦糖：液態玻璃球，漩渦絲帶封在裡面，不描邊（參數來自漩渦糖調校台）
+  const BEADS = {"size":0.14,"ior":2,"absorb":2.7,"bodyMin":0.37,"env":0.5,"spec":1.2,"gloss":260,"rim":0.5,"edge":0.35,"caustic":0.6,"pinkBody":"#fb6291","pinkMilk":0.1,"pinkRib":"#ffffff","whiteBody":"#ffffff","whiteMilk":0.55,"whiteRib":"#ff7aa5","arms":1,"tight":11.4,"twist":-8,"ribW":0.49,"ribSoft":0.08,"ribH":0.05,"ribR":0.9,"ribA":1.35,"flow":2,"wobAmp":0.05,"wobFreq":1,"wobSpeed":1,"wobIdle":0.15};
+  const beadTime = {value:0};
+  // 20 顆位置：繞開下殼中央的青蛙（合起來時青蛙待在那裡），青蛙正前方留空，正面看得到臉
+  const homes = [[0.38,-0.38,0.06],[-0.30,-1.00,-0.04],[-0.31,-0.30,-0.25],[-0.16,-0.30,0.36],[0.30,-0.94,-0.18],[0.11,-0.91,0.35],[0.14,-0.50,-0.36],[-0.38,-0.60,0.13],[-0.20,-0.73,-0.34],[0.05,-1.10,0.04],
+    [0.39,-0.76,0.12],[0.18,-0.32,0.33],[-0.04,-1.01,-0.27],[-0.19,-0.90,0.25],[-0.22,-0.30,0.05],[0.37,-0.60,-0.14],[0.31,-0.30,-0.22],[0.14,-0.79,-0.38],[-0.02,-0.30,-0.22],[-0.36,-0.56,-0.16]];
+  const beads = (() => {
+    const B = BEADS;
+    const VS = `
+      uniform float uTime, uPhase, uWob, uWobAmp, uWobFreq;
+      varying vec3 vVP; varying vec3 vNV; varying vec3 vC; varying float vS; varying mat3 vRot;
+      void main(){
+        vec3 p = position;
+        float w = uWob * uWobAmp;
+        float d = w * (sin(p.y * uWobFreq * 3.0 + uTime * 7.0 + uPhase) * 0.6 + sin(p.x * uWobFreq * 2.0 - uTime * 5.3 + uPhase * 1.7) * 0.4);
+        vec3 grad = vec3(cos(p.x * uWobFreq * 2.0 - uTime * 5.3 + uPhase * 1.7) * 0.4 * uWobFreq * 2.0, cos(p.y * uWobFreq * 3.0 + uTime * 7.0 + uPhase) * 0.6 * uWobFreq * 3.0, 0.0) * w;
+        p += normal * d;
+        vec3 nObj = normalize(normal - (grad - normal * dot(grad, normal)));
+        vec4 mv = modelViewMatrix * vec4(p, 1.0);
+        vVP = mv.xyz; vNV = normalize(normalMatrix * nObj);
+        vC = (modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+        vS = length(modelViewMatrix[0].xyz);
+        mat3 m = mat3(modelViewMatrix) / vS;
+        vRot = mat3(m[0].x, m[1].x, m[2].x, m[0].y, m[1].y, m[2].y, m[0].z, m[1].z, m[2].z);
+        gl_Position = projectionMatrix * mv;
+      }`;
+    // 沿著折射後的視線在球裡走一段，累積漩渦絲帶的顏色（像彈珠裡的彩色絲帶）
+    const FS = `
+      uniform vec3 uL; uniform vec3 uBody; uniform vec3 uRib; uniform float uMilk;
+      uniform float uIor, uAbsorb, uBodyMin, uEnv, uSpec, uGloss, uRim, uEdge, uCaustic;
+      uniform float uArms, uTight, uTwist, uRW, uRSoft, uRH, uRR, uRA, uFlow, uTime, uPhase;
+      varying vec3 vVP; varying vec3 vNV; varying vec3 vC; varying float vS; varying mat3 vRot;
+      void main(){
+        vec3 V = normalize(-vVP); vec3 nV = normalize(vNV);
+        vec3 ro = vRot * (-vC) / vS;
+        vec3 p = normalize(vRot * (vVP - vC) / vS);
+        vec3 rd = normalize(p - ro);
+        vec3 rIn = refract(rd, p, 1.0 / uIor);
+        if (dot(rIn, rIn) < 0.5) rIn = rd;
+        float tEx = max(-2.0 * dot(p, rIn), 0.0);
+        const int N = 36;
+        float dt = tEx / float(N);
+        vec3 acc = vec3(0.0); float aAcc = 0.0;
+        float jit = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
+        for (int i = 0; i < N; i++){
+          vec3 q = p + rIn * (float(i) + jit) * dt;
+          float rho = length(q.xz);
+          float ph = atan(q.z, q.x) * uArms - rho * uTight + q.y * uTwist + uTime * uFlow + uPhase;
+          float band = smoothstep(1.0 - uRW - uRSoft, 1.0 - uRW, 0.5 + 0.5 * cos(ph));
+          float mask = (1.0 - smoothstep(uRH * 0.55, uRH, abs(q.y))) * (1.0 - smoothstep(uRR - 0.15, uRR, rho));
+          float a = 1.0 - exp(-band * mask * uRA * 30.0 * dt);
+          acc += (1.0 - aAcc) * a * uRib * (float(i) < float(N) * 0.5 ? 1.0 : 0.85);
+          aAcc += (1.0 - aAcc) * a;
+        }
+        vec3 bodyCol = mix(uBody, vec3(1.0), uMilk * 0.6);
+        float bodyA = mix(uBodyMin, 1.0, 1.0 - exp(-uAbsorb * tEx));
+        bodyA = mix(bodyA, 1.0, uMilk * 0.5);
+        vec3 col = acc + (1.0 - aAcc) * bodyCol * bodyA;
+        float alpha = aAcc + (1.0 - aAcc) * bodyA;
+        vec3 c = col / max(alpha, 0.001);
+        vec3 L = normalize(uL);
+        float F = pow(1.0 - max(dot(nV, V), 0.0), 3.0);
+        float caus = pow(max(dot(nV, -L) * 0.5 + 0.5, 0.0), 6.0) * uCaustic * (1.0 - F);
+        c += mix(bodyCol, vec3(1.0), 0.5) * caus;
+        alpha = max(alpha, caus * 0.8);
+        c = mix(c, uBody * 0.45 + vec3(0.04), clamp(F * uEdge * 1.6, 0.0, 1.0));   // 鏡片暗邊，取代描邊
+        vec3 r = reflect(-V, nV);
+        vec3 env = mix(vec3(0.86, 0.89, 0.93), vec3(1.0), smoothstep(-0.2, 0.6, r.y));
+        env += vec3(1.0) * smoothstep(0.88, 0.97, dot(r, normalize(vec3(-0.5, 0.55, 0.65))));
+        env += vec3(0.4) * smoothstep(0.92, 0.985, dot(r, normalize(vec3(0.7, 0.25, 0.65))));
+        float er = clamp(uEnv * (0.04 + 0.96 * F), 0.0, 1.0);
+        c = mix(c, env, er);
+        float sp = pow(max(dot(nV, normalize(L + V)), 0.0), uGloss) * uSpec;
+        c += vec3(sp);
+        alpha = clamp(max(alpha, F * uRim) + sp + er * 0.3, 0.0, 1.0);
+        gl_FragColor = vec4(c, alpha);
+      }`;
+    const SH = {
+      uIor:{value:B.ior}, uAbsorb:{value:B.absorb}, uBodyMin:{value:B.bodyMin}, uEnv:{value:B.env}, uSpec:{value:B.spec}, uGloss:{value:B.gloss},
+      uRim:{value:B.rim}, uEdge:{value:B.edge}, uCaustic:{value:B.caustic},
+      uArms:{value:Math.round(B.arms)}, uTight:{value:B.tight}, uTwist:{value:B.twist}, uRW:{value:B.ribW}, uRSoft:{value:B.ribSoft},
+      uRH:{value:B.ribH}, uRR:{value:B.ribR}, uRA:{value:B.ribA}, uFlow:{value:B.flow},
+      uWobAmp:{value:B.wobAmp}, uWobFreq:{value:B.wobFreq}, uTime:beadTime,
+      uL:capTop.children[0].material.uniforms.uL   // 跟膠囊殼同一個光源方向
+    };
+    const KIND = {
+      pink:{ uBody:{value:new THREE.Color(B.pinkBody)}, uRib:{value:new THREE.Color(B.pinkRib)}, uMilk:{value:B.pinkMilk} },
+      white:{ uBody:{value:new THREE.Color(B.whiteBody)}, uRib:{value:new THREE.Color(B.whiteRib)}, uMilk:{value:B.whiteMilk} }
+    };
+    const geo = new THREE.SphereGeometry(1, 64, 48);
+    return homes.map(([x, y, z], i) => {
+      // 每顆一份材質：各自的漩渦相位與晃動量
+      const mat = new THREE.ShaderMaterial({ uniforms:Object.assign({}, SH, KIND[i % 2 === 0 ? 'pink' : 'white'], {uPhase:{value:i * 1.7}, uWob:{value:0}}), vertexShader:VS, fragmentShader:FS, transparent:true });
+      const m = new THREE.Mesh(geo, mat);
+      const home = new THREE.Vector3(x, y, z);
+      m.position.copy(home); m.scale.setScalar(B.size);
+      m.rotation.set(Math.PI/2 + (i%3-1)*0.12, (i%2?0.15:-0.12), i * 0.9);
+      m.userData.home = home; m.userData.rot = m.rotation.clone();
+      m.userData.dir = new THREE.Vector3(x || 0.15, 0, z || 0.1).normalize();
+      m.userData.prev = home.clone(); m.userData.wob = 0;
+      pill.add(m); return m;
+    });
+  })();
+
+  // 04 靈感濃縮核：液態玻璃青蛙頭（依三視圖建模，參數來自青蛙核心調校台）
+  const CORE = {"headW":174,"headH":138,"headD":150,"bumpR":32,"eyeGap":86,"eyeY":51,"bumpFwd":6,"smooth":12,"pearlR":12,"pearlOut":4,"mouthR":1.8,"mouthW":1,"mouthY":0,"tint":"#c8fa6e","bodyA":0.59,"edgeA":0.92,"glow":0.17,"diffuse":0.5,"backDark":0.61,"env":0.55,"spec":1.2,"gloss":300,"rimCol":"#e6ffb0","rimPow":3.2,"rimStr":1.22,"irid":1,"pearlCol":"#ffffff","pearlGlow":0.27,"pearlSheen":0.5,"pearlSpec":0.6,"mouthCol":"#ffffff","sway":0.8};
+  const CORE_CLOSED = {scale:0.75, y:-0.62};   // 合起來時青蛙的大小與位置（在下殼玻璃中央）
+  const core = new THREE.Group();
+  core.position.y = CORE_CLOSED.y; core.scale.setScalar(CORE_CLOSED.scale);
+  pill.add(core);
+  {
+    const C = CORE;
+    // ---- 造型：從圓開始（有號距離函數）：橢圓頭＋兩顆眼睛凸起「平滑融合」 ----
+    const base = {c:[0, 0, 0], r:[C.headW / 2, C.headH / 2, C.headD / 2]};
+    const bumps = [-1, 1].map(s => ({c:[s * C.eyeGap / 2, C.eyeY, C.bumpFwd], r:C.bumpR}));
+    const sdEll = (x, y, z, c, r) => {
+      const qx = (x - c[0]) / r[0], qy = (y - c[1]) / r[1], qz = (z - c[2]) / r[2];
+      const k0 = Math.hypot(qx, qy, qz);
+      const k1 = Math.hypot((x - c[0]) / (r[0] * r[0]), (y - c[1]) / (r[1] * r[1]), (z - c[2]) / (r[2] * r[2]));
+      return k0 * (k0 - 1) / Math.max(k1, 1e-9);
+    };
+    const sdSph = (x, y, z, c, r) => Math.hypot(x - c[0], y - c[1], z - c[2]) - r;
+    const smin = (a, b, k) => { const h = Math.min(1, Math.max(0, 0.5 + 0.5 * (b - a) / k)); return b * (1 - h) + a * h - k * h * (1 - h); };
+    const sdf = (x, y, z) => { let d = sdEll(x, y, z, base.c, base.r); for (const b of bumps) d = smin(d, sdSph(x, y, z, b.c, b.r), C.smooth); return d; };
+    // 把細分的球「縮」到表面上，再用距離函數的梯度當法線（表面才會很平滑）
+    const hg = new THREE.SphereGeometry(1, 144, 100);
+    {
+      const p = hg.attributes.position, O = [0, C.eyeY * 0.35, 0], tMax = Math.max(C.headW, C.headH + C.eyeY, 200);
+      for (let i = 0; i < p.count; i++){
+        const dx = p.getX(i), dy = p.getY(i), dz = p.getZ(i);
+        let t = tMax;
+        for (let k = 0; k < 200; k++){ const d = sdf(O[0] + dx * t, O[1] + dy * t, O[2] + dz * t); if (d < 0.05) break; t -= Math.max(d * 0.8, 0.05); if (t <= 0){ t = 0; break; } }
+        let a = Math.max(t - 1.5, 0), b = t + 1.5;
+        for (let k = 0; k < 16; k++){ const m = (a + b) / 2; if (sdf(O[0] + dx * m, O[1] + dy * m, O[2] + dz * m) < 0) a = m; else b = m; }
+        const tt = (a + b) / 2;
+        p.setXYZ(i, (O[0] + dx * tt) / 100, (O[1] + dy * tt) / 100, (O[2] + dz * tt) / 100);
+      }
+      const n = hg.attributes.normal, e = 0.05;
+      for (let i = 0; i < p.count; i++){
+        const x = p.getX(i) * 100, y = p.getY(i) * 100, z = p.getZ(i) * 100;
+        const nx = sdf(x + e, y, z) - sdf(x - e, y, z), ny = sdf(x, y + e, z) - sdf(x, y - e, z), nz = sdf(x, y, z + e) - sdf(x, y, z - e);
+        const l = Math.hypot(nx, ny, nz) || 1; n.setXYZ(i, nx / l, ny / l, nz / l);
+      }
+    }
+    // 嘴巴：海鷗形細管，沿著臉的表面
+    const surfaceZ = (x, y) => { for (let z = C.headD; z > -C.headD; z -= 0.25) if (sdf(x, y, z) < 0) return z; return 0; };
+    const M = [[-23, 38.5], [-14, 37], [-7, 33.5], [-2, 29], [0, 25], [2, 29], [7, 33.5], [14, 37], [23, 38.5]];
+    const mouthPts = M.map(([x, y]) => { const X = x * C.mouthW, Y = y + C.mouthY; return new THREE.Vector3(X / 100, Y / 100, (surfaceZ(X, Y) + C.mouthR * 0.4) / 100); });
+    const mouthGeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(mouthPts, false, 'catmullrom', 0.3), 80, C.mouthR / 100, 12);
+
+    // ---- 材質 ----
+    const L = capTop.children[0].material.uniforms.uL;   // 跟膠囊同一個光源
+    const VS = `varying vec3 vN; varying vec3 vV;
+      void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); vN = normalize(normalMatrix * normal); vV = -mv.xyz; gl_Position = projectionMatrix * mv; }`;
+    const UG = {
+      uTint:{value:new THREE.Color(C.tint)}, uRimCol:{value:new THREE.Color(C.rimCol)}, uL:L,
+      uBodyA:{value:C.bodyA}, uEdgeA:{value:C.edgeA}, uGlow:{value:C.glow}, uDiff:{value:C.diffuse}, uBackDark:{value:C.backDark},
+      uEnv:{value:C.env}, uSpec:{value:C.spec}, uGloss:{value:C.gloss}, uRimPow:{value:C.rimPow}, uRimStr:{value:C.rimStr}, uIrid:{value:C.irid}
+    };
+    // 液態玻璃：先畫後半顆（較深，玻璃才有厚度），再畫前面那層（半透明＋邊光＋虹彩＋反射）
+    const GLASS_FS = `
+      uniform vec3 uTint, uRimCol, uL;
+      uniform float uBodyA, uEdgeA, uGlow, uDiff, uBackDark, uEnv, uSpec, uGloss, uRimPow, uRimStr, uIrid;
+      varying vec3 vN; varying vec3 vV;
+      vec3 envCol(vec3 r){
+        vec3 e = mix(vec3(0.86, 0.89, 0.93), vec3(1.0), smoothstep(-0.2, 0.6, r.y));
+        e += vec3(1.0) * smoothstep(0.88, 0.97, dot(r, normalize(vec3(-0.5, 0.55, 0.65))));
+        e += vec3(0.4) * smoothstep(0.92, 0.985, dot(r, normalize(vec3(0.7, 0.25, 0.65))));
+        return e;
+      }
+      void main(){
+        vec3 n = normalize(vN); if (!gl_FrontFacing) n = -n;
+        vec3 v = normalize(vV); vec3 L = normalize(uL);
+        float ndv = max(dot(n, v), 0.0);
+        float wd = clamp((dot(n, L) + 0.5) / 1.5, 0.0, 1.0);
+      #ifdef BACK
+        gl_FragColor = vec4(uTint * uBackDark * mix(0.8, 1.0, wd) * (1.0 + uGlow * 0.6), uBodyA * 0.85);
+      #else
+        float F = pow(1.0 - ndv, uRimPow);
+        vec3 sat = clamp(uTint + (uTint - vec3(dot(uTint, vec3(0.333)))) * 0.6, 0.0, 1.0);
+        vec3 col = mix(uTint, sat, uGlow) * mix(1.0 - uDiff * 0.4, 1.0, wd) * (1.0 + uGlow * 0.35);
+        float er = clamp(uEnv * (0.05 + 0.95 * F), 0.0, 1.0);
+        col = mix(col, envCol(reflect(-v, n)), er * 0.7);
+        vec3 film = 0.5 + 0.5 * cos(6.2831 * (F * 1.4 + vec3(0.0, 0.33, 0.67)));
+        col = mix(col, col * film * 1.6, uIrid * F);
+        col += uRimCol * F * uRimStr;
+        float sp = pow(max(dot(n, normalize(L + v)), 0.0), uGloss) * uSpec;
+        col += vec3(sp);
+        float a = mix(uBodyA, uEdgeA, pow(1.0 - ndv, 2.0));
+        gl_FragColor = vec4(col, clamp(a + sp + F * uRimStr * 0.4 + er * 0.2, 0.0, 1.0));
+      #endif
+      }`;
+    // 白色霧面玻璃：眼珠、嘴巴
+    const FROST_FS = `
+      uniform vec3 uCol, uL; uniform float uGlow, uSheen, uSpec;
+      varying vec3 vN; varying vec3 vV;
+      void main(){
+        vec3 n = normalize(vN), v = normalize(vV), L = normalize(uL);
+        float wd = clamp((dot(n, L) + 0.6) / 1.6, 0.0, 1.0);
+        vec3 col = uCol * mix(0.78, 1.0, wd) * (1.0 + uGlow * 0.3) + uCol * uGlow * 0.15;
+        col = mix(col, vec3(1.0), pow(1.0 - max(dot(n, v), 0.0), 2.5) * uSheen);
+        col += vec3(pow(max(dot(n, normalize(L + v)), 0.0), 60.0) * uSpec);
+        gl_FragColor = vec4(min(col, vec3(1.0)), 1.0);
+      }`;
+    const frost = (hex, transparent) => new THREE.ShaderMaterial({ uniforms:{ uCol:{value:new THREE.Color(hex)}, uGlow:{value:C.pearlGlow}, uSheen:{value:C.pearlSheen}, uSpec:{value:C.pearlSpec}, uL:L }, vertexShader:VS, fragmentShader:FROST_FS, transparent:!!transparent });
+
+    const frog = new THREE.Group();
+    frog.scale.setScalar(0.6 / (C.headW / 100));   // 頭寬縮到跟原本青蛙臉一樣（約 0.6）
+    frog.position.y = -C.eyeY * 0.12 / 100 * frog.scale.x;
+    core.add(frog);
+    const headBack = new THREE.Mesh(hg, new THREE.ShaderMaterial({ uniforms:UG, vertexShader:VS, fragmentShader:GLASS_FS, defines:{BACK:''}, side:THREE.BackSide, transparent:true, depthWrite:false }));
+    const headFront = new THREE.Mesh(hg, new THREE.ShaderMaterial({ uniforms:UG, vertexShader:VS, fragmentShader:GLASS_FS, transparent:true, depthWrite:false }));
+    headBack.renderOrder = 1; headFront.renderOrder = 2;   // 比下殼玻璃（3～5）先畫：合起來時是隔著玻璃看到青蛙
+    const pearlGeo = new THREE.SphereGeometry(1, 48, 36), pearlMat = frost(C.pearlCol);
+    bumps.forEach(b => {
+      const m = new THREE.Mesh(pearlGeo, pearlMat);
+      m.position.set(b.c[0] / 100, (b.c[1] + 10) / 100, (b.c[2] + b.r - C.pearlR + C.pearlOut - 2) / 100);
+      m.scale.setScalar(C.pearlR / 100); frog.add(m);
+    });
+    const mouth = new THREE.Mesh(mouthGeo, frost(C.mouthCol, true)); mouth.renderOrder = 2.5;   // 嘴巴畫在青蛙玻璃上面才清楚
+    frog.add(headBack, mouth, headFront);
+  }
+
+  /* ---------- Floating tags ---------- */
+  const tagDefs = [
+    {no:'01', txt:'心態防護衣', obj:capTop, local:new THREE.Vector3(0.64, 0.9, 0)},
+    {no:'02', txt:'快捷鍵記憶膠', obj:capBot, local:new THREE.Vector3(0.61, 0.9, 0)},
+    {no:'03', txt:'雙色漩渦微粒', obj:beads[2], local:new THREE.Vector3(1.2, 0, 0)}   /* 糖球有縮放，座標以球半徑為單位 */,
+    {no:'04', txt:'靈感濃縮核', obj:core, local:new THREE.Vector3(0.32, 0, 0)}
+  ];
+  const tagWrap = $('tags');
+  tagDefs.forEach(t => { const el = document.createElement('div'); el.className = 'tag3d'; el.innerHTML = `<span><b>${t.no}</b>${t.txt}</span>`; tagWrap.appendChild(el); t.el = el; });
+
+  /* ---------- Scroll → timeline ---------- */
+  const section = $('explode');
+  const clamp = (v, a=0, b=1) => Math.min(b, Math.max(a, v));
+  const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+  const seg = (p, a, b) => ease(clamp((p - a) / (b - a)));
+  let target = 0, prog = 0;
+  function readScroll(){
+    const r = section.getBoundingClientRect();
+    target = clamp(-r.top / (r.height - window.innerHeight));
+  }
+  window.addEventListener('scroll', readScroll, {passive:true});
+
+  const W = [[.06,.19],[.19,.32],[.32,.46],[.46,.58]];
+  const CLOSE = [.72,.92];
+
+  let W_, H_, narrow = false, baseX = 1.5, baseY = 0;
+  const BEAD_SPIN = 0.5;   // 漩渦微粒拆開後的自轉速度（弧度／秒；約 12 秒轉一圈）
+  // 膠囊大小（原本 寬螢幕 1.65／手機 1.35）：拆開時縮 shrink 倍讓每層留在畫面內；開場再放大 introGrow、往下移 introY
+  const PILL_SIZE = { wide: 2.05, narrow: 1.65, shrinkWide: 0.52, shrinkNarrow: 0.51, introGrow: 0.1, introY: -0.15, introEnd: 0.06 };   // 拆開時的大小維持原本（寬 0.98／手機 0.81），只有合起來時變大
+  function resize(){
+    W_ = canvas.clientWidth; H_ = canvas.clientHeight;
+    renderer.setSize(W_, H_, false);
+    camera.aspect = W_ / H_;
+    narrow = camera.aspect < 0.85;
+    camera.position.z = narrow ? 12.5 : 10;
+    baseX = narrow ? 0 : 1.5; baseY = narrow ? 0.7 : 0;
+    root.position.set(baseX, baseY, 0);
+    camera.updateProjectionMatrix();
+    syncOutline(olMain, renderer); syncOutline(olShell, renderer); syncOutline(olGlass, renderer);
+  }
+  window.addEventListener('resize', resize);
+  resize(); readScroll();
+
+  const v = new THREE.Vector3();
+  const frogImgs = [...document.querySelectorAll('.frogs img')];
+  const frogCaps = ['<b>服用前</b>趴在桌上，只剩一口氣','<b>服用中</b>慢慢蠕動，重新開機中…','<b>服用後</b>滿血復活，永不喊累！'];
+  let curFrog = 0;
+  const hintEl = $('hint'); let hintShown = true;
+  const stageEl = $('stage');
+
+  /* ---------- 開場動畫（頁首）：跟 3D 拆解共用同一個 3D 畫面，畫布放在正在看的那一段 ---------- */
+  // 時間（秒）：hold＝先停一下、openDur＝四層一層一層拆開、zoomDur＝青蛙跳出來放大、after＝停一下再往下捲
+  const OPEN = { hold: 0.35, openDur: 2.2, pEnd: 0.6, zoomDur: 1.0, fill: 1.6, scrollMs: 550,   // fill：青蛙最後比畫面大幾倍（1.6＝四個角都蓋滿、像黏在螢幕上）；scrollMs：滿版後往下捲的時間（毫秒，越小越快）
+                 jelly: 0.16, jellyHz: 3.2, jellyDamp: 4.5,   // 軟Q：撞上畫面時果凍晃動的幅度、頻率（每秒幾下）、多快停
+
+                 t: 0, playing: true, done: false, left: false };
+  const openSec = $('opening'), openStage = $('opening-stage'), frogsEl = stageEl.querySelector('.frogs');
+  let openVis = true, expVis = false;
+  function placeCanvas(){
+    const host = expVis ? stageEl : openStage;
+    if (canvas.parentNode === host) return;
+    if (host === stageEl) stageEl.insertBefore(canvas, frogsEl.nextSibling); else host.appendChild(canvas);
+    resize();
+  }
+  new IntersectionObserver(es => es.forEach(en => {
+    if (en.target === openSec){
+      openVis = en.isIntersecting;
+    } else expVis = en.isIntersecting;
+    placeCanvas();
+  }), {threshold:[0, 0.1, 0.6]}).observe(openSec);
+  new IntersectionObserver(es => es.forEach(en => { expVis = en.isIntersecting; placeCanvas(); })).observe(section);
+  // 播完：自動往下捲到下一段（使用者自己捲了就不搶）
+  let autoRaf = 0;
+  const stopAuto = () => { if (autoRaf) cancelAnimationFrame(autoRaf); autoRaf = 0; };
+  ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(tp => window.addEventListener(tp, stopAuto, {passive:true}));
+  function autoScrollNext(){
+    if (window.__releaseTopHold) window.__releaseTopHold();
+    if (window.scrollY > openSec.offsetHeight * 0.3) return;
+    const navH = (document.querySelector('.nav') || {offsetHeight:0}).offsetHeight;
+    const startY = window.scrollY, endY = $('promo').getBoundingClientRect().top + startY - navH, dist = endY - startY;
+    const eio = k => k < .5 ? 4*k*k*k : 1 - Math.pow(-2*k + 2, 3) / 2;
+    let s0 = null;
+    const step = now => { if (s0 === null) s0 = now; const k = Math.min(1, (now - s0) / OPEN.scrollMs);
+      window.scrollTo({ top: startY + dist * eio(k), behavior: 'instant' }); autoRaf = k < 1 ? requestAnimationFrame(step) : 0; };
+    autoRaf = requestAnimationFrame(step);
+  }
+  const sstep = k => k * k * (3 - 2 * k);
+
+  let t0 = performance.now();
+  function frame(now){
+    requestAnimationFrame(frame);
+    const dt = Math.min((now - t0) / 1000, 0.05); t0 = now;
+    prog += (target - prog) * (reduce ? 1 : 0.09);
+    // 開場播完後，真的往下捲過開場一半才算「離開」；捲回最上面時才會重播
+    if (OPEN.done && window.scrollY > openSec.offsetHeight * 0.5) OPEN.left = true;
+    if (!openVis && !expVis) return;                        // 兩段都不在畫面上：不畫
+    const opening = !expVis;
+
+    // 這一格用的進度：開場照時間走，3D 拆解照捲動走
+    let P = prog, Z = 0;
+    if (opening){
+      // 離開過頁首、又捲回最上面：從頭再播一次
+      if (OPEN.done && OPEN.left && !autoRaf && window.scrollY < 8){ OPEN.t = 0; OPEN.playing = true; OPEN.done = false; OPEN.left = false; }
+      if (OPEN.playing && !reduce) OPEN.t += dt;
+      P = reduce ? 0 : 0.04 + (OPEN.pEnd - 0.04) * clamp((OPEN.t - OPEN.hold) / OPEN.openDur);
+      Z = reduce ? 0 : clamp((OPEN.t - OPEN.hold - OPEN.openDur) / OPEN.zoomDur);
+      // 青蛙貼上畫面、軟Q 晃到幾乎停住（剩 2% 以下）的那一刻，馬上往下捲，不再多等
+      const jellySettle = Math.log(1 / 0.02) / OPEN.jellyDamp;
+      if (OPEN.playing && OPEN.t >= OPEN.hold + OPEN.openDur + OPEN.zoomDur * 0.85 + jellySettle){ OPEN.playing = false; OPEN.done = true; OPEN.left = false; autoScrollNext(); setTimeout(() => window.__openPromoGate && window.__openPromoGate(), OPEN.scrollMs - 120); }   // 捲到定位時，字才開始出場   // left 歸零：要真的捲離開頭再回來才重播
+    }
+    const zz = sstep(Z);
+
+    const close = seg(P, CLOSE[0], CLOSE[1]);
+    const e = W.map(([a, b]) => seg(P, a, b) * (1 - close));
+
+    capTop.position.y = e[0] * 2.0;
+    capTop.rotation.z = e[0] * 0.25;
+    capBot.position.y = -e[1] * 2.0;
+    capBot.rotation.z = -e[1] * 0.25;
+    capTop.position.y += zz * 9; capBot.position.y -= zz * 9;   // 開場結尾：上下殼飛出畫面
+    botRim.visible = (capTop.position.y - capBot.position.y) > 0.6;   // 合起來時藏在綠殼裡，不能透出來
+    beads.forEach((b, i) => {
+      const h = b.userData.home, d = b.userData.dir, r0 = b.userData.rot, k = e[2];
+      const wob = Math.sin(now * 0.0012 + i) * 0.06 * k;
+      b.position.set(h.x + d.x * k * 1.4, h.y + k * (0.55 + (i % 3) * 0.3) + wob, h.z + d.z * k * 1.0 + k * 0.4);
+      if (zz > 0){ b.position.x += (d.x >= 0 ? 1 : -1) * zz * 7; b.position.y += (i % 2 ? 1 : -1) * zz * 4; }   // 開場結尾：糖果往四周散開
+      // 自轉：照時間慢慢累積（原本用「時間 × 拆開程度」，一捲動就瞬間轉好幾十圈，看起來很卡）
+      if (!reduce) b.userData.spin = (b.userData.spin || 0) + dt * k * BEAD_SPIN * (i % 2 ? 1 : -1);
+      b.rotation.set(r0.x - k * 0.5 * (i % 2 ? 1 : -1), r0.y, r0.z + (b.userData.spin || 0));
+      // 液態晃動：飛得越快晃越大，停在空中時保留一點微晃
+      const vel = b.position.distanceTo(b.userData.prev) / Math.max(dt, 1e-3); b.userData.prev.copy(b.position);
+      b.userData.wob = Math.max(b.userData.wob * Math.pow(0.3, dt), Math.min(1, vel * 0.9));
+      b.material.uniforms.uWob.value = reduce ? 0 : Math.min(1.2, b.userData.wob + BEADS.wobIdle * k * 0.6);
+    });
+    beadTime.value += reduce ? 0 : dt * BEADS.wobSpeed;
+    // 青蛙一直都在：合起來時縮小待在下殼中央（隔著玻璃看得到），第 4 層時升到中間放大
+    core.scale.setScalar(CORE_CLOSED.scale + (1.5 - CORE_CLOSED.scale) * e[3]);
+    core.position.set(0, CORE_CLOSED.y + (-0.2 - CORE_CLOSED.y) * e[3], e[3] * 0.35);
+
+    // 完整時放大；拆開時縮小，讓飛出去的每一層都留在畫面內
+    const spread = Math.max(e[0], e[1], e[2] * 0.8);
+    // 開場（還沒滑）：膠囊在畫面正中、再大一點；開始滑就滑到右邊讓出位置給文字
+    const intro = opening ? 1 : reduce ? 0 : 1 - seg(prog, 0, PILL_SIZE.introEnd);
+    root.position.x = opening ? 0 : baseX * (1 - intro); root.position.y = opening ? 0 : baseY * (1 - intro) + PILL_SIZE.introY * intro;
+    const rs = (narrow ? PILL_SIZE.narrow : PILL_SIZE.wide) * (1 - (narrow ? PILL_SIZE.shrinkNarrow : PILL_SIZE.shrinkWide) * spread) * (1 + PILL_SIZE.introGrow * intro);
+    root.scale.setScalar(rs);
+    // 開場結尾：青蛙先往上跳出來，再放大到蓋滿整個畫面
+    if (zz > 0){
+      const hopK = clamp(Z / 0.4), hop = Math.sin(Math.PI * hopK) * 0.9;
+      const gk = clamp((Z - 0.25) / 0.75), grow = 1 - Math.pow(1 - gk, 3);          // 衝向畫面：越來越慢，最後「啪」地貼上
+      const visH = 2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+      const need = OPEN.fill * Math.max(visH, visH * camera.aspect) / (0.6 * rs);   // 青蛙頭寬要蓋過畫面
+      const base = 1.5 + (need - 1.5) * grow;
+      // 軟Q：起跳時拉長、落點壓扁；貼上畫面那一下像果凍一樣左右上下晃幾下再停
+      let j = Math.sin(Math.PI * hopK) * 0.14 - Math.sin(Math.PI * clamp((Z - 0.3) / 0.15)) * 0.12;
+      const tHit = OPEN.t - (OPEN.hold + OPEN.openDur + OPEN.zoomDur * 0.85);
+      if (tHit > 0) j += OPEN.jelly * Math.sin(tHit * OPEN.jellyHz * Math.PI * 2) * Math.exp(-tHit * OPEN.jellyDamp);
+      core.scale.set(base * (1 - j * 0.6), base * (1 + j), base * (1 - j * 0.6));
+      core.position.y += hop * (1 - grow) + (0.2 - core.position.y) * grow;
+    }
+    pillShadow.position.set(root.position.x, root.position.y - 2.35 * rs / 1.65 - 0.15, -1);
+    pillShadow.scale.set(2.6 * rs / 1.65 * (1 + spread * 0.6), 0.42, 1);
+    pillShadow.material.opacity = (1 - spread * 0.5) * (1 - zz);
+    root.rotation.y = (reduce ? 0 : Math.sin(now * 0.0005) * 0.3) + P * Math.PI * 2;
+    root.rotation.x = Math.sin(now * 0.0004) * 0.06;
+    // 讓青蛙臉一直朝向鏡頭，輕輕左右擺頭
+    core.rotation.set(0, -root.rotation.y + Math.sin(now * 0.002) * (reduce ? 0 : CORE.sway), -pill.rotation.z + Math.sin(now * 0.0016) * 0.08);
+
+    if (opening){ tagDefs.forEach(t => { t.el.style.opacity = 0; }); renderer.render(scene, camera); return; }   // 開場沒有文字
+    let step = 0;
+    if (prog >= CLOSE[0]) step = 5;
+    else { for (let i = 0; i < 4; i++) if (prog >= W[i][0] + 0.02) step = i + 1; }
+    setStep(step);
+    stageEl.classList.toggle('revealed', target > 0.012 || prog > 0.012);   // 往下滑一點點，文字才出來
+    const hintOn = prog < 0.04;
+    if (hintOn !== hintShown){ hintShown = hintOn; hintEl.style.opacity = hintOn ? 1 : 0; hintEl.style.transform = hintOn ? 'none' : 'translateY(-8px)'; }
+    const fi = prog < 0.3 ? 0 : prog < 0.68 ? 1 : 2;
+    if (fi !== curFrog){
+      curFrog = fi;
+      frogImgs.forEach((im, j) => im.classList.toggle('on', j === fi));
+      $('frog-cap').innerHTML = frogCaps[fi]; wrapFix($('frog-cap'));
+    }
+
+    scene.updateMatrixWorld();
+    tagDefs.forEach((t, i) => {
+      const o = e[i];
+      if (o < 0.02) { t.el.style.opacity = 0; return; }
+      v.copy(t.local).applyMatrix4(t.obj.matrixWorld).project(camera);
+      const x = (v.x * 0.5 + 0.5) * W_, y = (-v.y * 0.5 + 0.5) * H_;
+      const flip = x > W_ - 190;
+      t.el.classList.toggle('flip', flip);
+      t.el.style.transform = `translate(${flip ? x - 8 : x + 8}px, ${y}px) translate(${flip ? '-100%' : '0'}, -50%)`;
+      t.el.style.opacity = o;
+    });
+
+    renderer.render(scene, camera);
+  }
+  requestAnimationFrame(frame);
+
+  /* ---------- 3D 藥瓶（第二頁） ---------- */
+  function makeBottle(cvId, stId, o){
+    const cv = $(cvId), st = $(stId);
+    if (!cv || !st) return;
+    let br;
+    try { br = new THREE.WebGLRenderer({canvas:cv, antialias:true, alpha:true}); } catch(e){ return; }
+    br.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    const bs = new THREE.Scene();
+    const cam = new THREE.PerspectiveCamera(20, 1, 0.1, 200);   // 長焦，產品照的透視比較自然
+    const ol = makeOutlineMat(); rimMatFor(ol);
+    const LIGHT = 'normalize(vec3(-0.45, 0.55, 0.75))';
+    const VS = `varying vec3 vN; varying vec3 vV; varying vec2 vUv;
+      void main(){ vUv = uv; vN = normalize(normalMatrix * normal); vec4 mv = modelViewMatrix * vec4(position, 1.0); vV = -mv.xyz; gl_Position = projectionMatrix * mv; }`;
+    // 材質統一走 litMat（白瓶：半亮塑膠）
+    function shade(hex){ return litMat(hex, MAT.plastic); }
+    const g = new THREE.Group(); bs.add(g);
+    const R = 1.0, yB = -1.32, yT = 1.28;
+
+    // 瓶身：半透明灰色玻璃。先畫內側（背面）再畫外框、最後畫正面，裡面的膠囊會隔著玻璃透出來
+    const prof = [new THREE.Vector2(0.001, yB)];
+    for (let i = 0; i <= 8; i++){ const a = -Math.PI/2 + (i/8) * Math.PI/2; prof.push(new THREE.Vector2(R - 0.12 + 0.12 * Math.cos(a), yB + 0.12 + 0.12 * Math.sin(a))); }
+    prof.push(new THREE.Vector2(R, yT));
+    for (let i = 1; i <= 14; i++){ const a = (i/14) * Math.PI/2; prof.push(new THREE.Vector2(0.66 + (R - 0.66) * Math.cos(a), yT + 0.3 * Math.sin(a))); }
+    prof.push(new THREE.Vector2(0.62, yT + 0.32), new THREE.Vector2(0.62, yT + 0.52), new THREE.Vector2(0.001, yT + 0.52));
+    const GLASS_VS = `varying vec3 vN; varying vec3 vV; varying vec3 vP;
+      void main(){ vP = position; vN = normalize(normalMatrix * normal); vec4 mv = modelViewMatrix * vec4(position, 1.0); vV = -mv.xyz; gl_Position = projectionMatrix * mv; }`;
+    const GLASS_FS = `uniform float yb; varying vec3 vN; varying vec3 vV; varying vec3 vP;
+      void main(){
+        vec3 n = normalize(vN), v = normalize(vV); if (!gl_FrontFacing) n = -n;
+        float ndv = clamp(abs(dot(n, v)), 0.0, 1.0), edge = 1.0 - ndv;
+        float a = mix(0.5, 0.9, pow(edge, 1.7));                              // 正面半透明、側邊玻璃厚所以較不透
+        a = max(a, 0.82 * (1.0 - smoothstep(0.0, 0.18, vP.y - yb)));           // 厚玻璃瓶底
+        vec3 c = vec3(0.34, 0.35, 0.37) * mix(1.0, 0.62, pow(edge, 1.3));     // 灰色玻璃
+        float s1 = exp(-pow((n.x + 0.52) / 0.075, 2.0)) * smoothstep(-0.6, 0.2, n.y + 0.4);   // 主反光條
+        float s2 = exp(-pow((n.x - 0.64) / 0.04, 2.0));                                      // 細反光
+        vec3 L = normalize(vec3(-0.45, 0.6, 0.7));
+        float sp = pow(max(dot(n, normalize(L + v)), 0.0), 170.0);                          // 肩部亮點
+        float rim = pow(edge, 4.0);
+        #ifdef BACK
+          s1 *= 0.3; s2 *= 0.3; sp = 0.0; a *= 0.6;
+        #endif
+        c += vec3(0.9) * s1 + vec3(0.55) * s2 + vec3(1.0) * sp + vec3(0.3) * rim;
+        a = max(a, max(s1 * 0.85, max(s2 * 0.6, sp)));
+        gl_FragColor = vec4(c, a); }`;
+    const bodyGeo = new THREE.LatheGeometry(prof, 128);
+    const glassBack = new THREE.Mesh(bodyGeo, new THREE.ShaderMaterial({ uniforms:{yb:{value:yB}}, defines:{BACK:''}, vertexShader:GLASS_VS, fragmentShader:GLASS_FS, side:THREE.BackSide, transparent:true, depthWrite:true }));
+    glassBack.renderOrder = 1; g.add(glassBack);
+    const olGlass = makeOutlineMat(); olGlass.transparent = true;          // 外框排在玻璃內側之後，才不會從玻璃裡透出黑色
+    const body = new THREE.Mesh(bodyGeo, new THREE.ShaderMaterial({ uniforms:{yb:{value:yB}}, vertexShader:GLASS_VS, fragmentShader:GLASS_FS, transparent:true, depthWrite:false }));
+    body.renderOrder = 3; g.add(body);
+    const bodyOl = outline(body, 0, olGlass); bodyOl.renderOrder = 2;
+
+
+    // 標籤：縮小、不整圈包住（留一段玻璃看得到裡面），右半（大字＋青蛙）朝正面，左半規格卡在背面
+    const tex = new THREE.TextureLoader().load(window.LABEL_SRC || 'frogs/label.jpg', () => { needsDraw = true; });   // 優先用內嵌版，雙擊開檔也看得到標籤
+    tex.anisotropy = br.capabilities.getMaxAnisotropy();
+    const FRONT_U = 0.665, LARC = Math.PI * 2 * 0.78;
+    const LH = LARC * R / (4096 / 1552), LY = (yB + yT) / 2 - 0.02, LT0 = -LARC * FRONT_U, LR = R + 0.006;
+    const labelMat = new THREE.ShaderMaterial({
+      uniforms:{ map:{value:tex} }, side:THREE.DoubleSide,
+      vertexShader: LIT_VS,
+      fragmentShader:`uniform sampler2D map; varying vec3 vN; varying vec3 vV; varying vec2 vUv; ${LIT_GLSL}
+        float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+        void main(){
+          vec3 n = normalize(vN), v = normalize(vV);
+          if (gl_FrontFacing){
+            vec3 base = texture2D(map, vUv).rgb;
+            base *= 1.0 + (hash(floor(vUv * vec2(2600.0, 980.0))) - 0.5) * 0.04;   // 紙纖維顆粒
+            vec3 c = litColor(base, n, v, 0.08, 24.0);                              // 霧面上光紙
+            c += vec3(0.06) * exp(-pow((n.x + 0.45) / 0.2, 2.0));                    // 上光膜的柔和反光
+            gl_FragColor = vec4(c, 1.0);
+          } else {
+            gl_FragColor = vec4(vec3(0.86, 0.86, 0.83), 1.0);                        // 標籤背面：素紙（隔著玻璃看得到）
+          } }`
+    });
+    const label = new THREE.Mesh(new THREE.CylinderGeometry(LR, LR, LH, 160, 1, true, LT0, LARC), labelMat);
+    label.position.y = LY; g.add(label);
+    // 標籤四邊的線：跟外框同粗
+    class ArcY extends THREE.Curve { constructor(r, y, a0, a1){ super(); this.r = r; this.y = y; this.a0 = a0; this.a1 = a1; }
+      getPoint(t, o = new THREE.Vector3()){ const a = this.a0 + (this.a1 - this.a0) * t; return o.set(this.r * Math.sin(a), this.y, this.r * Math.cos(a)); } }
+    const edgeLine = (curve, segs) => { const m = new THREE.Mesh(new THREE.TubeGeometry(curve, segs, 0.0006, 6, false), _hidden); m.add(new THREE.Mesh(smoothGeo(m.geometry), rimMatFor(ol))); g.add(m); };
+    const ER = LR + 0.002;
+    [LY + LH/2, LY - LH/2].forEach(y => edgeLine(new ArcY(ER, y, LT0, LT0 + LARC), 160));
+    [LT0, LT0 + LARC].forEach(a => edgeLine(new THREE.LineCurve3(new THREE.Vector3(ER * Math.sin(a), LY - LH/2, ER * Math.cos(a)), new THREE.Vector3(ER * Math.sin(a), LY + LH/2, ER * Math.cos(a))), 2));
+
+    // 瓶蓋：萊姆綠陽極鋁，細密直紋
+    const cap = new THREE.Group(); cap.position.y = yT + 0.56; g.add(cap);
+    // 瓶蓋：一體成形的直紋圓柱（凸紋直接長在蓋子上，不是另外貼的小方塊）
+    const CR = 0.74, CH = 0.5, RIBS = 110, RD = 0.01;
+    function ribbedGeo(base){
+      const geo = new THREE.CylinderGeometry(1, 1, CH, RIBS * 8, 1, true);
+      const pos = geo.attributes.position, ribAttr = new Float32Array(pos.count);
+      for (let i = 0; i < pos.count; i++){
+        const x = pos.getX(i), z = pos.getZ(i), a = Math.atan2(x, z);
+        const k = THREE.MathUtils.smoothstep(Math.cos(a * RIBS), -0.35, 0.35);   // 0 = 凹、1 = 凸
+        const r = base + RD * k; ribAttr[i] = k;
+        pos.setX(i, Math.sin(a) * r); pos.setZ(i, Math.cos(a) * r);
+      }
+      geo.setAttribute('rib', new THREE.BufferAttribute(ribAttr, 1));
+      geo.computeVertexNormals(); return geo;
+    }
+    const ALU = 'vec3(0.784, 0.980, 0.431)';   // 色票萊姆綠 #c8fa6e
+    const capMat = new THREE.ShaderMaterial({
+      vertexShader:`attribute float rib; varying float vR; varying vec3 vN; varying vec3 vS;
+        void main(){ vR = rib; vN = normalize(normalMatrix * normal); vS = normalize(normalMatrix * vec3(position.x, 0.0, position.z)); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+      fragmentShader:`varying float vR; varying vec3 vN; varying vec3 vS;
+        void main(){
+          vec3 n = normalize(vN); float x = normalize(vS).x;                  // 用不含凸紋的圓柱方向算金屬反光，反光條才會是一條乾淨的直線
+          float env = 0.74 + 0.26 * smoothstep(0.85, -0.5, x);
+          env -= 0.12 * exp(-pow((x - 0.3) / 0.16, 2.0));                    // 金屬暗帶
+          float rib = mix(0.86, 1.0, vR) * (0.94 - 0.06 * n.x);               // 細直紋的明暗
+          vec3 c = ${ALU} * env * rib;
+          c += vec3(0.30, 0.20, 0.36) * exp(-pow((x + 0.52) / 0.06, 2.0));    // 鋁的亮反光條
+          c += vec3(0.12, 0.06, 0.16) * exp(-pow((x - 0.66) / 0.04, 2.0));
+          gl_FragColor = vec4(min(c, vec3(1.0)), 1.0); }`
+    });
+    // 頂面：同心圓拉絲鋁
+    const capTopMat = new THREE.ShaderMaterial({
+      vertexShader: LIT_VS,
+      fragmentShader:`varying vec2 vUv; varying vec3 vN; varying vec3 vV;
+        void main(){
+          vec2 d = vUv - 0.5; float r = length(d) * 2.0, a = atan(d.y, d.x);
+          float brush = 0.88 + 0.12 * cos(2.0 * (a - 0.9)) + 0.025 * sin(r * 260.0);
+          vec3 c = ${ALU} * brush * mix(1.0, 0.9, smoothstep(0.85, 1.0, r));
+          gl_FragColor = vec4(c, 1.0); }`
+    });
+    const capSide = new THREE.Mesh(ribbedGeo(CR), capMat); cap.add(capSide);
+    // 描邊用外徑的平滑圓柱代替（凸紋不會讓外框忽粗忽細）
+    const capProxy = new THREE.Mesh(new THREE.CylinderGeometry(CR + RD, CR + RD, CH, 96, 1, true), new THREE.MeshBasicMaterial({colorWrite:false, depthWrite:false}));
+    outline(capProxy, 0, ol); cap.add(capProxy);
+    // 頂面＋圓角邊
+    const capTopDisc = new THREE.Mesh(new THREE.CircleGeometry(CR + RD, 96), capTopMat);
+    capTopDisc.rotation.x = -Math.PI / 2; capTopDisc.position.y = CH / 2; cap.add(capTopDisc);
+    const capBot = new THREE.Mesh(new THREE.CircleGeometry(CR + RD, 96), litMat(0x8fb84a, MAT.matte));
+    capBot.rotation.x = Math.PI / 2; capBot.position.y = -CH / 2; cap.add(capBot);
+    [CH / 2, -CH / 2].forEach(y => rimLine(cap, CR + RD, y, ol));
+
+    // 地面柔和陰影（全站同一種）
+    const shadow = contactShadow();
+    shadow.rotation.x = -Math.PI / 2; shadow.position.y = yB - 0.02; shadow.scale.set(3.0, 1.6, 1); bs.add(shadow);
+    g.position.x = shadow.position.x = o.bx || 0;
+
+    // 小膠囊零件（瓶子裡＋旁邊那堆共用）
+    {
+      const pr = 0.12, ph = 0.24;
+      // 半顆膠囊：圓柱＋半球；上蓋半徑稍大、往下多包一點，像真的膠囊殼套在一起
+      function halfGeo(R, y0){
+        const pts = [new THREE.Vector2(R * 0.985, y0), new THREE.Vector2(R, y0 + 0.008), new THREE.Vector2(R, ph)];
+        for (let i = 1; i <= 24; i++){ const a = (i/24) * Math.PI/2; pts.push(new THREE.Vector2(Math.max(R*Math.cos(a), 0.0001), ph + R*Math.sin(a))); }
+        return new THREE.LatheGeometry(pts, 64);
+      }
+      const PRT = pr * 1.015;
+      const hgTop = halfGeo(PRT, -0.05), hgBot = halfGeo(pr, 0);
+      // 外框用「整顆膠囊」一個外殼來描（不是上下兩半各描一次），接縫處才不會疊出一段特別粗的黑線
+      const fullOl = (() => {
+        const pts = [];
+        for (let i = 0; i <= 16; i++){ const a = -Math.PI / 2 + (i / 16) * Math.PI / 2; pts.push(new THREE.Vector2(Math.max(pr * Math.cos(a), 0.0001), -ph + pr * Math.sin(a))); }
+        pts.push(new THREE.Vector2(pr, -0.05), new THREE.Vector2(PRT, -0.05));
+        for (let i = 0; i <= 16; i++){ const a = (i / 16) * Math.PI / 2; pts.push(new THREE.Vector2(Math.max(PRT * Math.cos(a), 0.0001), ph + PRT * Math.sin(a))); }
+        return smoothGeo(new THREE.LatheGeometry(pts, 64));
+      })();
+      const seamGeo = new THREE.TorusGeometry(PRT + 0.002, 0.0035, 6, 48);
+      const inkM = new THREE.MeshBasicMaterial({color:INK}), whiteM = new THREE.MeshBasicMaterial({color:0xffffff});
+      function stad(w, h){
+        const r = Math.min(w, h) / 2, sh = new THREE.Shape(), hw = w / 2 - r, hh = h / 2 - r;
+        sh.absarc(hw, hh, r, 0, Math.PI / 2, false); sh.absarc(-hw, hh, r, Math.PI / 2, Math.PI, false);
+        sh.absarc(-hw, -hh, r, Math.PI, Math.PI * 1.5, false); sh.absarc(hw, -hh, r, Math.PI * 1.5, Math.PI * 2, false);
+        return sh;
+      }
+      const dotIn = new THREE.ShapeGeometry(stad(0.022, 0.022), 12), dotOut = new THREE.ShapeGeometry(stad(0.03, 0.03), 12);
+      const barIn = new THREE.ShapeGeometry(stad(0.02, 0.12), 12), barOut = new THREE.ShapeGeometry(stad(0.028, 0.128), 12);
+      const ZA = new THREE.Vector3(0, 0, 1);
+      function stick(inG, outG, nx, nz, R, y){
+        const g = new THREE.Group(), o = new THREE.Mesh(outG, inkM), f = new THREE.Mesh(inG, whiteM);
+        f.position.z = 0.0008; g.add(o, f);
+        const n = new THREE.Vector3(nx, 0, nz).normalize();
+        g.position.set(n.x * R, y, n.z * R); g.quaternion.setFromUnitVectors(ZA, n); return g;
+      }
+      const limeM = litMat(0xbaf65a, MAT.gelatin);
+      const gradM = new THREE.ShaderMaterial({
+        uniforms:{ len:{value:ph + pr} },
+        vertexShader:`uniform float len; varying float vT; varying vec3 vN; varying vec3 vV;
+          void main(){ vT = position.y / len; vec4 p = vec4(position, 1.0); vec3 nn = normal;
+            #ifdef USE_INSTANCING
+              p = instanceMatrix * p; nn = mat3(instanceMatrix) * nn;
+            #endif
+            vN = normalize(normalMatrix * nn); vec4 mv = modelViewMatrix * p; vV = -mv.xyz; gl_Position = projectionMatrix * mv; }`,
+        fragmentShader:`varying float vT; varying vec3 vN; varying vec3 vV; ${LIT_GLSL}
+          void main(){ vec3 n = normalize(vN);
+            vec3 c = mix(vec3(0.0, 0.863, 1.0), vec3(1.0), smoothstep(0.05, 0.85, vT));
+            gl_FragColor = vec4(litColor(c, n, normalize(vV), ${MAT.gelatin.spec.toFixed(2)}, ${MAT.gelatin.shin.toFixed(1)}), 1.0); }`
+      });
+      // 瓶子裡裝約七分滿的膠囊（隔著半透明玻璃看得到）
+      {
+        let seed = 11; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+        const mats = [], Q = new THREE.Quaternion(), E = new THREE.Euler(0, 0, 0, 'YXZ'), S1 = new THREE.Vector3(1, 1, 1), FLIP = new THREE.Matrix4().makeRotationX(Math.PI);
+        for (let y = yB + 0.17; y < yT - 0.32; y += 0.2){
+          [[0, 1], [0.40, 4], [0.68, 7]].forEach(([r, n]) => {
+            const off = rnd() * Math.PI * 2;
+            for (let k = 0; k < n; k++){
+              const a = off + k / n * Math.PI * 2;
+              const V = new THREE.Vector3(r * Math.cos(a), y + (rnd() - 0.5) * 0.05, r * Math.sin(a));
+              E.set((rnd() - 0.5) * 0.5, -a + Math.PI / 2 + (rnd() - 0.5) * 0.5, Math.PI / 2 + (rnd() - 0.5) * 0.4);   // 沿著瓶壁橫躺，不會穿出玻璃
+              Q.setFromEuler(E); mats.push(new THREE.Matrix4().compose(V, Q.clone(), S1));
+            }
+          });
+        }
+        const N = mats.length;
+        const mk = (geo, mat, flip) => { const im = new THREE.InstancedMesh(geo, mat, N); mats.forEach((m, i) => im.setMatrixAt(i, flip ? m.clone().multiply(FLIP) : m)); g.add(im); return im; };
+        mk(hgTop, limeM); mk(hgBot, gradM, true);
+        mk(fullOl, ol);
+      }
+
+      if (o.pile){
+      const P = [[0.649,-1.195,0.442,-0.53,0.00],[1.142,-1.195,0.137,-0.75,0.00],[1.463,-1.195,0.631,1.17,0.00],[1.908,-1.195,-0.198,-0.84,0.00],[0.707,-1.195,-0.102,-1.58,0.00],[0.558,-1.195,0.942,0.13,0.00],[1.621,-1.195,0.083,-0.31,0.00],[1.793,-1.195,0.780,1.44,0.00],[1.457,-1.195,-0.467,0.90,0.00],[1.084,-1.195,0.841,1.30,0.00],[0.978,-1.195,-0.547,-1.40,0.00],[0.359,-1.195,-0.360,-1.31,0.00],[0.700,-0.985,0.693,-0.19,0.04],[1.688,-0.985,-0.076,-0.44,0.12],[0.809,-0.985,0.293,-0.18,-0.07],[1.648,-0.985,0.575,1.36,0.11],[0.557,-0.985,-0.333,1.57,-0.07],[1.256,-0.775,0.033,0.60,0.05],[1.142,-0.775,0.438,0.58,-0.07],[0.816,-0.775,-0.084,0.85,0.01],[0.922,-0.575,0.071,0.80,0.04]];
+      // 整堆放大 1.3 倍（以靠藥瓶那側的地面為支點，確保不碰到瓶身、也不陷進地面）
+      const PS = 0.95, pileG = new THREE.Group(); bs.add(pileG);
+      pileG.scale.setScalar(PS); pileG.position.set(0.45 * (1 - PS), yB * (1 - PS), 0.2 * (1 - PS));
+      P.forEach(([x, y, z, yaw, tilt], i) => {
+        const outer = new THREE.Group(); outer.rotation.order = 'YXZ';
+        outer.position.set(x, y, z); outer.rotation.set(0, yaw, tilt);
+        const inner = new THREE.Group(); inner.rotation.set(i % 2 ? Math.PI / 2 : -Math.PI / 2, 0, -Math.PI / 2);
+        const top = new THREE.Mesh(hgTop, limeM), bot = new THREE.Mesh(hgBot, gradM);
+        bot.rotation.x = Math.PI;
+        inner.add(new THREE.Mesh(fullOl, ol));
+        inner.add(top, bot); rimLine(inner, PRT, -0.05, ol);
+        outer.add(inner); pileG.add(outer);
+      });
+      const ps = contactShadow();
+      ps.rotation.x = -Math.PI / 2; ps.position.set(1.13, yB - 0.012, 0.2); ps.scale.set(2.6, 2.4, 1); pileG.add(ps);
+      }
+    }
+
+    // 互動：拖曳旋轉，放手後慢慢自轉
+    let yaw = 0, vel = 0, dragging = false, lastX = 0, idle = 0, needsDraw = true;
+    yaw = o.yaw0 || 0;
+    if (o.drag){
+      st.addEventListener('pointerdown', e => { dragging = true; lastX = e.clientX; idle = 0; });
+      window.addEventListener('pointermove', e => { if (!dragging) return; const dx = e.clientX - lastX; lastX = e.clientX; vel = dx * 0.008; yaw += vel; });
+      window.addEventListener('pointerup', () => { dragging = false; });
+    }
+
+    let visible = false;
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; }, {rootMargin:'120px'}).observe(st);
+    function fit(){
+      const w = cv.clientWidth, h = cv.clientHeight; if (!w || !h) return;
+      br.setSize(w, h, false); cam.aspect = w / h;
+      const t = Math.tan(THREE.MathUtils.degToRad(cam.fov / 2));
+      const cx = o.cx || 0, hw = o.hw || 1.45, hh = o.hh || 2.05;
+      const z = Math.max(hh / t, hw / (t * cam.aspect));
+      cam.position.set(cx, 0.95, z); cam.lookAt(cx, 0.32, 0);
+      cam.updateProjectionMatrix(); needsDraw = true;
+      syncOutline(ol, br); syncOutline(olGlass, br);
+    }
+    window.addEventListener('resize', fit); fit();
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(cv);
+
+    let t0 = performance.now();
+    function loop(now){
+      requestAnimationFrame(loop);
+      if (!visible) { t0 = now; return; }
+      const dt = Math.min((now - t0) / 1000, 0.05); t0 = now;
+      if (!dragging){
+        vel *= 0.93; yaw += vel; idle += dt;
+        if (!reduce && o.spin && idle > 1.2) yaw += dt * 0.32 * Math.min(1, idle - 1.2);
+      }
+      g.rotation.y = yaw + (o.sway && !reduce ? Math.sin(now * 0.0006) * 0.35 : 0);
+      g.position.y = (reduce || o.pile) ? 0 : Math.sin(now * 0.0012) * 0.04;
+      br.render(bs, cam);
+    }
+    requestAnimationFrame(loop);
+  }
+  makeBottle('promo-gl', 'promo-stage', {drag:true, spin:true, hw:1.12, hh:1.92});
+  makeBottle('buy-gl', 'buy-stage', {sway:true, yaw0:-0.25, pile:true, bx:-0.8, cx:0.3, hw:2.45, hh:2.2});
+})(); }
+// 3D 程式庫備援：主要來源載入失敗時，改用第二個來源
+if (typeof THREE !== 'undefined') startPage();
+else {
+  const bk = document.createElement('script');
+  bk.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
+  bk.onload = startPage; bk.onerror = startPage;
+  document.head.appendChild(bk);
+}
+</script>
+
+<!-- 說明文字調整面板：只有網址結尾加 #tune 才會出現，一般訪客看不到 -->
+<style>
+.tune{position:fixed;right:16px;bottom:16px;z-index:100;width:300px;max-height:calc(100vh - 32px);overflow:auto;padding:16px 18px 14px;background:#fff;border:1px solid var(--ink-line);border-radius:20px;box-shadow:0 8px 28px rgba(0,0,0,.18);font-family:var(--font-tc);font-size:13px;color:#000}
+.tune[hidden]{display:none}
+.tune h3{font-size:14px;font-weight:500;letter-spacing:.06em;margin-bottom:2px}
+.tune .tip{font-size:11px;color:var(--ink-600);margin-bottom:10px;line-height:1.5}
+.tune .r{display:grid;grid-template-columns:72px 1fr 52px;gap:8px;align-items:center;margin-bottom:8px}
+.tune .r b{font-weight:400;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-600);font-size:12px}
+.tune input[type=range]{width:100%;accent-color:#7fbf2a}
+.tune .bt{display:flex;gap:6px;margin-top:6px}
+.tune button{flex:1;height:34px;border:1px solid var(--ink-line);border-radius:999px;background:#fff;font:inherit;font-size:13px;cursor:pointer}
+.tune button.go{background:var(--lime-500)}
+.tune .x{position:absolute;top:10px;right:12px;flex:none;width:28px;height:28px;padding:0;font-size:16px;line-height:1}
+.tune textarea{width:100%;height:64px;margin-top:8px;border:1px solid var(--line);border-radius:10px;padding:6px 8px;font:11px/1.4 ui-monospace,Menlo,monospace;color:var(--ink-600);resize:vertical}
+.tune .ok{height:14px;font-size:11px;color:#4f8a10;margin-top:4px}
+</style>
+<div class="tune" id="tune" hidden role="dialog" aria-label="說明文字調整">
+  <button class="x" id="tune-x" aria-label="關閉面板">×</button>
+  <h3>說明文字調整</h3>
+  <p class="tip">「四層配方…」「設計師記得…」這兩段。調好按「複製」貼給我，我會寫進頁面。</p>
+  <div id="tune-rows"></div>
+  <div class="bt"><button class="go" id="tune-copy">複製</button><button id="tune-reset">還原</button></div>
+  <div class="ok" id="tune-ok" aria-live="polite"></div>
+  <textarea id="tune-out" readonly aria-label="目前數值"></textarea>
+</div>
+<script>
+(function(){
+  const box = document.getElementById('tune'), desc = document.querySelector('.promo-desc');
+  if (!box || !desc) return;
+  // 每一條滑桿對應一個 CSS 變數
+  const ROWS = [
+    {v:'--pd-size',   label:'字級',       min:14,  max:40,  step:1,    unit:'px', def:19},
+    {v:'--pd-first',  label:'第一句放大', min:1,   max:1.8, step:0.05, unit:'×',  def:1},
+    {v:'--pd-weight', label:'粗細',       min:400, max:500, step:100,  unit:'',   def:400},
+    {v:'--pd-lh',     label:'行高',       min:1.2, max:2.4, step:0.05, unit:'',   def:1.55},
+    {v:'--pd-ls',     label:'字距',       min:0,   max:0.3, step:0.01, unit:'em', def:0},
+    {v:'--pd-gap',    label:'段落間距',   min:0,   max:48,  step:1,    unit:'px', def:14},
+    {v:'--pd-max',    label:'最大寬度',   min:320, max:900, step:10,   unit:'px', def:620}
+  ];
+  const wrap = document.getElementById('tune-rows'), vals = {};
+  const css = r => vals[r.v] + (r.unit === '×' ? '' : r.unit);
+  function apply(){
+    ROWS.forEach(r => desc.style.setProperty(r.v, css(r)));
+    document.getElementById('tune-out').value = ROWS.map(r => r.v + ':' + css(r)).join('; ');
+    clearTimeout(apply.t); apply.t = setTimeout(() => window.dispatchEvent(new Event('resize')), 120);   // 重新整理斷行
+  }
+  ROWS.forEach(r => {
+    vals[r.v] = r.def;
+    const row = document.createElement('label'); row.className = 'r';
+    row.innerHTML = `<span>${r.label}</span><input type="range" min="${r.min}" max="${r.max}" step="${r.step}" value="${r.def}"><b></b>`;
+    const inp = row.querySelector('input'), out = row.querySelector('b');
+    const show = () => out.textContent = (+vals[r.v]).toFixed(r.step < 0.1 ? 2 : r.step < 1 ? 1 : 0) + (r.unit === 'em' ? 'em' : r.unit === 'px' ? 'px' : r.unit);
+    inp.addEventListener('input', () => { vals[r.v] = +inp.value; show(); apply(); });
+    r.inp = inp; r.show = show; show(); wrap.appendChild(row);
+  });
+  document.getElementById('tune-reset').addEventListener('click', () => { ROWS.forEach(r => { vals[r.v] = r.def; r.inp.value = r.def; r.show(); }); apply(); });
+  document.getElementById('tune-copy').addEventListener('click', () => {
+    const t = document.getElementById('tune-out'), ok = document.getElementById('tune-ok');
+    const done = m => { ok.textContent = m; setTimeout(() => ok.textContent = '', 2400); };
+    try { navigator.clipboard.writeText(t.value).then(() => done('已複製，貼給我就可以'), () => { t.select(); done('請直接選取下方文字複製'); }); }
+    catch(e){ t.select(); done('請直接選取下方文字複製'); }
+  });
+  document.getElementById('tune-x').addEventListener('click', () => { box.hidden = true; });
+  function check(){
+    const on = location.hash === '#tune'; box.hidden = !on;
+    if (on) document.getElementById('promo').scrollIntoView({block:'center'});
+  }
+  window.addEventListener('hashchange', check); check(); apply();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>青蛙貼布｜FROGet</title>
+    <!-- 分頁標題前的小圖：綠色玻璃青蛙頭 -->
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+    <link rel="apple-touch-icon" href="img/favicon-180.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500&family=Post+No+Bills+Colombo&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/shop.css" />
+    <!-- three.js 路徑（3D 動畫模組使用） -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+        }
+      }
+    </script>
+  <script>
+  /* 每次進到這頁都從最上面開始，第一頁的動畫才會自己從頭跑。
+     瀏覽器（或嵌入的預覽視窗）會在載入後、甚至過好幾秒才把頁面捲回上次的位置（例如上一頁的最下面）；
+     在你自己動手捲動、或開場動畫播完自動往下捲之前，任何不是你捲的捲動都會被拉回最上面。 */
+  (function () {
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    var top = function () { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); };   // instant：頁面有平滑捲動，要直接跳回去
+    top();
+    var holding = true;
+    function release() { holding = false; window.removeEventListener('scroll', hold); }
+    window.__releaseTopHold = release;   // 開場動畫要自動往下捲時呼叫
+    ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (t) {
+      window.addEventListener(t, release, { passive: true, capture: true, once: true });
+    });
+    function hold() { if (holding && window.scrollY > 0) top(); }
+    window.addEventListener('scroll', hold, { passive: true });
+    window.addEventListener('load', hold);
+    window.addEventListener('pageshow', function (e) { if (e.persisted) { holding = true; window.addEventListener('scroll', hold, { passive: true }); top(); } });
+    setTimeout(release, 20000);   // 保險：20 秒後一定放開
+  })();
+</script>
+<script>
+  /* 離開這頁時馬上釋放所有 3D 畫面（WebGL）。瀏覽器同時能開的 3D 畫面有上限，
+     舊頁面的還沒釋放、新頁面又開了好幾個，最先開的那個（開場動畫）就會被瀏覽器關掉，變成一片空白。 */
+  window.addEventListener('pagehide', function () {
+    document.querySelectorAll('canvas').forEach(function (c) {
+      try {
+        var gl = c.__gl || null;
+        if (!gl) return;
+        var ext = gl.getExtension('WEBGL_lose_context'); if (ext) ext.loseContext();
+      } catch (e) {}
+    });
+  });
+  // 按「上一頁」回到這頁時（瀏覽器直接拿快取的舊畫面），3D 已經釋放了，重新載入一次
+  window.addEventListener('pageshow', function (e) { if (e.persisted) location.reload(); });
+  // 記下每個畫布的 3D 內容，離開時才找得到（不改變任何畫面行為）
+  (function () {
+    var orig = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (type) {
+      var ctx = orig.apply(this, arguments);
+      if (ctx && /webgl/.test(type)) this.__gl = ctx;
+      return ctx;
+    };
+  })();
+</script>
+</head>
+  <body class="shop-page">
+    <!-- 導覽列（與首頁相同）；這頁是青蛙貼布的產品頁，「商店」連到商店頁 store.html -->
+    <header class="nav">
+      <a class="logo" href="index.html">
+        <span class="logo-line1"><span class="logo-name">FROGet</span></span>
+      </a>
+      <nav class="menu">
+        <a href="ask.html">問答</a>
+        <a href="store.html">商店</a>
+        <a href="game.html">解壓遊戲</a>
+        <a href="pill.html">不累不累丸</a>
+        <a class="cart-button" href="cart.html"
+          >購物車 (<span id="cart-count">0</span>)</a
+        >
+      </nav>
+    </header>
+
+    <main>
+      <h1 class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">青蛙貼布</h1>
+
+      <!-- 01 貼布飛入（頁面開場，一進來就播）：區塊加長，內層固定在畫面上，3D 動畫跟著捲動進度播放 -->
+      <section class="shop-section shop-flyin" id="flyin">
+        <div class="flyin-sticky">
+          <div class="flyin-canvas" id="flyin-canvas"></div>
+        </div>
+      </section>
+
+      <!-- 02 開場：商品介紹（3D 袋子停在左欄商品圖位置緩慢擺動；右欄文字滑入） -->
+      <section class="shop-section shop-intro" id="intro">
+        <div class="intro-inner">
+          <div class="intro-visual">
+            <img
+              class="intro-img"
+              id="intro-img"
+              src="img/shop-pouch-front.png"
+              alt="青蛙貼布包裝正面"
+            />
+          </div>
+          <div class="intro-text">
+            <span class="shop-badge intro-reveal">NEW｜新品上市</span>
+            <h2 class="intro-title intro-reveal">青蛙貼布</h2>
+            <p class="intro-sub intro-reveal">痛感轉移！立即有感</p>
+            <div class="intro-desc intro-reveal">
+              <p>
+                全新研發 F-TRANSFER 超能痛覺轉移貼，搭載獨家五層式 F
+                粒子能量轉換系統。透過深層吸收、疼痛搜集、射線轉換、能量匯集及定向發射五大程序，實現完整的痛覺轉移循環。
+              </p>
+              <p>
+                本產品突破傳統貼布思維，不再侷限於單純舒緩，而是將疼痛視為可回收、可轉換、可輸出的珍貴資源。
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- 3D 畫布：鋪滿整個區塊，不擋滑鼠 -->
+        <div class="intro-canvas" id="intro-canvas"></div>
+      </section>
+
+      <!-- 04 產品說明：四張卡從右側滑入 -->
+      <section class="shop-section shop-specs" id="specs">
+        <div class="specs-inner">
+          <h2 class="shop-heading specs-title">產品說明</h2>
+          <div class="spec-row">
+            <article class="spec-card">
+              <div class="spec-number-row">
+                <span class="spec-number">0.3</span>
+                <span class="spec-unit">秒</span>
+              </div>
+              <h3 class="spec-title">不用一眨眼，立即見效</h3>
+              <p class="spec-body">
+                撕開、貼上，F 粒子 0.3 秒內開始搜集疼痛訊號。比你按下 ⌘Z 還快，痛感立刻有地方去。
+              </p>
+            </article>
+            <article class="spec-card">
+              <div class="spec-number-row">
+                <span class="spec-number">30</span>
+                <span class="spec-unit">小時</span>
+              </div>
+              <h3 class="spec-title">長久忍耐、必大爆炸</h3>
+              <p class="spec-body">
+                一片撐滿 30 小時，把整天的痠痛慢慢存起來。存到極限就集中爆破，熬夜改稿也撐得住。
+              </p>
+            </article>
+            <article class="spec-card">
+              <div class="spec-number-row">
+                <span class="spec-number">3</span>
+                <span class="spec-unit">公尺內生效</span>
+              </div>
+              <h3 class="spec-title">三步之內、我最快</h3>
+              <p class="spec-body">
+                轉移出去的痛感，會在 3 公尺內找到新主人。開會前記得確認一下，坐你旁邊的是誰。
+              </p>
+            </article>
+            <article class="spec-card">
+              <div class="spec-number-row">
+                <span class="spec-number">3</span>
+                <span class="spec-unit">種痛苦</span>
+              </div>
+              <h3 class="spec-title">痠痛・疼痛・爆炸痛</h3>
+              <p class="spec-body">
+                肩頸的痠、手腕的疼，還有聽到「再改一版」時的爆炸痛，三種一起收，一片搞定。
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05 貼布構造：畫面固定，捲動驅動四層分解＋五大程序；說明卡依程序淡入 -->
+      <!-- data-stage：對應程序（1 深層吸收、2 疼痛搜集、3 射線轉換、4 能量匯集、5 定向發射） -->
+      <section class="shop-section shop-layers" id="layers">
+        <div class="layers-sticky">
+          <div class="layers-canvas" id="layers-canvas"></div>
+          <div class="layers-inner">
+            <h2 class="shop-heading layers-title">
+              四層構造，由下往上把痛送走
+            </h2>
+            <div class="layer-labels">
+              <div class="layer-label is-left" data-stage="5">
+                <div class="layer-box">
+                  <h3 class="layer-name">05 發射層</h3>
+                  <p class="layer-body">
+                    透過定向能量發射技術，精準鎖定目標對象，將累積的疼痛訊號全面釋放，實現痛覺轉移，讓酸痛不再由你承擔。
+                  </p>
+                </div>
+                <img class="layer-leader" src="img/shop-leader.svg" alt="" />
+              </div>
+              <div class="layer-label is-right" data-stage="4">
+                <img class="layer-leader" src="img/shop-leader.svg" alt="" />
+                <div class="layer-box">
+                  <h3 class="layer-name">04 匯集層</h3>
+                  <p class="layer-body">
+                    配置多重能量匯流結構，有效集中並壓縮F射線，將分散的疼痛能量凝聚成高密度能量核心，蓄勢待發。
+                  </p>
+                </div>
+              </div>
+              <div class="layer-label is-left" data-stage="3">
+                <div class="layer-box">
+                  <h3 class="layer-name">03 轉換層</h3>
+                  <p class="layer-body">
+                    透過專利F粒子轉換技術，將搜集而來的疼痛能量進行分子重組，轉換為肉眼不可見的高頻F射線。
+                  </p>
+                </div>
+                <img class="layer-leader" src="img/shop-leader.svg" alt="" />
+              </div>
+              <div class="layer-label is-right" data-stage="2">
+                <img class="layer-leader" src="img/shop-leader.svg" alt="" />
+                <div class="layer-box">
+                  <h3 class="layer-name">02 F 粒子層</h3>
+                  <p class="layer-body">
+                    搭載高活性F粒子，能精準感應肌肉不適，迅速舒緩緊繃感，同時全面搜集疼痛訊號，轉化為可利用能量。
+                  </p>
+                </div>
+              </div>
+              <div class="layer-label is-left" data-stage="1">
+                <div class="layer-box">
+                  <h3 class="layer-name">01 吸收層</h3>
+                  <p class="layer-body">
+                    採用高密度親膚滲透材質，迅速深入肌膚表層，將有效成分層層導入，直達疼痛核心，開啟能量吸收程序。
+                  </p>
+                </div>
+                <img class="layer-leader" src="img/shop-leader.svg" alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 06 購買：左邊 3D 袋子（滑鼠移動時小幅傾斜），右邊商品資訊、數量、按鈕 -->
+      <section class="shop-section shop-buy" id="buy">
+        <div class="buy-inner">
+          <div class="buy-visual" id="buy-visual">
+            <div class="buy-canvas" id="buy-canvas"></div>
+          </div>
+          <div class="buy-info">
+            <h2 class="buy-title">青蛙貼布｜一盒 10 片</h2>
+            <p class="buy-price">NT$ 999</p>
+            <p class="buy-desc">
+              這是一段假文，示意這裡會放的說明內容與大概長度，正式文案之後再替換。這是一段假文，示意這裡會放的說明內容與大概長度，正式文案之後再替換。
+            </p>
+            <p class="buy-label" id="qty-label">數量</p>
+            <div class="qty-stepper" role="group" aria-labelledby="qty-label">
+              <button
+                class="qty-btn"
+                type="button"
+                id="qty-minus"
+                aria-label="減少數量"
+              >
+                －
+              </button>
+              <output class="qty-value" id="qty-value" aria-live="polite"
+                >1</output
+              >
+              <button
+                class="qty-btn"
+                type="button"
+                id="qty-plus"
+                aria-label="增加數量"
+              >
+                ＋
+              </button>
+            </div>
+            <button
+              class="pill-button pill-dark buy-button"
+              type="button"
+              id="add-cart"
+            >
+              加入購物車
+            </button>
+            <button
+              class="pill-button pill-secondary buy-button"
+              type="button"
+              id="add-wish"
+              aria-pressed="false"
+            >
+              加入願望清單
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- 滑到底：回商店／看另一個商品 -->
+    <nav class="back-band" aria-label="繼續逛逛">
+      <div>
+        <p class="back-band-kicker">KEEP BROWSING</p>
+        <p class="back-band-title">逛完了？回商店看看其他照顧自己的方法</p>
+      </div>
+      <div class="back-band-actions">
+        <a class="pill-button pill-primary to-store" href="store.html"><span class="arr">←</span>回商店</a>
+        <a class="pill-button pill-secondary to-other" href="pill.html">看不累不累丸<span class="arr">→</span></a>
+      </div>
+    </nav>
+
+    <!-- 頁尾 -->
+    <footer class="site-footer">
+      <div class="site-footer-text">
+        <p class="site-footer-title">FROGet to self-care</p>
+        <p class="site-footer-sub">designer survival guide　｜　貼掉你的煩惱</p>
+      </div>
+      <a class="site-footer-home" href="index.html" aria-label="回首頁">
+        <img class="icon-default" src="img/home-button-default.svg" alt="" />
+        <img class="icon-hover" src="img/home-button-hover.svg" alt="" />
+      </a>
+    </footer>
+
+    <script src="js/frogSound.js"></script>
+    <script type="module" src="js/shop.js"></script>
+  </body>
+</html>

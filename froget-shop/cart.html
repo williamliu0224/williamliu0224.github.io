@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>購物車｜FROGet</title>
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500&family=Post+No+Bills+Colombo&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ===== 設計變數（與商品頁相同） ===== */
+      :root {
+        --lime-50: #e7ffc4;
+        --lime-300: #bafc52;
+        --lime-500: #c8fa6e;
+        --pink: #fb6291;
+        --pink-200: #ffbdd1;
+        --pink-title: #ff3573;
+        --ink-900: #000000;
+        --ink-800: #1f1f1f;
+        --ink-600: #5f5f5f;
+        --ink-400: #9a9895;
+        --ink-line: #2b2b2b;
+        --gray-100: #edebeb;
+        --line: #d9d7d5;
+        --white: #ffffff;
+        --font-tc: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+        --font-logo: "Post No Bills Colombo", var(--font-tc);
+        --fs-12: 12px; --fs-14: 14px; --fs-16: 16px; --fs-20: 20px; --fs-28: 28px; --fs-40: 40px;
+        --lh-tight: 1.2; --lh-snug: 1.6; --lh-body: 1.7;
+        --ls-heading: 0.02em; --ls-title: 0.04em; --ls-body: 0.04em; --ls-ui: 0.1em; --ls-label: 0.2em;
+        --radius-lg: 32px; --radius-md: 20px; --radius-pill: 999px; --radius-circle: 50%;
+      }
+      @media (max-width: 640px) { :root { --radius-lg: 24px; } }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: var(--font-tc);
+        color: var(--ink-900);
+        -webkit-font-smoothing: antialiased;
+        background: linear-gradient(to bottom, var(--lime-50) 0, var(--white) 498px) no-repeat, var(--white);
+      }
+      a { color: inherit; text-decoration: none; }
+      button, input, textarea, select { font: inherit; color: inherit; }
+      .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+      :focus-visible { outline: 2px solid var(--ink-line); outline-offset: 3px; }
+
+      /* ===== 導覽列（與商品頁相同） ===== */
+      .nav { height: 60px; padding: 0 64px; display: flex; align-items: center; justify-content: space-between; background: var(--white); }
+      .logo-name { font-family: var(--font-logo); font-size: 24px; letter-spacing: 3.2px; }
+      .menu { display: flex; align-items: center; gap: 24px; }
+      .menu a { font-size: var(--fs-14); letter-spacing: var(--ls-ui); color: var(--ink-600); transition: color 0.2s; }
+      .menu a:hover { color: var(--ink-900); }
+      .menu .cart-button { padding: 7px 20px; font-size: var(--fs-12); border: 1px solid var(--ink-line); border-radius: var(--radius-pill); background: var(--lime-500); color: var(--ink-900); }
+
+      /* ===== 共用按鈕（與商品頁相同） ===== */
+      .pill-button { display: inline-flex; align-items: center; justify-content: center; height: 64px; padding: 0 28px; border: 1px solid var(--ink-line); border-radius: var(--radius-pill); font-size: var(--fs-16); font-weight: 500; letter-spacing: var(--ls-ui); line-height: var(--lh-tight); white-space: nowrap; cursor: pointer; transition: background-color 0.2s, transform 0.15s; }
+      .pill-button:active { transform: scale(0.98); }
+      .pill-primary { background: var(--lime-500); } .pill-primary:hover { background: var(--lime-300); }
+      .pill-secondary { background: var(--white); } .pill-secondary:hover { background: var(--gray-100); }
+      .pill-dark { background: var(--ink-line); color: var(--white); } .pill-dark:hover { background: var(--ink-900); }
+      .pill-button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+      /* ===== 頁面 ===== */
+      .page { max-width: 1728px; margin: 0 auto; padding: 72px 10.19% 140px; min-height: calc(100vh - 280px); }
+      .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+      .page-title { font-size: clamp(var(--fs-28), 2.31vw, var(--fs-40)); font-weight: 500; line-height: var(--lh-tight); letter-spacing: var(--ls-heading); color: var(--pink-title); }
+      .page-lead { margin-top: 12px; font-size: var(--fs-16); letter-spacing: var(--ls-body); color: var(--ink-600); }
+
+      /* 步驟：購物車 → 填寫資料 → 訂購完成 */
+      .steps { display: flex; align-items: center; gap: 8px; list-style: none; }
+      .steps li { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; white-space: nowrap; border: 1px solid var(--ink-line); border-radius: var(--radius-pill); background: var(--white); font-size: var(--fs-14); letter-spacing: var(--ls-ui); color: var(--ink-600); }
+      .steps li b { font-size: var(--fs-14); font-weight: 500; }   /* 只留數字，不加圓圈 */
+      .steps li.on { background: var(--lime-500); color: var(--ink-900); }
+      .steps li.done { color: var(--ink-900); }
+
+      .layout { margin-top: 48px; display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 48px; align-items: start; }
+
+      /* ===== 商品清單 ===== */
+      .items { display: flex; flex-direction: column; gap: 16px; list-style: none; }
+      .item { display: grid; grid-template-columns: 120px minmax(0, 1fr) auto; gap: 24px; align-items: center; padding: 20px; border: 1px solid var(--ink-line); border-radius: var(--radius-lg); background: var(--white); transition: opacity 0.3s, transform 0.3s; }
+      .item.leaving { opacity: 0; transform: translateX(24px); }
+      .item-thumb { width: 120px; height: 120px; border-radius: var(--radius-md); background: var(--gray-100); display: grid; place-items: center; overflow: hidden; }
+      .item-thumb img { width: auto; height: auto; max-width: 92px; max-height: 98px; object-fit: contain; filter: drop-shadow(3px 5px 8px rgba(0, 0, 0, 0.15)); }
+      /* 3D 藥瓶縮圖：模型載入成功才顯示，失敗時維持原本的圖片 */
+      /* 貼布縮圖：左右擺動，跟藥瓶自轉一起看起來是活的 */
+      .item-thumb { perspective: 420px; }
+      .item-thumb { transition: transform 0.25s; }
+      .item-thumb:hover { transform: scale(1.04); }
+      .item-name a { color: inherit; text-decoration: none; }
+      .item-name a:hover { text-decoration: underline; text-underline-offset: 4px; }
+      .bottle-thumb { display: none; width: 100%; height: 100%; }
+      .bottle-3d .item-thumb.has-model .bottle-thumb { display: block; }
+      .bottle-3d .item-thumb.has-model img { display: none; }
+      /* 3D 貼布縮圖：完整 360 度自轉；貼圖載好才顯示，失敗時維持原本的圖片 */
+      .pouch-thumb { display: none; width: 100%; height: 100%; filter: drop-shadow(3px 5px 8px rgba(0, 0, 0, 0.15)); }
+      .pouch-3d .item-thumb.has-pouch .pouch-thumb { display: block; }
+      .pouch-3d .item-thumb.has-pouch img { display: none; }
+      .item-no { font-size: var(--fs-12); letter-spacing: var(--ls-label); color: var(--ink-600); }
+      .item-name { margin-top: 4px; font-size: var(--fs-20); font-weight: 500; line-height: var(--lh-snug); letter-spacing: var(--ls-title); }
+      .item-spec { margin-top: 2px; font-size: var(--fs-14); letter-spacing: var(--ls-body); color: var(--ink-600); }
+      .item-unit { margin-top: 8px; font-size: var(--fs-14); letter-spacing: var(--ls-body); color: var(--ink-600); font-variant-numeric: tabular-nums; }
+      .item-side { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; }
+      .item-sum { font-size: var(--fs-20); font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .qty { width: 150px; height: 48px; padding: 0 8px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--ink-line); border-radius: var(--radius-pill); background: var(--white); }
+      .qty button { width: 34px; height: 34px; border: 0; border-radius: 50%; background: transparent; cursor: pointer; font-size: var(--fs-16); transition: background-color 0.2s; }
+      .qty button:hover:not(:disabled) { background: var(--gray-100); }
+      .qty button:disabled { color: var(--ink-400); cursor: default; }
+      .qty output { min-width: 2ch; text-align: center; font-weight: 500; font-variant-numeric: tabular-nums; }
+      .remove { border: 0; background: none; font-size: var(--fs-14); letter-spacing: var(--ls-body); color: var(--ink-600); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+      .remove:hover { color: var(--ink-900); }
+      .back-link { display: inline-block; margin-top: 24px; font-size: var(--fs-14); letter-spacing: var(--ls-ui); color: var(--ink-600); }
+      .back-link:hover { color: var(--ink-900); }
+
+      /* ===== 訂單摘要 ===== */
+      .summary { position: sticky; top: 24px; padding: 32px; border: 1px solid var(--ink-line); border-radius: var(--radius-lg); background: var(--white); }
+      .summary h2 { font-size: var(--fs-20); font-weight: 500; letter-spacing: var(--ls-title); }
+      .sum-lines { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; font-size: var(--fs-16); letter-spacing: var(--ls-body); }
+      .sum-line { display: flex; justify-content: space-between; gap: 16px; font-variant-numeric: tabular-nums; }
+      .sum-line span:first-child { color: var(--ink-600); }
+      .sum-mini { display: flex; justify-content: space-between; gap: 12px; font-size: var(--fs-14); color: var(--ink-600); letter-spacing: var(--ls-body); }
+      .ship-hint { padding: 10px 14px; border-radius: var(--radius-md); background: var(--lime-50); font-size: var(--fs-14); letter-spacing: var(--ls-body); line-height: var(--lh-snug); }
+      .sum-total { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: baseline; }
+      .sum-total span { font-size: var(--fs-16); letter-spacing: var(--ls-body); }
+      .sum-total b { font-size: var(--fs-28); font-weight: 500; font-variant-numeric: tabular-nums; }
+      .summary .pill-button { width: 100%; margin-top: 24px; }
+      .summary .pill-button + .pill-button { margin-top: 12px; }
+      .note { margin-top: 16px; font-size: var(--fs-12); line-height: var(--lh-body); letter-spacing: var(--ls-body); color: var(--ink-600); }
+
+      /* ===== 空的購物車 ===== */
+      .empty { margin-top: 48px; padding: 56px 32px 64px; border: 1px solid var(--ink-line); border-radius: var(--radius-lg); background: var(--white); text-align: center; }
+      .empty img { width: min(360px, 80%); height: auto; }
+      .empty h2 { margin-top: 24px; font-size: var(--fs-28); font-weight: 500; letter-spacing: var(--ls-title); }
+      .empty p { margin-top: 8px; font-size: var(--fs-16); letter-spacing: var(--ls-body); color: var(--ink-600); }
+      .empty-actions { margin-top: 32px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+      /* ===== 填寫資料 ===== */
+      .form { display: flex; flex-direction: column; gap: 32px; }
+      .fieldset { padding: 32px; border: 1px solid var(--ink-line); border-radius: var(--radius-lg); background: var(--white); }
+      .fieldset legend { float: left; width: 100%; font-size: var(--fs-20); font-weight: 500; letter-spacing: var(--ls-title); }
+      .fieldset legend + * { clear: both; }
+      .fields { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+      .field { display: flex; flex-direction: column; gap: 8px; }
+      .field.full { grid-column: 1 / -1; }
+      .field label, .group-label { font-size: var(--fs-14); letter-spacing: var(--ls-ui); color: var(--ink-600); }
+      .field label i, .group-label i { font-style: normal; color: var(--pink-title); }
+      .field input, .field textarea, .field select { height: 52px; padding: 0 20px; border: 1px solid var(--ink-line); border-radius: var(--radius-pill); background: var(--white); font-size: var(--fs-16); letter-spacing: var(--ls-body); }
+      .field textarea { height: 96px; padding: 14px 20px; border-radius: var(--radius-md); resize: vertical; line-height: var(--lh-snug); }
+      .field input::placeholder, .field textarea::placeholder { color: var(--ink-400); }
+      .field.bad input, .field.bad textarea, .field.bad select { border-color: var(--pink-title); background: #fff5f8; }
+      .err { min-height: 0; font-size: var(--fs-12); letter-spacing: var(--ls-body); color: var(--pink-title); }
+      .choices { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 12px; }
+      .choice { position: relative; }
+      .choice input { position: absolute; opacity: 0; pointer-events: none; }
+      .choice span { display: flex; flex-direction: column; gap: 2px; min-width: 180px; padding: 14px 22px; border: 1px solid var(--ink-line); border-radius: var(--radius-md); background: var(--white); cursor: pointer; transition: background-color 0.2s; }
+      .choice span b { font-size: var(--fs-16); font-weight: 500; letter-spacing: var(--ls-title); }
+      .choice span small { font-size: var(--fs-12); letter-spacing: var(--ls-body); color: var(--ink-600); }
+      .choice span:hover { background: var(--gray-100); }
+      .choice input:checked + span { background: var(--lime-500); }
+      .choice input:focus-visible + span { outline: 2px solid var(--ink-line); outline-offset: 3px; }
+      .form-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+      .form-actions .pill-button { min-width: 200px; }
+
+      /* ===== 訂購完成 ===== */
+      .done-wrap { margin-top: 48px; display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 48px; align-items: start; }
+      .done-card { padding: 48px 40px; border: 1px solid var(--ink-line); border-radius: var(--radius-lg); background: var(--white); text-align: center; }
+      .done-badge { display: inline-grid; place-items: center; width: 88px; height: 88px; border: 1px solid var(--ink-line); border-radius: 50%; background: var(--lime-500); font-size: 40px; }
+      .done-card h2 { margin-top: 24px; font-size: var(--fs-40); font-weight: 500; letter-spacing: var(--ls-heading); color: var(--pink-title); }
+      .done-card p { margin-top: 12px; font-size: var(--fs-16); line-height: var(--lh-body); letter-spacing: var(--ls-body); color: var(--ink-600); }
+      .order-no { display: inline-block; margin-top: 24px; padding: 10px 20px; border: 1px solid var(--ink-line); border-radius: var(--radius-pill); background: var(--gray-100); font-size: var(--fs-16); letter-spacing: var(--ls-ui); font-variant-numeric: tabular-nums; }
+      .recap { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); display: grid; grid-template-columns: max-content 1fr; gap: 10px 24px; text-align: left; font-size: var(--fs-14); letter-spacing: var(--ls-body); line-height: var(--lh-snug); }
+      .recap dt { color: var(--ink-600); }
+      .done-card .pill-button { margin-top: 32px; min-width: 200px; }
+
+      /* 每個步驟淡入 */
+      .view { animation: view-in 0.45s ease-out; }
+      @keyframes view-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+      @media (prefers-reduced-motion: reduce) { .view { animation: none; } .item { transition: none; } }
+
+      /* ===== 頁尾（與商品頁相同） ===== */
+      .site-footer { padding: 72px 10.19% 64px; display: flex; align-items: flex-start; justify-content: space-between; background: var(--white); }
+      .site-footer-title { font-size: var(--fs-20); letter-spacing: var(--ls-title); color: var(--ink-800); }
+      .site-footer-sub { margin-top: 16px; font-size: var(--fs-14); letter-spacing: var(--ls-ui); color: var(--ink-400); }
+      .site-footer-home .bg { fill: var(--white); transition: fill 0.2s; }
+      .site-footer-home:hover .bg { fill: var(--lime-500); }
+
+      /* ===== 小螢幕 ===== */
+      @media (max-width: 1100px) {
+        .layout, .done-wrap { grid-template-columns: 1fr; }
+        .summary { position: static; }
+      }
+      @media (max-width: 640px) {
+        .nav { height: auto; padding: 12px 16px; flex-direction: column; gap: 8px; }
+        .menu { flex-wrap: wrap; justify-content: center; gap: 14px; }
+        .page { padding: 40px 16px 96px; }
+        .steps li span { display: none; }
+        .item { grid-template-columns: 88px minmax(0, 1fr); gap: 16px; padding: 16px; }
+        .item-thumb { width: 88px; height: 88px; }
+        .item-thumb img { max-width: 68px; max-height: 72px; }
+        .item-side { grid-column: 1 / -1; flex-direction: row; align-items: center; justify-content: space-between; }
+        .fields { grid-template-columns: 1fr; }
+        .fieldset, .summary { padding: 24px; }
+        .choice span { min-width: 0; }
+        .form-actions .pill-button, .empty-actions .pill-button { width: 100%; }
+        .site-footer { padding: 48px 16px; }
+      }
+    </style>
+  <script>
+  /* 離開這頁時馬上釋放所有 3D 畫面（WebGL）。瀏覽器同時能開的 3D 畫面有上限，
+     舊頁面的還沒釋放、新頁面又開了好幾個，最先開的那個（開場動畫）就會被瀏覽器關掉，變成一片空白。 */
+  window.addEventListener('pagehide', function () {
+    document.querySelectorAll('canvas').forEach(function (c) {
+      try {
+        var gl = c.__gl || null;
+        if (!gl) return;
+        var ext = gl.getExtension('WEBGL_lose_context'); if (ext) ext.loseContext();
+      } catch (e) {}
+    });
+  });
+  // 按「上一頁」回到這頁時（瀏覽器直接拿快取的舊畫面），3D 已經釋放了，重新載入一次
+  window.addEventListener('pageshow', function (e) { if (e.persisted) location.reload(); });
+  // 記下每個畫布的 3D 內容，離開時才找得到（不改變任何畫面行為）
+  (function () {
+    var orig = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (type) {
+      var ctx = orig.apply(this, arguments);
+      if (ctx && /webgl/.test(type)) this.__gl = ctx;
+      return ctx;
+    };
+  })();
+</script>
+</head>
+  <body>
+    <header class="nav">
+      <a class="logo" href="index.html"><span class="logo-name">FROGet</span></a>
+      <nav class="menu" aria-label="主選單">
+        <a href="ask.html">問答</a>
+        <a href="store.html">商店</a>
+        <a href="game.html">解壓遊戲</a>
+        <a href="patch.html">青蛙貼布</a>
+        <a href="pill.html">不累不累丸</a>
+        <a class="cart-button" href="cart.html" aria-current="page">購物車 (<span id="cart-count">0</span>)</a>
+      </nav>
+    </header>
+
+    <main class="page" id="page">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title" id="page-title">購物車</h1>
+          <p class="page-lead" id="page-lead">看看你幫自己準備了什麼。</p>
+        </div>
+        <ol class="steps" id="steps" aria-label="結帳步驟">
+          <li data-step="cart"><b>1</b><span>購物車</span></li>
+          <li data-step="form"><b>2</b><span>填寫資料</span></li>
+          <li data-step="done"><b>3</b><span>訂購完成</span></li>
+        </ol>
+      </div>
+      <div id="view"></div>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <p class="site-footer-title">FROGet to self-care</p>
+        <p class="site-footer-sub">designer survival guide ｜ 永不喊累</p>
+      </div>
+      <a class="site-footer-home" href="index.html" aria-label="回首頁">
+        <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true"><rect class="bg" x=".5" y=".5" width="55" height="55" rx="27.5" /><rect x=".5" y=".5" width="55" height="55" rx="27.5" stroke="#2B2B2B" /><path d="M19 27.5L28 19.5L37 27.5M22 25.5V36.5H34V25.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke="black" /></svg>
+      </a>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+    <script src="js/pillBottle.js" defer></script>
+    <script src="js/patchPouchThumb.js" defer></script>
+    <script>
+      (function () {
+        // ===== 設定：商品圖片與連結（依網站實際檔案位置修改） =====
+        const PRODUCTS = {
+          patch: { no: "(01) F-TRANSFER", img: "img/shop-pouch-front.png", href: "patch.html", pouch: true }, // pouch：顯示 3D 貼布袋，完整自轉（img 是載入失敗時的備用圖）
+          pill: { no: "(02) F-RECHARGE", img: "frogs/pill.png", href: "pill.html", model: true }, // model：顯示 3D 藥瓶（img 是載入失敗時的備用圖）
+        };
+        const EMPTY_IMG = "frogs/tired.png"; // 空購物車的青蛙圖
+        const SHIP = { home: 100, store: 60, freeOver: 1500 }; // 宅配／超商運費，滿多少免運
+
+        // ===== 購物車資料：存在瀏覽器裡（兩個商品頁按「加入購物車」時寫入同一份） =====
+        const KEY = "froget-cart";
+        const read = () => { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { return []; } };
+        const write = (c) => { try { localStorage.setItem(KEY, JSON.stringify(c)); } catch (e) {} };
+        let cart = read();
+
+        // 網址結尾加 #demo：放入示範商品（只用來預覽版面）
+        if (location.hash === "#demo" && !cart.length) {
+          cart = [
+            { id: "patch|一盒 10 片", product: "patch", name: "青蛙貼布", spec: "一盒 10 片", price: 999, qty: 1 },
+            { id: "pill|一瓶 30 粒", product: "pill", name: "不累不累丸", spec: "一瓶 30 粒", price: 399, qty: 2 },
+          ];
+          write(cart);
+        }
+
+        const $ = (id) => document.getElementById(id);
+        const money = (n) => "NT$ " + n.toLocaleString("en-US");
+        const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+        const count = () => cart.reduce((a, it) => a + it.qty, 0);
+        const subtotal = () => cart.reduce((a, it) => a + it.price * it.qty, 0);
+        const shipping = (method) => (subtotal() >= SHIP.freeOver ? 0 : SHIP[method || "home"]);
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        function syncCount() { $("cart-count").textContent = count(); }
+        function setStep(step) {
+          const order = ["cart", "form", "done"], i = order.indexOf(step);
+          document.querySelectorAll("#steps li").forEach((li) => {
+            const j = order.indexOf(li.dataset.step);
+            li.classList.toggle("on", j === i);
+            li.classList.toggle("done", j < i);
+            li.toggleAttribute("aria-current", j === i);
+            if (j === i) li.setAttribute("aria-current", "step");
+          });
+        }
+        function show(html, title, lead, step) {
+          $("view").innerHTML = '<div class="view">' + html + "</div>";
+          $("page-title").textContent = title;
+          $("page-lead").textContent = lead;
+          setStep(step);
+          syncCount();
+        }
+
+        // ---------- 摘要（購物車與填寫資料共用） ----------
+        function summaryHTML(method, mode) {
+          const sub = subtotal(), ship = shipping(method), left = SHIP.freeOver - sub;
+          const lines = mode === "form"
+            ? cart.map((it) => `<div class="sum-mini"><span>${esc(it.name)}｜${esc(it.spec)} × ${it.qty}</span><span>${money(it.price * it.qty)}</span></div>`).join("")
+            : "";
+          return `
+            <aside class="summary" aria-label="訂單摘要">
+              <h2>訂單摘要</h2>
+              <div class="sum-lines">
+                ${lines}
+                <div class="sum-line"><span>商品小計（${count()} 件）</span><span>${money(sub)}</span></div>
+                <div class="sum-line"><span>運費</span><span>${ship ? money(ship) : "免運"}</span></div>
+                ${left > 0 ? `<p class="ship-hint">再買 ${money(left)} 就免運</p>` : `<p class="ship-hint">已達 ${money(SHIP.freeOver)}，免運費</p>`}
+              </div>
+              <div class="sum-total"><span>合計</span><b id="grand">${money(sub + ship)}</b></div>
+              ${mode === "cart"
+                ? `<button class="pill-button pill-dark" type="button" id="to-form">前往結帳</button>
+                   <a class="pill-button pill-secondary" href="store.html">繼續逛逛</a>`
+                : ""}
+              <p class="note">恭喜你成為自己的主人</p>
+            </aside>`;
+        }
+
+        // ---------- 1 購物車 ----------
+        function renderCart() {
+          if (!cart.length) {
+            show(`
+              <section class="empty">
+                <img src="${EMPTY_IMG}" alt="一隻累到趴在桌上的青蛙" />
+                <h2>購物車是空的</h2>
+                <p>先去照顧一下自己吧。</p>
+                <div class="empty-actions">
+                  <a class="pill-button pill-primary" href="${PRODUCTS.patch.href}">看青蛙貼布</a>
+                  <a class="pill-button pill-secondary" href="${PRODUCTS.pill.href}">看不累不累丸</a>
+                </div>
+              </section>`, "購物車", "還沒有放東西進來。", "cart");
+            return;
+          }
+          const items = cart.map((it, i) => {
+            const p = PRODUCTS[it.product] || {};
+            return `
+              <li class="item" data-i="${i}">
+                <a class="item-thumb${p.model ? " has-model" : ""}${p.pouch ? " has-pouch" : ""}" href="${p.href || "#"}">${p.model ? `<canvas class="bottle-thumb" role="img" aria-label="${esc(it.name)} 3D 藥瓶"></canvas>` : ""}${p.pouch ? `<canvas class="pouch-thumb" role="img" aria-label="${esc(it.name)} 3D 貼布袋"></canvas>` : ""}<img src="${p.img || ""}" alt="${esc(it.name)}" /></a>
+                <div>
+                  <p class="item-no">${p.no || ""}</p>
+                  <h3 class="item-name"><a href="${p.href || "#"}">${esc(it.name)}</a></h3>
+                  <p class="item-spec">${esc(it.spec)}</p>
+                  <p class="item-unit">單價 ${money(it.price)}</p>
+                </div>
+                <div class="item-side">
+                  <span class="item-sum">${money(it.price * it.qty)}</span>
+                  <div class="qty" role="group" aria-label="${esc(it.name)} 數量">
+                    <button type="button" data-act="minus" aria-label="減少數量" ${it.qty <= 1 ? "disabled" : ""}>－</button>
+                    <output aria-live="polite">${it.qty}</output>
+                    <button type="button" data-act="plus" aria-label="增加數量" ${it.qty >= 99 ? "disabled" : ""}>＋</button>
+                  </div>
+                  <button class="remove" type="button" data-act="remove">移除</button>
+                </div>
+              </li>`;
+          }).join("");
+          show(`
+            <div class="layout">
+              <div>
+                <ul class="items" id="items">${items}</ul>
+                <a class="back-link" href="store.html">← 繼續逛逛</a>
+              </div>
+              ${summaryHTML("home", "cart")}
+            </div>`, "購物車", `共 ${count()} 件商品，看看你幫自己準備了什麼。`, "cart");
+
+          $("items").addEventListener("click", (ev) => {
+            const btn = ev.target.closest("button[data-act]");
+            if (!btn) return;
+            const li = btn.closest(".item"), i = Number(li.dataset.i), it = cart[i];
+            if (btn.dataset.act === "plus") it.qty = Math.min(99, it.qty + 1);
+            if (btn.dataset.act === "minus") it.qty = Math.max(1, it.qty - 1);
+            if (btn.dataset.act === "remove") {
+              cart.splice(i, 1); write(cart);
+              if (reduceMotion) { renderCart(); return; }
+              li.classList.add("leaving");
+              setTimeout(renderCart, 280);
+              return;
+            }
+            write(cart); renderCart();
+            const again = document.querySelector(`.item[data-i="${i}"] button[data-act="${btn.dataset.act}"]`);
+            if (again && !again.disabled) again.focus();   // 連按時焦點留在同一顆按鈕
+          });
+          $("to-form").addEventListener("click", () => { renderForm(); window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" }); });
+        }
+
+        // ---------- 2 填寫資料 ----------
+        let form = { name: "", phone: "", email: "", method: "home", address: "", store: "", pay: "cod", memo: "" };
+        function renderForm() {
+          if (!cart.length) { renderCart(); return; }
+          const f = form;
+          show(`
+            <div class="layout">
+              <form class="form" id="form" novalidate>
+                <fieldset class="fieldset">
+                  <legend>收件人</legend>
+                  <div class="fields">
+                    <div class="field"><label for="f-name">姓名 <i>*</i></label><input id="f-name" name="name" autocomplete="name" value="${esc(f.name)}" placeholder="王小蛙" /><span class="err" id="e-name"></span></div>
+                    <div class="field"><label for="f-phone">手機 <i>*</i></label><input id="f-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" value="${esc(f.phone)}" placeholder="0912345678" /><span class="err" id="e-phone"></span></div>
+                    <div class="field full"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" value="${esc(f.email)}" placeholder="frog@example.com（選填，收訂單通知）" /><span class="err" id="e-email"></span></div>
+                  </div>
+                </fieldset>
+
+                <fieldset class="fieldset">
+                  <legend>取貨方式</legend>
+                  <div class="choices">
+                    <label class="choice"><input type="radio" name="method" value="home" ${f.method === "home" ? "checked" : ""} /><span><b>宅配到府</b><small>運費 ${money(SHIP.home)}，2～3 天到</small></span></label>
+                    <label class="choice"><input type="radio" name="method" value="store" ${f.method === "store" ? "checked" : ""} /><span><b>超商取貨</b><small>運費 ${money(SHIP.store)}，3～4 天到</small></span></label>
+                  </div>
+                  <div class="fields">
+                    <div class="field full" id="w-address" ${f.method === "home" ? "" : "hidden"}><label for="f-address">收件地址 <i>*</i></label><input id="f-address" name="address" autocomplete="street-address" value="${esc(f.address)}" placeholder="縣市、區、路名、門牌" /><span class="err" id="e-address"></span></div>
+                    <div class="field full" id="w-store" ${f.method === "store" ? "" : "hidden"}><label for="f-store">取貨門市 <i>*</i></label><input id="f-store" name="store" value="${esc(f.store)}" placeholder="例如：7-ELEVEN 台藝門市" /><span class="err" id="e-store"></span></div>
+                  </div>
+                </fieldset>
+
+                <fieldset class="fieldset">
+                  <legend>付款方式</legend>
+                  <div class="choices">
+                    <label class="choice"><input type="radio" name="pay" value="cod" ${f.pay === "cod" ? "checked" : ""} /><span><b>貨到付款</b><small>收到再付</small></span></label>
+                    <label class="choice"><input type="radio" name="pay" value="transfer" ${f.pay === "transfer" ? "checked" : ""} /><span><b>ATM 轉帳</b><small>下單後提供帳號</small></span></label>
+                    <label class="choice"><input type="radio" name="pay" value="linepay" ${f.pay === "linepay" ? "checked" : ""} /><span><b>LINE Pay</b><small>示意，不會跳轉</small></span></label>
+                  </div>
+                  <div class="fields">
+                    <div class="field full"><label for="f-memo">備註</label><textarea id="f-memo" name="memo" placeholder="想對青蛙說的話（選填）">${esc(f.memo)}</textarea></div>
+                  </div>
+                </fieldset>
+
+                <div class="form-actions">
+                  <button class="pill-button pill-secondary" type="button" id="back-cart">← 回購物車</button>
+                  <button class="pill-button pill-dark" type="submit">確認下單</button>
+                </div>
+              </form>
+              ${summaryHTML(f.method, "form")}
+            </div>`, "填寫資料", "最後一步，告訴青蛙要送去哪裡。", "form");
+
+          const el = $("form");
+          // 邊填邊記住（回購物車再回來，資料還在）
+          el.addEventListener("input", (ev) => {
+            const t = ev.target; if (!t.name) return;
+            form[t.name] = t.value;
+            if (t.name === "method") {
+              $("w-address").hidden = t.value !== "home";
+              $("w-store").hidden = t.value !== "store";
+              $("grand").textContent = money(subtotal() + shipping(t.value));
+              const shipLine = el.parentElement.querySelectorAll(".sum-line span")[3];
+              if (shipLine) { const s = shipping(t.value); shipLine.textContent = s ? money(s) : "免運"; }
+            }
+            const box = t.closest(".field");
+            if (box && box.classList.contains("bad")) { box.classList.remove("bad"); const e = box.querySelector(".err"); if (e) e.textContent = ""; t.removeAttribute("aria-invalid"); }
+          });
+          $("back-cart").addEventListener("click", renderCart);
+          el.addEventListener("submit", (ev) => {
+            ev.preventDefault();
+            const errs = validate();
+            if (errs.length) { const first = $(errs[0]); if (first) first.focus(); return; }
+            renderDone();
+            window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+          });
+        }
+        function validate() {
+          const f = form, bad = [];
+          const mark = (id, msg) => {
+            const input = $("f-" + id), box = input.closest(".field");
+            box.classList.add("bad"); input.setAttribute("aria-invalid", "true");
+            input.setAttribute("aria-describedby", "e-" + id);
+            $("e-" + id).textContent = msg; bad.push("f-" + id);
+          };
+          document.querySelectorAll(".field.bad").forEach((b) => b.classList.remove("bad"));
+          document.querySelectorAll(".err").forEach((e) => (e.textContent = ""));
+          if (!f.name.trim()) mark("name", "請填寫姓名");
+          if (!/^09\d{8}$/.test(f.phone.replace(/[\s-]/g, ""))) mark("phone", "請填寫 09 開頭的 10 碼手機號碼");
+          if (f.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim())) mark("email", "Email 格式好像不太對");
+          if (f.method === "home" && !f.address.trim()) mark("address", "請填寫收件地址");
+          if (f.method === "store" && !f.store.trim()) mark("store", "請填寫取貨門市");
+          return bad;
+        }
+
+        // ---------- 3 訂購完成 ----------
+        function renderDone() {
+          const f = form, d = new Date();
+          const no = "FG-" + String(d.getFullYear()).slice(2) + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0") + "-" + String(Math.floor(1000 + Math.random() * 9000));
+          const sub = subtotal(), ship = shipping(f.method);
+          const payName = { cod: "貨到付款", transfer: "ATM 轉帳", linepay: "LINE Pay" }[f.pay];
+          const items = cart.map((it) => `${esc(it.name)}｜${esc(it.spec)} × ${it.qty}`).join("<br />");
+          const html = `
+            <div class="done-wrap">
+              <section class="done-card">
+                <span class="done-badge" aria-hidden="true">🐸</span>
+                <h2>訂購完成！</h2>
+                <p>謝謝你，記得照顧自己。<br />${f.email.trim() ? "訂單通知已寄到 " + esc(f.email.trim()) + "。" : "青蛙已經收到你的訂單了。"}</p>
+                <span class="order-no">訂單編號 ${no}</span>
+                <dl class="recap">
+                  <dt>商品</dt><dd>${items}</dd>
+                  <dt>收件人</dt><dd>${esc(f.name)}｜${esc(f.phone)}</dd>
+                  <dt>取貨方式</dt><dd>${f.method === "home" ? "宅配到府｜" + esc(f.address) : "超商取貨｜" + esc(f.store)}</dd>
+                  <dt>付款方式</dt><dd>${payName}</dd>
+                  <dt>合計</dt><dd><b>${money(sub + ship)}</b>（含運費 ${ship ? money(ship) : "免運"}）</dd>
+                </dl>
+                <a class="pill-button pill-primary" href="store.html">回商店逛逛</a>
+              </section>
+            </div>`;
+          cart = []; write(cart);                         // 下單後清空購物車
+          form = { name: "", phone: "", email: "", method: "home", address: "", store: "", pay: "cod", memo: "" };
+          show(html, "訂購完成", "", "done");
+          $("page-lead").textContent = "訂單已送出。";
+        }
+
+        // 其他分頁加入商品時，這裡也同步
+        window.addEventListener("storage", (ev) => { if (ev.key === KEY) { cart = read(); if (!document.querySelector(".done-wrap")) renderCart(); } });
+        renderCart();
+      })();
+    </script>
+  </body>
+</html>

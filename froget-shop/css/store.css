@@ -1,0 +1,181 @@
+/* ===== 商店頁（shop.html）專用樣式 =====
+   共用變數與導覽列在 style.css；膠囊按鈕、頁尾在 shop.css */
+
+/* ===== 主視覺：3D 細胞分裂 ===== */
+/* 導覽列以下整個畫面；3D 畫布鋪滿、背景透明 */
+.store-hero {
+  position: relative;
+  height: calc(100vh - 60px);
+  height: calc(100svh - 60px);
+  min-height: 520px;
+  overflow: hidden;
+  background: var(--white);
+}
+
+.store-hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: pan-y; /* 手機上下滑動照常捲頁 */
+}
+
+/* 頁面標題只給螢幕閱讀器（畫面上由動畫表現） */
+.store-hero-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* 商品入口：位置由 js 跟著 3D 泡泡移動，動畫最後淡入 */
+.hero-label {
+  position: absolute;
+  left: 50%;
+  top: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.hero-label-tag {
+  font-size: var(--fs-12);
+  letter-spacing: var(--ls-label);
+  color: var(--ink-600);
+}
+
+.hero-label-name {
+  font-size: var(--fs-28);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-title);
+}
+
+.hero-label-link {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;   /* 文字和箭頭之間（inline-flex 會吃掉空白） */
+  min-height: 44px;
+  padding: 0 24px;
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius-pill);
+  background: var(--white);
+  font-size: var(--fs-14);
+  letter-spacing: var(--ls-ui);
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.hero-label-link:hover,
+.hero-label-link:focus-visible {
+  background: var(--lime-100);   /* 滑鼠移入：淡綠底＋黑字 */
+  color: var(--ink-900);
+  outline: none;
+}
+
+/* 再看一次：動畫播完後出現在右下角 */
+.hero-replay {
+  position: absolute;
+  right: 64px;
+  bottom: 32px;
+  min-height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius-pill);
+  background: var(--white);
+  font-family: inherit;
+  font-size: var(--fs-12);
+  letter-spacing: var(--ls-ui);
+  color: var(--ink-600);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.4s,
+    background-color 0.2s;
+}
+
+.hero-replay.is-shown {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hero-replay:hover {
+  background: var(--lime-50);
+  color: var(--ink-900);
+}
+
+/* 聲音開關：還沒允許出聲時才顯示（左下角），樣式跟「再看一次」一樣 */
+.hero-sound {
+  position: absolute;
+  left: 64px;
+  bottom: 32px;
+  min-height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius-pill);
+  background: var(--white);
+  font-family: inherit;
+  font-size: var(--fs-12);
+  letter-spacing: var(--ls-ui);
+  color: var(--ink-600);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.4s,
+    background-color 0.2s;
+}
+
+.hero-sound.is-shown {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hero-sound:hover {
+  background: var(--lime-50);
+  color: var(--ink-900);
+}
+
+/* ===== 小螢幕 ===== */
+@media (max-width: 1200px) {
+  .hero-replay {
+    right: 40px;
+  }
+  .hero-sound {
+    left: 40px;
+  }
+}
+
+/* 直式畫面（手機）：動畫區高度跟著寬度，青蛙才不會被大片空白包住 */
+@media (max-aspect-ratio: 1/1) {
+  .store-hero {
+    height: 125vw;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero-label-name {
+    font-size: var(--fs-20);
+  }
+  .hero-label-link {
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-replay {
+    right: 20px;
+    bottom: 20px;
+  }
+}

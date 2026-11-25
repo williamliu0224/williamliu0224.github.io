@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>商店｜FROGet</title>
+    <!-- 分頁標題前的小圖 -->
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+    <link rel="apple-touch-icon" href="img/favicon-180.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500&family=Post+No+Bills+Colombo&display=swap"
+      rel="stylesheet"
+    />
+    <!-- 共用：變數、導覽列（style.css）；膠囊按鈕、頁尾（shop.css）；商店頁專用（store.css） -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/shop.css" />
+    <link rel="stylesheet" href="css/store.css" />
+    <!-- three.js 路徑（3D 主視覺使用，跟其他頁同一版） -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+        }
+      }
+    </script>
+  <script>
+  /* 離開這頁時馬上釋放所有 3D 畫面（WebGL）。瀏覽器同時能開的 3D 畫面有上限，
+     舊頁面的還沒釋放、新頁面又開了好幾個，最先開的那個（開場動畫）就會被瀏覽器關掉，變成一片空白。 */
+  window.addEventListener('pagehide', function () {
+    document.querySelectorAll('canvas').forEach(function (c) {
+      try {
+        var gl = c.__gl || null;
+        if (!gl) return;
+        var ext = gl.getExtension('WEBGL_lose_context'); if (ext) ext.loseContext();
+      } catch (e) {}
+    });
+  });
+  // 按「上一頁」回到這頁時（瀏覽器直接拿快取的舊畫面），3D 已經釋放了，重新載入一次
+  window.addEventListener('pageshow', function (e) { if (e.persisted) location.reload(); });
+  // 記下每個畫布的 3D 內容，離開時才找得到（不改變任何畫面行為）
+  (function () {
+    var orig = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (type) {
+      var ctx = orig.apply(this, arguments);
+      if (ctx && /webgl/.test(type)) this.__gl = ctx;
+      return ctx;
+    };
+  })();
+</script>
+</head>
+  <body class="shop-page store-page">
+    <!-- 導覽列 -->
+    <header class="nav">
+      <a class="logo" href="index.html">
+        <span class="logo-line1"><span class="logo-name">FROGet</span></span>
+      </a>
+      <nav class="menu">
+        <a href="ask.html">問答</a>
+        <a href="store.html" aria-current="page">商店</a>
+        <a href="game.html">解壓遊戲</a>
+        <a href="about.html">關於我們</a>
+        <a class="cart-button" href="cart.html"
+          >購物車 (<span id="cart-count">0</span>)</a
+        >
+      </nav>
+    </header>
+
+    <main>
+      <!-- 主視覺：青蛙細胞分裂成兩個商品（3D 畫布透明，用網站背景） -->
+      <section
+        class="store-hero"
+        id="store-hero"
+        aria-label="FROGet 商店：青蛙貼布與不累不累丸"
+      >
+        <h1 class="store-hero-title">商店</h1>
+        <canvas
+          class="store-hero-canvas"
+          id="store-hero-canvas"
+          role="img"
+          aria-label="透明的青蛙泡泡裡飄著貼布和膠囊，分裂成兩顆後各自融合成一個商品"
+        ></canvas>
+        <!-- 商品入口：動畫最後淡入，位置跟著 3D 泡泡 -->
+        <div class="hero-label" id="hero-label-a">
+          <span class="hero-label-tag">＊呱＊</span>
+          <span class="hero-label-name">青蛙貼布</span>
+          <a class="hero-label-link" href="patch.html">看商品 <span class="hover-arrow ha-right" aria-hidden="true">→</span></a>
+        </div>
+        <div class="hero-label" id="hero-label-b">
+          <span class="hero-label-tag">＊呱＊</span>
+          <span class="hero-label-name">不累不累丸</span>
+          <a class="hero-label-link" href="pill.html">看商品 <span class="hover-arrow ha-right" aria-hidden="true">→</span></a>
+        </div>
+        <button class="hero-sound" id="hero-sound" type="button">🔊 開啟聲音</button>
+        <button class="hero-replay" id="hero-replay" type="button">
+          ↺ 再看一次
+        </button>
+      </section>
+    </main>
+
+    <!-- 頁尾 -->
+    <footer class="site-footer">
+      <div class="site-footer-text">
+        <p class="site-footer-title">FROGet to self-care</p>
+        <p class="site-footer-sub">designer survival guide　｜　選你所呱</p>
+      </div>
+      <a class="site-footer-home" href="index.html" aria-label="回首頁">
+        <img class="icon-default" src="img/home-button-default.svg" alt="" />
+        <img class="icon-hover" src="img/home-button-hover.svg" alt="" />
+      </a>
+    </footer>
+
+    <script src="js/frogSound.js"></script>
+    <script type="module" src="js/store.js"></script>
+  </body>
+</html>
