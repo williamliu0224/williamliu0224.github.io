@@ -230,6 +230,12 @@ body.shop-page {
   letter-spacing: 0.1em;
   line-height: 1.4;
   color: var(--ink-900);
+  white-space: nowrap; /* 「痛感轉移！立即有感」保持一行 */
+}
+@media (max-width: 640px) {
+  .intro-sub {
+    font-size: min(var(--fs-40), 6.4vw); /* 手機縮小字級，一行放得下 */
+  }
 }
 
 /* 說明文字：跟不累不累丸頁同一組數值（19px、行高 1.55、段距 14px、最寬 620px；手機 0.8 倍） */
