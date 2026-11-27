@@ -40,7 +40,7 @@ const env = (t, [a, b], fin = 0.35, fout = 0.4) => ss((t - a) / fin) * (1 - ss((
 const CYAN = '#1fb2d8', WHITE = '#8ad8ec', LIME = '#a6dc3c', PALE = '#d2ef9a';
 // 貼布各層加深：顏色（白層改成淡灰藍、綠層更綠、電路層帶藍）與不透明度
 const DEEPEN = {
-  whiteColor: '#d3dee5', greenColor: '#a3dc3e', blueTint: '#bfe3f2',
+  whiteColor: '#d3dee5', bottomColor: '#9fb6c4', bottomOpacity: 0.92, absorbLine: ['#0f8fb8', '#5cc6e2'],   // 01 吸收層（底層）與它的吸收線再加深 greenColor: '#a3dc3e', blueTint: '#bfe3f2',
   opacity: { white: 0.8, green: 0.72, bump: 0.95, blue: 0.92 },
 };
 
@@ -83,7 +83,7 @@ export function createLayersFx(container, options = {}) {
   // 各層材質的原始不透明度（淡化時以此為基準）
   const BASE_OPACITY = { ...DEEPEN.opacity };
   patch.materials.white.color.set(DEEPEN.whiteColor);
-  whiteBottom.color.set(DEEPEN.whiteColor);
+  whiteBottom.color.set(DEEPEN.bottomColor);
   patch.materials.green.color.set(DEEPEN.greenColor);
   patch.materials.blue.color.set(DEEPEN.blueTint);
 
@@ -153,7 +153,7 @@ export function createLayersFx(container, options = {}) {
     const curve = new THREE.CubicBezierCurve3(
       new THREE.Vector3(sx, sy, -0.2), new THREE.Vector3(sx * 0.9, sy * 0.9, -0.09),
       new THREE.Vector3(ex, ey, -0.07), new THREE.Vector3(ex, ey, -0.006));
-    const mat = flowMat(CYAN, WHITE, 0.9, 0.65, 2.5);
+    const mat = flowMat(DEEPEN.absorbLine[0], DEEPEN.absorbLine[1], 0.9, 0.65, 2.5);
     absorb.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 60, 0.0016, 8), mat)); // 只用線，不加箭頭
     arrows.push({ mat, delay: (i % 4) * 0.12 });
   }
@@ -258,7 +258,7 @@ export function createLayersFx(container, options = {}) {
   // dim：五個區域各自的不透明度倍率（推近某區時其他區淡化）
   function apply(t, clock, fk = 0, dim = [1, 1, 1, 1, 1, 1]) {
     // 各層材質依區域淡化：1 底層、3 藍層、4 綠層與凸點、5 外層
-    whiteBottom.opacity = BASE_OPACITY.white * dim[1];
+    whiteBottom.opacity = DEEPEN.bottomOpacity * dim[1];
     patch.materials.blue.opacity = BASE_OPACITY.blue * dim[3];
     patch.materials.green.opacity = BASE_OPACITY.green * dim[4];
     patch.materials.bump.opacity = BASE_OPACITY.bump * dim[4];
