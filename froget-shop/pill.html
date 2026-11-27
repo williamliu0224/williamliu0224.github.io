@@ -6,7 +6,7 @@
 <title>不累不累丸</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500&family=Post+No+Bills+Colombo&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Post+No+Bills+Colombo&display=swap" rel="stylesheet">
 <style>
 /* 依 FROGet 網站設計系統（tsann0918.github.io 的 style.css / shop.css）重建，讓兩個商品頁放在一起一致 */
 :root{
@@ -87,9 +87,9 @@ img{display:block}
 .promo-stage{position:relative;width:100%;aspect-ratio:511/781;max-height:calc(var(--vh) - 112px);cursor:grab;touch-action:pan-y;user-select:none}
 .promo-stage:active{cursor:grabbing}
 #promo-gl{position:absolute;inset:0;width:100%;height:100%;display:block}
-.promo-title{margin-top:28px;font-size:var(--fs-64);font-weight:500;line-height:var(--lh-tight);letter-spacing:var(--ls-heading);color:var(--ink-900);white-space:nowrap}
-.promo-sub{font-size:var(--fs-40);line-height:var(--lh-tight);letter-spacing:var(--ls-heading);color:var(--ink-900)}
-.promo-desc{--pd-size:19px;--pd-first:1;--pd-weight:400;--pd-lh:1.55;--pd-ls:0em;--pd-gap:14px;--pd-max:620px;   /* 說明文字：數值集中在這裡，網址加 #tune 可以用面板拉 */
+.promo-title{margin-top:28px;font-size:var(--fs-64);font-weight:400;line-height:1.3;letter-spacing:.08em;color:var(--ink-900);white-space:nowrap}
+.promo-sub{margin-top:10px;font-size:var(--fs-40);font-weight:300;line-height:1.4;letter-spacing:.1em;color:var(--ink-900)}
+.promo-desc{--pd-size:19px;--pd-first:1;--pd-weight:300;--pd-lh:1.95;--pd-ls:.06em;--pd-gap:20px;--pd-max:620px;   /* 說明文字：數值集中在這裡，網址加 #tune 可以用面板拉 */
   margin-top:28px;max-width:var(--pd-max);font-size:var(--pd-size);font-weight:var(--pd-weight);line-height:var(--pd-lh);letter-spacing:var(--pd-ls);color:var(--ink-900)}
 .promo-desc p:first-child{font-size:calc(1em * var(--pd-first))}
 .promo-desc p + p{margin-top:var(--pd-gap)}
@@ -1799,10 +1799,10 @@ else {
   const ROWS = [
     {v:'--pd-size',   label:'字級',       min:14,  max:40,  step:1,    unit:'px', def:19},
     {v:'--pd-first',  label:'第一句放大', min:1,   max:1.8, step:0.05, unit:'×',  def:1},
-    {v:'--pd-weight', label:'粗細',       min:400, max:500, step:100,  unit:'',   def:400},
-    {v:'--pd-lh',     label:'行高',       min:1.2, max:2.4, step:0.05, unit:'',   def:1.55},
-    {v:'--pd-ls',     label:'字距',       min:0,   max:0.3, step:0.01, unit:'em', def:0},
-    {v:'--pd-gap',    label:'段落間距',   min:0,   max:48,  step:1,    unit:'px', def:14},
+    {v:'--pd-weight', label:'粗細',       min:300, max:500, step:100,  unit:'',   def:300},
+    {v:'--pd-lh',     label:'行高',       min:1.2, max:2.4, step:0.05, unit:'',   def:1.95},
+    {v:'--pd-ls',     label:'字距',       min:0,   max:0.3, step:0.01, unit:'em', def:0.06},
+    {v:'--pd-gap',    label:'段落間距',   min:0,   max:48,  step:1,    unit:'px', def:20},
     {v:'--pd-max',    label:'最大寬度',   min:320, max:900, step:10,   unit:'px', def:620}
   ];
   const wrap = document.getElementById('tune-rows'), vals = {};
