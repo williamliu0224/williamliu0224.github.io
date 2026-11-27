@@ -88,7 +88,7 @@ body.shop-page {
   height: 100vh;
   height: 100svh;
   overflow: hidden;
-  background: linear-gradient(to bottom, var(--white), var(--lime-500));
+  background: var(--white);   /* 全站背景統一白色 */
 }
 
 /* 3D 畫布容器：鋪滿固定的畫面 */
@@ -181,7 +181,7 @@ body.shop-page {
   min-height: 100svh;
   display: flex;
   align-items: center;
-  background: var(--shop-pink);
+  background: var(--white);   /* 全站背景統一白色（原本粉紅） */
 }
 
 /* 依設計稿比例排版（1728 寬：左留 290、右留 220、圖 511、間距 187、文字 520） */
@@ -219,7 +219,7 @@ body.shop-page {
   font-weight: 500;
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-heading);
-  color: var(--lime-500);
+  color: var(--ink-900);
   white-space: nowrap;
 }
 
@@ -227,7 +227,7 @@ body.shop-page {
   font-size: var(--fs-40);
   letter-spacing: var(--ls-heading);
   line-height: var(--lh-tight);
-  color: var(--lime-500);
+  color: var(--ink-900);
 }
 
 /* 說明文字：跟不累不累丸頁同一組數值（19px、行高 1.55、段距 14px、最寬 620px；手機 0.8 倍） */
@@ -237,7 +237,7 @@ body.shop-page {
   font-size: 19px;
   font-weight: 400;
   line-height: 1.55;
-  color: var(--white);
+  color: var(--ink-900);
   letter-spacing: 0;
 }
 .intro-desc p + p {
@@ -490,7 +490,7 @@ body.shop-page {
   height: 100vh;
   height: 100svh;
   overflow: hidden;
-  background: linear-gradient(to bottom, var(--gray-100), var(--shop-pink));
+  background: var(--white);   /* 全站背景統一白色（原本灰→粉漸層） */
 }
 
 /* 3D 畫布鋪滿固定畫面，貼布在正中央 */
@@ -931,7 +931,7 @@ body.shop-page {
 }
 
 /* ===== 滑到底：回商店／看另一個商品 ===== */
-.back-band{padding:64px 10.19%;display:flex;align-items:center;justify-content:space-between;gap:24px 40px;flex-wrap:wrap;background:var(--gray-100,#edebeb);border-top:1px solid var(--ink-line,#2b2b2b)}
+.back-band{padding:64px 10.19%;display:flex;align-items:center;justify-content:space-between;gap:24px 40px;flex-wrap:wrap;background:var(--white);border-top:1px solid var(--ink-line,#2b2b2b)}
 .back-band-kicker{font-size:var(--fs-12,12px);letter-spacing:var(--ls-label,.2em);color:var(--ink-600,#5f5f5f)}
 .back-band-title{margin-top:8px;text-wrap:balance;font-size:clamp(var(--fs-20,20px),1.7vw,var(--fs-28,28px));font-weight:500;letter-spacing:var(--ls-title,.04em)}
 .back-band-actions{display:flex;gap:16px;flex-wrap:wrap}

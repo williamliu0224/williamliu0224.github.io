@@ -68,9 +68,7 @@ body {
   font-weight: 400;
   color: var(--ink-900);
   /* 頁首淡綠漸層，高度 498px */
-  background:
-    linear-gradient(to bottom, var(--lime-50) 0, var(--white) 498px) no-repeat,
-    var(--white);
+  background: var(--white);   /* 全站背景統一白色（原本頁首淡綠漸層） */
 }
 
 a {
