@@ -36,7 +36,13 @@ const GAP = 0.045; // 分解後各層間距
 const ss = (v) => { v = Math.min(1, Math.max(0, v)); return v * v * (3 - 2 * v); };
 const span = (t, [a, b]) => (t - a) / (b - a); // 0~1
 const env = (t, [a, b], fin = 0.35, fout = 0.4) => ss((t - a) / fin) * (1 - ss((t - (b - fout)) / fout)); // 淡入淡出包絡
-const CYAN = '#5fd8f0', WHITE = '#ffffff', LIME = '#d2f981', PALE = '#eefbd2';
+// 背景改白色後物件太淡，整體加深：線條、分子、能量光束的顏色（原本 #5fd8f0 / #ffffff / #d2f981 / #eefbd2）
+const CYAN = '#1fb2d8', WHITE = '#8ad8ec', LIME = '#a6dc3c', PALE = '#d2ef9a';
+// 貼布各層加深：顏色（白層改成淡灰藍、綠層更綠、電路層帶藍）與不透明度
+const DEEPEN = {
+  whiteColor: '#d3dee5', greenColor: '#a3dc3e', blueTint: '#bfe3f2',
+  opacity: { white: 0.8, green: 0.72, bump: 0.95, blue: 0.92 },
+};
 
 export function createLayersFx(container, options = {}) {
   const P = { mouseTilt: true, ...options }; // mouseTilt：滑鼠移動時貼布微微傾斜
@@ -75,7 +81,11 @@ export function createLayersFx(container, options = {}) {
   const whiteBottom = patch.materials.white.clone();
   Lyr.w2.children[0].material = whiteBottom;
   // 各層材質的原始不透明度（淡化時以此為基準）
-  const BASE_OPACITY = { white: 0.58, green: 0.5, bump: 0.85, blue: 0.8 };
+  const BASE_OPACITY = { ...DEEPEN.opacity };
+  patch.materials.white.color.set(DEEPEN.whiteColor);
+  whiteBottom.color.set(DEEPEN.whiteColor);
+  patch.materials.green.color.set(DEEPEN.greenColor);
+  patch.materials.blue.color.set(DEEPEN.blueTint);
 
   // ---------- 鏡頭推近設定 ----------
   const FOCUS = {
@@ -150,9 +160,9 @@ export function createLayersFx(container, options = {}) {
 
   // ---------- 2 疼痛搜集：F 粒子 ----------
   const fTex = spriteTex((x) => {
-    x.fillStyle = '#ffffff'; x.strokeStyle = '#5fd8f0'; x.lineWidth = 8;
+    x.fillStyle = '#ffffff'; x.strokeStyle = CYAN; x.lineWidth = 8;
     x.beginPath(); x.arc(64, 64, 54, 0, Math.PI * 2); x.fill(); x.stroke();
-    x.fillStyle = '#5fd8f0'; x.font = '500 70px system-ui,sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.fillStyle = CYAN; x.font = '500 70px system-ui,sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
     x.fillText('F', 64, 68);
   });
   const collect = new THREE.Group();
@@ -172,7 +182,7 @@ export function createLayersFx(container, options = {}) {
   // ---------- 3 射線轉換：兩組分子＋中間電光 ----------
   const convert = new THREE.Group();
   patch.group.add(convert);
-  const OUTLINE = new THREE.MeshBasicMaterial({ color: '#5fd8f0', side: THREE.BackSide });
+  const OUTLINE = new THREE.MeshBasicMaterial({ color: CYAN, side: THREE.BackSide });
   function molecule(colors) {
     const m = new THREE.Group();
     const pts = [new THREE.Vector3(-0.011, 0, 0), new THREE.Vector3(0, 0.008, 0.004), new THREE.Vector3(0.011, -0.002, 0)];
@@ -201,7 +211,7 @@ export function createLayersFx(container, options = {}) {
   const molMats = new Set();
   [molA, molB].forEach((m) => m.traverse((o) => { if (o.material) molMats.add(o.material); }));
   molMats.forEach((mat) => { mat.transparent = true; });
-  const boltMat = flat('#5fd8f0');
+  const boltMat = flat(CYAN);
   let bolt = null, boltTimer = -1;
   // 重新產生一道隨機折線的閃電
   function rebuildBolt() {
